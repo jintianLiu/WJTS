@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行工具 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .tool-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .currency-tool .tool-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .weather-tool .tool-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .translation-tool .tool-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .packing-tool .tool-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .route-tool .tool-icon {
+            background: linear-gradient(135deg, #ffa17f 0%, #00223e 100%);
+        }
+        .converter-tool .tool-icon {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar py-3 px-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 网站标志 -->
+            <div class="flex items-center">
+                <a href="../index.html" class="navbar-brand">
+                    <img src="../forum-asste/image/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                    <span>无境探索</span>
+                </a>
+            </div>
+            
+            <!-- 搜索栏 -->
+            <div class="search-bar">
+                <form id="search-form">
+                    <i class="fas fa-search"></i>
+                    <input id="search-input" type="text" placeholder="搜索帖子、用户或标签...">
+                </form>
+            </div>
+            
+            <!-- 导航链接 -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link"><i class="fas fa-home mr-1"></i> 首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="hot.html" class="nav-link"><i class="fas fa-fire mr-1"></i> 热门</a>
+                </li>
+                <li class="nav-item">
+                    <a href="latest.html" class="nav-link"><i class="fas fa-clock mr-1"></i> 最新</a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link"><i class="fas fa-th-large mr-1"></i> 分类</a>
+                </li>
+            </ul>
+            
+            <!-- 用户菜单 -->
+            <div class="user-menu">
+                <img src="https://picsum.photos/200/200?random=1" alt="用户头像" class="user-avatar">
+                <div class="dropdown-menu">
+                    <a href="profile.html" class="dropdown-item"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                    <a href="messages.html" class="dropdown-item"><i class="fas fa-envelope mr-2"></i> 私信 <span class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                    <a href="collections.html" class="dropdown-item"><i class="fas fa-bookmark mr-2"></i> 我的收藏</a>
+                    <a href="history.html" class="dropdown-item"><i class="fas fa-history mr-2"></i> 浏览历史</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="settings.html" class="dropdown-item"><i class="fas fa-cog mr-2"></i> 设置</a>
+                    <a href="login.html" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i> 退出登录</a>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden px-4 py-2 bg-white border-t">
+            <ul class="navbar-nav flex flex-col">
+                <li class="nav-item mb-1">
+                    <a href="../index.html" class="nav-link block py-2"><i class="fas fa-home mr-2"></i> 首页</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="hot.html" class="nav-link block py-2"><i class="fas fa-fire mr-2"></i> 热门</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="latest.html" class="nav-link block py-2"><i class="fas fa-clock mr-2"></i> 最新</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="categories.html" class="nav-link block py-2"><i class="fas fa-th-large mr-2"></i> 分类</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="profile.html" class="nav-link block py-2"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="settings.html" class="nav-link block py-2"><i class="fas fa-cog mr-2"></i> 设置</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <div class="container mx-auto mt-6 px-4">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb mb-6">
+            <ol class="flex items-center space-x-2">
+                <li><a href="../index.html" class="text-gray-500 hover:text-primary"><i class="fas fa-home mr-1"></i>首页</a></li>
+                <li><i class="fas fa-chevron-right text-xs text-gray-400"></i></li>
+                <li><span class="font-medium text-gray-800">旅行工具</span></li>
+            </ol>
+        </nav>
+
+        <!-- 页面标题 -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">旅行工具</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">为您的旅行提供实用工具，让旅途更加便捷、安全和愉快</p>
+        </div>
+
+        <!-- 工具分类选项卡 -->
+        <div class="tool-tabs mb-8">
+            <div class="flex overflow-x-auto pb-2 scrollbar-hide">
+                <button class="tool-tab active px-6 py-2 mr-2 rounded-full bg-primary text-white font-medium" data-category="all">全部工具</button>
+                <button class="tool-tab px-6 py-2 mr-2 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-category="planning">旅行规划</button>
+                <button class="tool-tab px-6 py-2 mr-2 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-category="calculation">换算计算</button>
+                <button class="tool-tab px-6 py-2 mr-2 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" data-category="reference">参考信息</button>
+            </div>
+        </div>
+
+        <!-- 工具卡片网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- 汇率换算工具 -->
+            <div class="tool-card currency-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="calculation">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-exchange-alt text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">汇率换算</h3>
+                    <p class="text-gray-600 mb-4">实时汇率查询和货币转换，帮助您了解目的地货币价值</p>
+                    <div class="currency-converter mb-4">
+                        <div class="flex items-center mb-2">
+                            <input type="number" id="currency-amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" value="100">
+                        </div>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <select id="currency-from" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="CNY">人民币 (CNY)</option>
+                                <option value="USD">美元 (USD)</option>
+                                <option value="EUR">欧元 (EUR)</option>
+                                <option value="JPY">日元 (JPY)</option>
+                            </select>
+                            <button id="currency-swap" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <select id="currency-to" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="USD">美元 (USD)</option>
+                                <option value="CNY">人民币 (CNY)</option>
+                                <option value="EUR">欧元 (EUR)</option>
+                                <option value="JPY">日元 (JPY)</option>
+                            </select>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="text-gray-500 text-sm">结果</p>
+                            <p id="currency-result" class="text-xl font-bold text-gray-900">100 CNY = 13.80 USD</p>
+                        </div>
+                    </div>
+                    <a href="#" class="inline-block text-primary hover:underline font-medium">查看更多货币 →</a>
+                </div>
+            </div>
+
+            <!-- 天气预报工具 -->
+            <div class="tool-card weather-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="planning">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-cloud-sun text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">天气预报</h3>
+                    <p class="text-gray-600 mb-4">查询目的地的实时天气和未来预报，帮助您合理安排行程</p>
+                    <div class="weather-search mb-4">
+                        <div class="flex items-center mb-3">
+                            <input type="text" id="weather-location" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入城市名称">
+                            <button id="weather-search-btn" class="ml-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="weather-info p-3 bg-gray-50 rounded-lg mb-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p id="weather-city" class="font-bold text-gray-900">北京</p>
+                                <p id="weather-desc" class="text-gray-600 text-sm">晴朗</p>
+                            </div>
+                            <div class="text-right">
+                                <p id="weather-temp" class="text-3xl font-bold text-gray-900">23°C</p>
+                                <p id="weather-date" class="text-gray-500 text-sm">2024-06-15</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weather-forecast flex justify-between text-center text-sm text-gray-600">
+                        <div>
+                            <p>周一</p>
+                            <i class="fas fa-sun text-yellow-500 block my-1"></i>
+                            <p>25°</p>
+                        </div>
+                        <div>
+                            <p>周二</p>
+                            <i class="fas fa-cloud text-gray-400 block my-1"></i>
+                            <p>23°</p>
+                        </div>
+                        <div>
+                            <p>周三</p>
+                            <i class="fas fa-cloud-rain text-blue-400 block my-1"></i>
+                            <p>20°</p>
+                        </div>
+                        <div>
+                            <p>周四</p>
+                            <i class="fas fa-sun text-yellow-500 block my-1"></i>
+                            <p>24°</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 语言翻译工具 -->
+            <div class="tool-card translation-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="reference">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-language text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">语言翻译</h3>
+                    <p class="text-gray-600 mb-4">支持多语言互译，帮助您在旅行中克服语言障碍</p>
+                    <div class="translation-container mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <select id="translate-from" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="zh">中文</option>
+                                <option value="en">英语</option>
+                                <option value="ja">日语</option>
+                                <option value="ko">韩语</option>
+                            </select>
+                            <button id="translate-swap" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <select id="translate-to" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="en">英语</option>
+                                <option value="zh">中文</option>
+                                <option value="ja">日语</option>
+                                <option value="ko">韩语</option>
+                            </select>
+                        </div>
+                        <textarea id="translate-input" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 mb-2" placeholder="请输入要翻译的文本">你好，请问去火车站怎么走？</textarea>
+                        <div id="translate-result" class="p-3 bg-gray-50 rounded-lg">
+                            Hello, how do I get to the train station?
+                        </div>
+                    </div>
+                    <button id="translate-btn" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">翻译</button>
+                </div>
+            </div>
+
+            <!-- 行李打包清单 -->
+            <div class="tool-card packing-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="planning">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-suitcase text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">行李打包清单</h3>
+                    <p class="text-gray-600 mb-4">根据旅行类型和目的地，生成个性化的行李打包建议</p>
+                    <div class="packing-options mb-4">
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">旅行类型</label>
+                            <select id="packing-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="summer">夏季海滩</option>
+                                <option value="winter">冬季滑雪</option>
+                                <option value="city">城市观光</option>
+                                <option value="adventure">户外探险</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">旅行天数</label>
+                            <select id="packing-days" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="1-3">1-3天</option>
+                                <option value="4-7">4-7天</option>
+                                <option value="8-14">8-14天</option>
+                                <option value="15+">15天以上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="generate-packing-list" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary-dark mb-4">生成清单</button>
+                    <div id="packing-list-preview" class="p-3 bg-gray-50 rounded-lg">
+                        <ul class="space-y-1 text-sm text-gray-700">
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 护照和身份证</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 轻薄衣物（5-7件）</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 泳衣和防晒霜</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 舒适的行走鞋</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 充电器和转换插头</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 行程规划工具 -->
+            <div class="tool-card route-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="planning">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-route text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">行程规划</h3>
+                    <p class="text-gray-600 mb-4">创建和管理您的旅行计划，包括景点安排和交通路线</p>
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">目的地</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入目的地城市">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
+                                <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">结束日期</label>
+                                <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary-dark mb-4">创建行程</button>
+                    </div>
+                    <div class="saved-trips">
+                        <h4 class="font-medium text-gray-900 mb-2">已保存的行程</h4>
+                        <ul class="space-y-2">
+                            <li class="p-2 bg-gray-50 rounded-lg text-sm flex justify-between items-center">
+                                <span>东京五日游</span>
+                                <a href="#" class="text-primary hover:underline">查看</a>
+                            </li>
+                            <li class="p-2 bg-gray-50 rounded-lg text-sm flex justify-between items-center">
+                                <span>巴黎艺术之旅</span>
+                                <a href="#" class="text-primary hover:underline">查看</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 单位换算工具 -->
+            <div class="tool-card converter-tool bg-white rounded-xl shadow-sm overflow-hidden" data-category="calculation">
+                <div class="tool-icon p-6 text-white">
+                    <i class="fas fa-calculator text-4xl"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">单位换算</h3>
+                    <p class="text-gray-600 mb-4">提供常用旅行单位换算，包括长度、重量、温度等</p>
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">换算类型</label>
+                            <select id="converter-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="temperature">温度</option>
+                                <option value="length">长度</option>
+                                <option value="weight">重量</option>
+                                <option value="volume">体积</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <input type="number" id="converter-input" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" value="30">
+                            <select id="converter-from" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="celsius">摄氏度</option>
+                                <option value="fahrenheit">华氏度</option>
+                            </select>
+                            <span class="text-gray-500">→</span>
+                            <select id="converter-to" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                <option value="fahrenheit">华氏度</option>
+                                <option value="celsius">摄氏度</option>
+                            </select>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg mb-3">
+                            <p id="converter-result" class="font-medium text-gray-900">30°C = 86°F</p>
+                        </div>
+                        <button id="convert-btn" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">换算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 旅行资源推荐 -->
+        <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">推荐旅行资源</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 资源卡片1 -->
+                <div class="resource-card p-4 border border-gray-200 rounded-lg hover:border-primary transition-colors">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">机票比价</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">推荐可靠的机票比价网站和APP，帮您找到最优惠的机票</p>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> Skyscanner</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> 携程旅行</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> 去哪儿网</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 资源卡片2 -->
+                <div class="resource-card p-4 border border-gray-200 rounded-lg hover:border-primary transition-colors">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">住宿预订</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">精选性价比高的住宿平台，从酒店到民宿应有尽有</p>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> Booking.com</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> Airbnb</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> 美团民宿</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 资源卡片3 -->
+                <div class="resource-card p-4 border border-gray-200 rounded-lg hover:border-primary transition-colors">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">地图导航</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">推荐实用的地图和导航工具，让您在陌生城市也不会迷路</p>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> Google Maps</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> 高德地图</a></li>
+                        <li><a href="#" class="text-primary hover:underline flex items-center"><i class="fas fa-external-link-alt text-xs mr-1"></i> 百度地图</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="mt-10 bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="../forum-asste/image/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                        <span class="ml-2 text-xl font-bold">无境探索</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        无境探索，让旅行不再孤单，让分享连接世界。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white">首页</a></li>
+                        <li><a href="hot.html" class="text-gray-400 hover:text-white">热门话题</a></li>
+                        <li><a href="categories.html" class="text-gray-400 hover:text-white">论坛分类</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">关于我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">帮助中心</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="help.html" class="text-gray-400 hover:text-white">使用帮助</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">隐私政策</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">服务条款</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关注我们</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weixin text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weibo text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <p>© 2023 无境探索 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // 工具分类选项卡切换
+            const toolTabs = document.querySelectorAll('.tool-tab');
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            toolTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有选项卡的活跃状态
+                    toolTabs.forEach(t => t.classList.remove('active', 'bg-primary', 'text-white'));
+                    toolTabs.forEach(t => t.classList.add('bg-gray-100', 'text-gray-700'));
+                    
+                    // 添加当前选项卡的活跃状态
+                    this.classList.add('active', 'bg-primary', 'text-white');
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // 显示或隐藏工具卡片
+                    toolCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // 汇率转换功能
+            const currencyAmount = document.getElementById('currency-amount');
+            const currencyFrom = document.getElementById('currency-from');
+            const currencyTo = document.getElementById('currency-to');
+            const currencyResult = document.getElementById('currency-result');
+            const currencySwap = document.getElementById('currency-swap');
+            
+            function updateCurrencyResult() {
+                // 这里使用模拟汇率，实际应用中应调用API获取实时汇率
+                const rates = {
+                    'CNY_USD': 0.138,
+                    'CNY_EUR': 0.126,
+                    'CNY_JPY': 20.5,
+                    'USD_CNY': 7.25,
+                    'USD_EUR': 0.91,
+                    'USD_JPY': 148.6,
+                    'EUR_CNY': 7.94,
+                    'EUR_USD': 1.10,
+                    'EUR_JPY': 162.7,
+                    'JPY_CNY': 0.0488,
+                    'JPY_USD': 0.00673,
+                    'JPY_EUR': 0.00615
+                };
+                
+                const from = currencyFrom.value;
+                const to = currencyTo.value;
+                const amount = parseFloat(currencyAmount.value) || 0;
+                
+                if (from === to) {
+                    currencyResult.textContent = `${amount} ${from} = ${amount} ${to}`;
+                    return;
+                }
+                
+                const rateKey = `${from}_${to}`;
+                const rate = rates[rateKey];
+                
+                if (rate) {
+                    const result = (amount * rate).toFixed(2);
+                    currencyResult.textContent = `${amount} ${from} = ${result} ${to}`;
+                }
+            }
+            
+            if (currencyAmount && currencyFrom && currencyTo && currencyResult) {
+                currencyAmount.addEventListener('input', updateCurrencyResult);
+                currencyFrom.addEventListener('change', updateCurrencyResult);
+                currencyTo.addEventListener('change', updateCurrencyResult);
+                
+                if (currencySwap) {
+                    currencySwap.addEventListener('click', function() {
+                        const temp = currencyFrom.value;
+                        currencyFrom.value = currencyTo.value;
+                        currencyTo.value = temp;
+                        updateCurrencyResult();
+                    });
+                }
+            }
+
+            // 温度转换功能
+            const converterInput = document.getElementById('converter-input');
+            const converterFrom = document.getElementById('converter-from');
+            const converterTo = document.getElementById('converter-to');
+            const converterResult = document.getElementById('converter-result');
+            const converterType = document.getElementById('converter-type');
+            const convertBtn = document.getElementById('convert-btn');
+            
+            function updateConverterOptions() {
+                const type = converterType.value;
+                
+                // 根据选择的类型更新单位选项
+                if (type === 'temperature') {
+                    converterFrom.innerHTML = `
+                        <option value="celsius">摄氏度</option>
+                        <option value="fahrenheit">华氏度</option>
+                        <option value="kelvin">开尔文</option>
+                    `;
+                    converterTo.innerHTML = `
+                        <option value="fahrenheit">华氏度</option>
+                        <option value="celsius">摄氏度</option>
+                        <option value="kelvin">开尔文</option>
+                    `;
+                } else if (type === 'length') {
+                    converterFrom.innerHTML = `
+                        <option value="kilometer">公里</option>
+                        <option value="mile">英里</option>
+                        <option value="meter">米</option>
+                    `;
+                    converterTo.innerHTML = `
+                        <option value="mile">英里</option>
+                        <option value="kilometer">公里</option>
+                        <option value="meter">米</option>
+                    `;
+                } else if (type === 'weight') {
+                    converterFrom.innerHTML = `
+                        <option value="kilogram">公斤</option>
+                        <option value="pound">磅</option>
+                        <option value="gram">克</option>
+                    `;
+                    converterTo.innerHTML = `
+                        <option value="pound">磅</option>
+                        <option value="kilogram">公斤</option>
+                        <option value="gram">克</option>
+                    `;
+                }
+                
+                performConversion();
+            }
+            
+            function performConversion() {
+                const type = converterType.value;
+                const fromUnit = converterFrom.value;
+                const toUnit = converterTo.value;
+                const inputValue = parseFloat(converterInput.value) || 0;
+                let result = 0;
+                
+                // 温度转换
+                if (type === 'temperature') {
+                    if (fromUnit === 'celsius' && toUnit === 'fahrenheit') {
+                        result = (inputValue * 9/5) + 32;
+                        converterResult.textContent = `${inputValue}°C = ${result.toFixed(1)}°F`;
+                    } else if (fromUnit === 'fahrenheit' && toUnit === 'celsius') {
+                        result = (inputValue - 32) * 5/9;
+                        converterResult.textContent = `${inputValue}°F = ${result.toFixed(1)}°C`;
+                    } else if (fromUnit === 'celsius' && toUnit === 'kelvin') {
+                        result = inputValue + 273.15;
+                        converterResult.textContent = `${inputValue}°C = ${result.toFixed(2)}K`;
+                    } else if (fromUnit === toUnit) {
+                        converterResult.textContent = `${inputValue}${fromUnit === 'celsius' ? '°C' : fromUnit === 'fahrenheit' ? '°F' : 'K'} = ${inputValue}${toUnit === 'celsius' ? '°C' : toUnit === 'fahrenheit' ? '°F' : 'K'}`;
+                    }
+                }
+                // 其他单位转换逻辑...
+            }
+            
+            if (converterType && converterInput && converterFrom && converterTo && converterResult && convertBtn) {
+                converterType.addEventListener('change', updateConverterOptions);
+                convertBtn.addEventListener('click', performConversion);
+            }
+
+            // 翻译功能
+            const translateBtn = document.getElementById('translate-btn');
+            const translateInput = document.getElementById('translate-input');
+            const translateResult = document.getElementById('translate-result');
+            const translateFrom = document.getElementById('translate-from');
+            const translateTo = document.getElementById('translate-to');
+            const translateSwap = document.getElementById('translate-swap');
+            
+            if (translateBtn && translateInput && translateResult) {
+                translateBtn.addEventListener('click', function() {
+                    // 这里使用模拟翻译，实际应用中应调用API
+                    const text = translateInput.value;
+                    const from = translateFrom.value;
+                    const to = translateTo.value;
+                    
+                    if (from === to) {
+                        translateResult.textContent = text;
+                        return;
+                    }
+                    
+                    // 简单的模拟翻译
+                    if (from === 'zh' && to === 'en' && text.includes('火车站')) {
+                        translateResult.textContent = "Hello, how do I get to the train station?";
+                    } else if (from === 'en' && to === 'zh') {
+                        translateResult.textContent = "你好，这是一个示例翻译。";
+                    } else {
+                        translateResult.textContent = "[翻译结果将显示在这里]";
+                    }
+                });
+                
+                if (translateSwap && translateFrom && translateTo) {
+                    translateSwap.addEventListener('click', function() {
+                        const temp = translateFrom.value;
+                        translateFrom.value = translateTo.value;
+                        translateTo.value = temp;
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

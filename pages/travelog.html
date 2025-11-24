@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行日志 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 图片悬停效果 */
+        .travelog-card {
+            transition: all 0.3s ease;
+        }
+        .travelog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .travelog-image {
+            overflow: hidden;
+            height: 200px;
+        }
+        .travelog-image img {
+            transition: transform 0.5s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .travelog-card:hover .travelog-image img {
+            transform: scale(1.05);
+        }
+        /* 标签样式 */
+        .tag {
+            transition: all 0.2s ease;
+        }
+        .tag:hover {
+            background-color: #4f46e5;
+            color: white;
+        }
+        /* 模态框动画 */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transition: opacity 300ms;
+        }
+        /* 瀑布流布局 */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 20px;
+            grid-auto-flow: dense;
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+        }
+        .masonry-item-tall {
+            grid-row: span 2;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar py-3 px-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 网站标志 -->
+            <div class="flex items-center">
+                <a href="../index.html" class="navbar-brand">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                    <span>无境探索</span>
+                </a>
+            </div>
+            
+            <!-- 搜索栏 -->
+            <div class="search-bar">
+                <form id="search-form">
+                    <i class="fas fa-search"></i>
+                    <input id="search-input" type="text" placeholder="搜索帖子、用户或标签...">
+                </form>
+            </div>
+            
+            <!-- 导航链接 -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link"><i class="fas fa-home mr-1"></i> 首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="hot.html" class="nav-link"><i class="fas fa-fire mr-1"></i> 热门</a>
+                </li>
+                <li class="nav-item">
+                    <a href="latest.html" class="nav-link"><i class="fas fa-clock mr-1"></i> 最新</a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link"><i class="fas fa-th-large mr-1"></i> 分类</a>
+                </li>
+            </ul>
+            
+            <!-- 用户菜单 -->
+            <div class="user-menu">
+                <img src="https://picsum.photos/200/200?random=1" alt="用户头像" class="user-avatar">
+                <div class="dropdown-menu">
+                    <a href="profile.html" class="dropdown-item"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                    <a href="messages.html" class="dropdown-item"><i class="fas fa-envelope mr-2"></i> 私信 <span class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                    <a href="collections.html" class="dropdown-item"><i class="fas fa-bookmark mr-2"></i> 我的收藏</a>
+                    <a href="history.html" class="dropdown-item"><i class="fas fa-history mr-2"></i> 浏览历史</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="settings.html" class="dropdown-item"><i class="fas fa-cog mr-2"></i> 设置</a>
+                    <a href="login.html" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i> 退出登录</a>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden px-4 py-2 bg-white border-t">
+            <ul class="navbar-nav flex flex-col">
+                <li class="nav-item mb-1">
+                    <a href="../index.html" class="nav-link block py-2"><i class="fas fa-home mr-2"></i> 首页</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="hot.html" class="nav-link block py-2"><i class="fas fa-fire mr-2"></i> 热门</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="latest.html" class="nav-link block py-2"><i class="fas fa-clock mr-2"></i> 最新</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="categories.html" class="nav-link block py-2"><i class="fas fa-th-large mr-2"></i> 分类</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="profile.html" class="nav-link block py-2"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="settings.html" class="nav-link block py-2"><i class="fas fa-cog mr-2"></i> 设置</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <div class="container mx-auto mt-6 px-4">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb mb-6">
+            <ol class="flex items-center space-x-2">
+                <li><a href="../index.html" class="text-gray-500 hover:text-primary"><i class="fas fa-home mr-1"></i>首页</a></li>
+                <li><i class="fas fa-chevron-right text-xs text-gray-400"></i></li>
+                <li><span class="font-medium text-gray-800">旅行日志</span></li>
+            </ol>
+        </nav>
+
+        <!-- 页面标题 -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">旅行日志</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">记录旅途中的美好瞬间，分享世界各地的风土人情</p>
+        </div>
+
+        <!-- 创建日志按钮 -->
+        <div class="text-center mb-8">
+            <button id="create-travelog-btn" class="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors">
+                <i class="fas fa-plus-circle mr-2"></i> 创建新旅行日志
+            </button>
+        </div>
+
+        <!-- 过滤器 -->
+        <div class="filter-container bg-white p-4 rounded-xl shadow-sm mb-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-3">
+                    <label class="text-gray-700 font-medium">热门目的地：</label>
+                    <div class="tags-container flex flex-wrap gap-2">
+                        <span class="tag px-4 py-1 bg-primary text-white rounded-full text-sm cursor-pointer">全部</span>
+                        <span class="tag px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200">日本</span>
+                        <span class="tag px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200">泰国</span>
+                        <span class="tag px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200">欧洲</span>
+                        <span class="tag px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200">美国</span>
+                        <span class="tag px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm cursor-pointer hover:bg-gray-200">国内</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <label for="sort-select" class="text-gray-700 font-medium mr-2">排序：</label>
+                    <select id="sort-select" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                        <option value="latest">最新发布</option>
+                        <option value="popular">最受欢迎</option>
+                        <option value="commented">评论最多</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 旅行日志瀑布流 -->
+        <div class="masonry-grid mb-12">
+            <!-- 日志卡片1 -->
+            <div class="masonry-item">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/400?random=10" alt="东京樱花之旅" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs mr-2">日本</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2024-04-12</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">东京樱花之旅：与春天的浪漫邂逅</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            东京的樱花季总是让人期待，这次终于如愿以偿。从上野公园到新宿御苑，樱花盛开的景象美不胜收。走在樱花树下，微风拂过，花瓣飘落，仿佛置身于梦境之中...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=1" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">旅行达人小王</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 1.2k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 89</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 23</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志卡片2 -->
+            <div class="masonry-item masonry-item-tall">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden h-full">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/800?random=11" alt="巴厘岛海滩" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs mr-2">印尼</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2024-03-28</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">巴厘岛：阳光下的度假天堂</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            巴厘岛的海滩、阳光和美食让人流连忘返。在这里，我度过了最放松的一周。白天在海滩上晒太阳，傍晚欣赏美丽的日落，晚上品尝当地美食...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=2" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">夏日阳光</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 2.5k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 156</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 42</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志卡片3 -->
+            <div class="masonry-item">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/400?random=12" alt="巴黎铁塔" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs mr-2">法国</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2024-02-15</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">巴黎：浪漫之都的艺术气息</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            巴黎的确是一座充满艺术气息的城市。卢浮宫的蒙娜丽莎、埃菲尔铁塔的壮观、塞纳河的夜景，每一处都让人印象深刻。在咖啡馆里喝咖啡，看街头艺术家表演...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=3" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">艺术爱好者</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 1.8k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 124</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 35</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志卡片4 -->
+            <div class="masonry-item">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/400?random=13" alt="丽江古城" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs mr-2">中国</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2024-01-20</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">丽江古城：邂逅雪山下的纳西风情</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            丽江古城的四方街、束河古镇的宁静、玉龙雪山的壮丽，构成了一幅完美的画卷。走在青石板路上，听着纳西古乐，感受着这里的慢生活...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=4" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">山水之间</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 1.5k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 92</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 28</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志卡片5 -->
+            <div class="masonry-item masonry-item-tall">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden h-full">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/800?random=14" alt="纽约城市风光" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs mr-2">美国</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2023-12-10</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">纽约：不夜城的繁华与活力</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            纽约是一座充满活力的城市，从曼哈顿的天际线到布鲁克林的艺术区，处处都展现着这座城市的多样性。时代广场的霓虹灯、中央公园的宁静、百老汇的精彩演出...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=5" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">城市猎人</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 2.1k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 135</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 40</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日志卡片6 -->
+            <div class="masonry-item">
+                <div class="travelog-card bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="travelog-image">
+                        <img src="https://picsum.photos/600/400?random=15" alt="普吉岛风光" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center mb-3">
+                            <span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs mr-2">泰国</span>
+                            <span class="text-gray-500 text-sm"><i class="far fa-calendar-alt mr-1"></i> 2023-11-25</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">普吉岛：蓝天下的碧海白沙</h3>
+                        <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                            普吉岛的海水清澈见底，沙滩洁白细腻。在这里，我尝试了浮潜、帆船等水上活动，还品尝了正宗的泰国菜。夜晚的芭东海滩热闹非凡...
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=6" alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm font-medium text-gray-700">海洋之心</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 space-x-3">
+                                <span class="text-sm flex items-center"><i class="far fa-eye mr-1"></i> 1.6k</span>
+                                <span class="text-sm flex items-center"><i class="far fa-heart mr-1"></i> 105</span>
+                                <span class="text-sm flex items-center"><i class="far fa-comment mr-1"></i> 32</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="text-center mb-10">
+            <button id="load-more-btn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                <i class="fas fa-spinner mr-2"></i> 加载更多
+            </button>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="mt-10 bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="../forum-asste/image/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                        <span class="ml-2 text-xl font-bold">无境探索</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        无境探索，让旅行不再孤单，让分享连接世界。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white">首页</a></li>
+                        <li><a href="hot.html" class="text-gray-400 hover:text-white">热门话题</a></li>
+                        <li><a href="categories.html" class="text-gray-400 hover:text-white">论坛分类</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">关于我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">帮助中心</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="help.html" class="text-gray-400 hover:text-white">使用帮助</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">隐私政策</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">服务条款</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关注我们</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weixin text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weibo text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <p>© 2023 无境探索 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 创建日志模态框 -->
+    <div id="create-travelog-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-auto">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10">
+                <h3 class="text-xl font-bold text-gray-900">创建旅行日志</h3>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-5">
+                <form id="travelog-form">
+                    <div class="mb-4">
+                        <label for="travelog-title" class="block text-gray-700 font-medium mb-2">标题</label>
+                        <input type="text" id="travelog-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入日志标题">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="travelog-destination" class="block text-gray-700 font-medium mb-2">目的地</label>
+                            <input type="text" id="travelog-destination" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入旅行目的地">
+                        </div>
+                        <div>
+                            <label for="travelog-date" class="block text-gray-700 font-medium mb-2">旅行日期</label>
+                            <input type="date" id="travelog-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">添加照片</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
+                            <input type="file" id="travelog-photos" class="hidden" multiple accept="image/*">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500">点击或拖拽照片到此处上传</p>
+                            <p class="text-gray-400 text-xs mt-1">支持JPG、PNG、GIF格式，单张不超过10MB</p>
+                        </div>
+                    </div>
+                    <div id="photo-preview-container" class="mb-4 hidden">
+                        <label class="block text-gray-700 font-medium mb-2">照片预览</label>
+                        <div id="photo-preview" class="grid grid-cols-4 gap-2"></div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="travelog-content" class="block text-gray-700 font-medium mb-2">日志内容</label>
+                        <textarea id="travelog-content" rows="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="分享你的旅行故事..."></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="travelog-tags" class="block text-gray-700 font-medium mb-2">添加标签</label>
+                        <input type="text" id="travelog-tags" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入标签，用逗号分隔">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" id="cancel-travelog-btn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">取消</button>
+                        <button type="button" id="submit-travelog-btn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">发布日志</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // 标签点击效果
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    tags.forEach(t => {
+                        t.classList.remove('bg-primary', 'text-white');
+                        t.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    this.classList.add('bg-primary', 'text-white');
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                });
+            });
+
+            // 模态框控制
+            const createTravelogBtn = document.getElementById('create-travelog-btn');
+            const createTravelogModal = document.getElementById('create-travelog-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelTravelogBtn = document.getElementById('cancel-travelog-btn');
+            
+            function openModal() {
+                createTravelogModal.classList.remove('hidden');
+                createTravelogModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeModal() {
+                createTravelogModal.classList.add('hidden');
+                createTravelogModal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+            
+            if (createTravelogBtn && createTravelogModal) {
+                createTravelogBtn.addEventListener('click', openModal);
+                
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', closeModal);
+                }
+                
+                if (cancelTravelogBtn) {
+                    cancelTravelogBtn.addEventListener('click', closeModal);
+                }
+                
+                // 点击模态框外部关闭
+                createTravelogModal.addEventListener('click', function(e) {
+                    if (e.target === createTravelogModal) {
+                        closeModal();
+                    }
+                });
+            }
+
+            // 照片上传预览
+            const photoUpload = document.querySelector('#travelog-photos');
+            const photoUploadArea = document.querySelector('#travelog-photos').parentElement;
+            const photoPreviewContainer = document.getElementById('photo-preview-container');
+            const photoPreview = document.getElementById('photo-preview');
+            
+            function handlePhotoUpload() {
+                if (this.files && this.files.length > 0) {
+                    photoPreviewContainer.classList.remove('hidden');
+                    photoPreview.innerHTML = '';
+                    
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const photoItem = document.createElement('div');
+                            photoItem.className = 'relative group';
+                            photoItem.innerHTML = `
+                                <img src="${e.target.result}" alt="上传预览" class="w-full h-20 object-cover rounded-lg">
+                                <button type="button" class="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            `;
+                            photoPreview.appendChild(photoItem);
+                            
+                            // 删除照片
+                            const deleteBtn = photoItem.querySelector('button');
+                            deleteBtn.addEventListener('click', function() {
+                                photoItem.remove();
+                                if (photoPreview.children.length === 0) {
+                                    photoPreviewContainer.classList.add('hidden');
+                                }
+                            });
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+            
+            if (photoUpload && photoUploadArea) {
+                photoUpload.addEventListener('change', handlePhotoUpload);
+                photoUploadArea.addEventListener('click', function() {
+                    photoUpload.click();
+                });
+                
+                // 拖拽上传
+                photoUploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('border-primary');
+                });
+                
+                photoUploadArea.addEventListener('dragleave', function() {
+                    this.classList.remove('border-primary');
+                });
+                
+                photoUploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('border-primary');
+                    
+                    if (e.dataTransfer.files) {
+                        photoUpload.files = e.dataTransfer.files;
+                        handlePhotoUpload.call(photoUpload);
+                    }
+                });
+            }
+
+            // 提交日志
+            const submitTravelogBtn = document.getElementById('submit-travelog-btn');
+            
+            if (submitTravelogBtn) {
+                submitTravelogBtn.addEventListener('click', function() {
+                    const title = document.getElementById('travelog-title').value;
+                    const destination = document.getElementById('travelog-destination').value;
+                    const date = document.getElementById('travelog-date').value;
+                    const content = document.getElementById('travelog-content').value;
+                    
+                    if (!title || !destination || !date || !content) {
+                        alert('请填写完整的日志信息');
+                        return;
+                    }
+                    
+                    // 模拟提交成功
+                    alert('旅行日志发布成功！');
+                    closeModal();
+                    
+                    // 重置表单
+                    document.getElementById('travelog-form').reset();
+                    photoPreviewContainer.classList.add('hidden');
+                    photoPreview.innerHTML = '';
+                });
+            }
+
+            // 加载更多
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 加载中...';
+                    
+                    // 模拟加载延迟
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i> 已加载全部';
+                        this.disabled = true;
+                        this.classList.add('opacity-50');
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

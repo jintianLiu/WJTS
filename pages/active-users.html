@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活跃用户 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 活跃用户特定样式 */
+        .user-card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .user-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+        
+        .user-rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6b7280;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f3f4f6;
+        }
+        
+        .user-rank.top1 {
+            color: #f59e0b;
+            background-color: #fffbeb;
+        }
+        
+        .user-rank.top2 {
+            color: #6b7280;
+            background-color: #f9fafb;
+        }
+        
+        .user-rank.top3 {
+            color: #92400e;
+            background-color: #fff7ed;
+        }
+        
+        .user-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-bio {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-stats {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-stat {
+            display: flex;
+            align-items: center;
+            margin-right: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .user-stat i {
+            margin-right: 0.25rem;
+        }
+        
+        .user-tags {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .user-tag {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f9fafb;
+        }
+        
+        .leaderboard-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        
+        .leaderboard-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .leaderboard-tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        
+        .leaderboard-content-section {
+            display: none;
+        }
+        
+        .leaderboard-content-section.active {
+            display: block;
+        }
+        
+        .filter-container {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .filter-label {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">活跃用户</span>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="text-3xl font-bold">社区排行榜</h1>
+            <p class="text-gray-600 mt-2">探索我们社区中最活跃、最有贡献的成员</p>
+        </div>
+        
+        <!-- 排行榜标签页 -->
+        <div class="leaderboard-tabs">
+            <div class="leaderboard-tab active" data-tab="overall">总体排行</div>
+            <div class="leaderboard-tab" data-tab="posts">发帖之王</div>
+            <div class="leaderboard-tab" data-tab="replies">回复大师</div>
+            <div class="leaderboard-tab" data-tab="likes">点赞之星</div>
+            <div class="leaderboard-tab" data-tab="views">热门创作者</div>
+        </div>
+        
+        <!-- 标签页内容 -->
+        <div class="leaderboard-content">
+            <!-- 总体排行 -->
+            <div class="leaderboard-content-section active" id="overall">
+                <!-- 筛选选项 -->
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <span class="filter-label">时间范围:</span>
+                        <select class="filter-select">
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="year">今年</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <span class="filter-label">排序方式:</span>
+                        <select class="filter-select">
+                            <option value="activity" selected>活跃度</option>
+                            <option value="posts">发帖数</option>
+                            <option value="replies">回复数</option>
+                            <option value="join_date">加入时间</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 用户列表 -->
+                <div class="space-y-4">
+                    <!-- 用户1 - 第一名 -->
+                    <div class="user-card">
+                        <div class="user-rank top1">1</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=101" alt="旅行摄影师">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">旅行摄影师</h3>
+                            <p class="user-bio">用镜头记录世界的美丽，分享旅行的每一个精彩瞬间</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>256 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>1,283 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>8,563 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-03-15</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">摄影达人</span>
+                                <span class="user-tag">欧洲旅游</span>
+                                <span class="user-tag">亚洲旅游</span>
+                                <span class="user-tag">风光摄影</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户2 - 第二名 -->
+                    <div class="user-card">
+                        <div class="user-rank top2">2</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=102" alt="美食猎人">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">美食猎人</h3>
+                            <p class="user-bio">寻找全球各地的美食，分享最地道的当地料理和隐藏美食</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>198 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>2,456 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>7,342 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-05-28</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">美食达人</span>
+                                <span class="user-tag">日本料理</span>
+                                <span class="user-tag">意大利美食</span>
+                                <span class="user-tag">街边小吃</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户3 - 第三名 -->
+                    <div class="user-card">
+                        <div class="user-rank top3">3</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=103" alt="背包客指南">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">背包客指南</h3>
+                            <p class="user-bio">经济实惠的旅行攻略，教你如何用最少的钱体验最精彩的旅行</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>342 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>1,987 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>6,734 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-01-12</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">背包客</span>
+                                <span class="user-tag">省钱攻略</span>
+                                <span class="user-tag">徒步旅行</span>
+                                <span class="user-tag">露营</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户4 -->
+                    <div class="user-card">
+                        <div class="user-rank">4</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=104" alt="文化探索者">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">文化探索者</h3>
+                            <p class="user-bio">深入了解各国文化历史，探索世界不同文明的独特魅力</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>176 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>2,145 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>5,423 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-07-20</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">文化遗产</span>
+                                <span class="user-tag">历史古迹</span>
+                                <span class="user-tag">博物馆</span>
+                                <span class="user-tag">艺术展览</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户5 -->
+                    <div class="user-card">
+                        <div class="user-rank">5</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=105" alt="户外冒险家">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">户外冒险家</h3>
+                            <p class="user-bio">热爱挑战极限，分享徒步、攀岩、漂流等户外运动的刺激体验</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>213 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>1,765 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>4,876 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-04-08</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">徒步</span>
+                                <span class="user-tag">攀岩</span>
+                                <span class="user-tag">漂流</span>
+                                <span class="user-tag">极限运动</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户6 -->
+                    <div class="user-card">
+                        <div class="user-rank">6</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=106" alt="奢华旅行家">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">奢华旅行家</h3>
+                            <p class="user-bio">分享高端酒店体验、奢华旅行攻略，带你感受世界顶级服务</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>156 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>1,324 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>4,321 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2022-09-14</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">奢华酒店</span>
+                                <span class="user-tag">五星级</span>
+                                <span class="user-tag">私人定制</span>
+                                <span class="user-tag">高端体验</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-8">
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <span class="pagination-item">...</span>
+                    <a href="#" class="pagination-item">12</a>
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 发帖之王 -->
+            <div class="leaderboard-content-section" id="posts">
+                <!-- 内容与总体排行类似，但按发帖数量排序 -->
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <span class="filter-label">时间范围:</span>
+                        <select class="filter-select">
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="year">今年</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 发帖最多用户列表 -->
+                <div class="space-y-4">
+                    <!-- 用户1 - 发帖最多 -->
+                    <div class="user-card">
+                        <div class="user-rank top1">1</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=201" alt="环球旅行者">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">环球旅行者</h3>
+                            <p class="user-bio">已走过50+国家，分享各地旅行见闻和实用攻略</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>523 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>1,876 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>9,234 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2021-08-25</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">环球旅行</span>
+                                <span class="user-tag">旅行攻略</span>
+                                <span class="user-tag">多国经验</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 更多用户卡片... -->
+                    <!-- 这里可以添加更多发帖数量排名靠前的用户 -->
+                </div>
+            </div>
+            
+            <!-- 回复大师 -->
+            <div class="leaderboard-content-section" id="replies">
+                <!-- 类似结构，但显示回复最多的用户 -->
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <span class="filter-label">时间范围:</span>
+                        <select class="filter-select">
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="year">今年</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 回复最多用户列表 -->
+                <div class="space-y-4">
+                    <!-- 用户1 - 回复最多 -->
+                    <div class="user-card">
+                        <div class="user-rank top1">1</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=301" alt="热心回答">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">热心回答</h3>
+                            <p class="user-bio">乐于解答各类旅行问题，帮助旅行者解决实际困难</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>87 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>5,632 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>3,456 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2021-06-18</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">问答达人</span>
+                                <span class="user-tag">旅行顾问</span>
+                                <span class="user-tag">乐于助人</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 更多用户卡片... -->
+                </div>
+            </div>
+            
+            <!-- 点赞之星 -->
+            <div class="leaderboard-content-section" id="likes">
+                <!-- 类似结构，但显示获得点赞最多的用户 -->
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <span class="filter-label">时间范围:</span>
+                        <select class="filter-select">
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="year">今年</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 获得点赞最多用户列表 -->
+                <div class="space-y-4">
+                    <!-- 用户1 - 获得点赞最多 -->
+                    <div class="user-card">
+                        <div class="user-rank top1">1</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=401" alt="旅行博主">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">旅行博主</h3>
+                            <p class="user-bio">专业旅行内容创作者，分享高质量旅行笔记和精美照片</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>321 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-comment"></i>
+                                    <span>987 回复</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>23,456 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2020-11-30</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">知名博主</span>
+                                <span class="user-tag">摄影大神</span>
+                                <span class="user-tag">精品内容</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 更多用户卡片... -->
+                </div>
+            </div>
+            
+            <!-- 热门创作者 -->
+            <div class="leaderboard-content-section" id="views">
+                <!-- 类似结构，但显示内容被查看最多的用户 -->
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <span class="filter-label">时间范围:</span>
+                        <select class="filter-select">
+                            <option value="week">本周</option>
+                            <option value="month" selected>本月</option>
+                            <option value="year">今年</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 内容被查看最多用户列表 -->
+                <div class="space-y-4">
+                    <!-- 用户1 - 内容被查看最多 -->
+                    <div class="user-card">
+                        <div class="user-rank top1">1</div>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/100/100?random=501" alt="资深玩家">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name">资深玩家</h3>
+                            <p class="user-bio">分享深度游攻略和独家玩法，带你探索不一样的旅行体验</p>
+                            <div class="user-stats">
+                                <div class="user-stat">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>187 主题</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-eye"></i>
+                                    <span>156,789 总浏览</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>12,345 获得点赞</span>
+                                </div>
+                                <div class="user-stat">
+                                    <i class="far fa-calendar"></i>
+                                    <span>加入于 2020-05-12</span>
+                                </div>
+                            </div>
+                            <div class="user-tags">
+                                <span class="user-tag">深度游</span>
+                                <span class="user-tag">独家攻略</span>
+                                <span class="user-tag">旅行达人</span>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> 关注
+                            </button>
+                            <button class="btn btn-outline ml-2">
+                                <i class="fas fa-comment-alt"></i> 私信
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 更多用户卡片... -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签页切换
+            const tabs = document.querySelectorAll('.leaderboard-tab');
+            const contentSections = document.querySelectorAll('.leaderboard-content-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签页的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    tab.classList.add('active');
+                    
+                    // 获取当前标签页对应的内容区域ID
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // 隐藏所有内容区域
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    // 显示对应内容区域
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 关注按钮点击事件
+            const followButtons = document.querySelectorAll('.btn-secondary');
+            followButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.textContent.includes('关注')) {
+                        this.innerHTML = '<i class="fas fa-user-check"></i> 已关注';
+                        this.classList.remove('btn-secondary');
+                        this.classList.add('btn-primary');
+                    } else {
+                        this.innerHTML = '<i class="fas fa-user-plus"></i> 关注';
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-secondary');
+                    }
+                });
+            });
+            
+            // 筛选下拉框变化事件
+            const filterSelects = document.querySelectorAll('.filter-select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    // 这里可以添加筛选逻辑
+                    // 简单模拟刷新效果
+                    const currentTab = document.querySelector('.leaderboard-tab.active').getAttribute('data-tab');
+                    const currentSection = document.getElementById(currentTab);
+                    
+                    // 显示加载动画（简单实现）
+                    const userList = currentSection.querySelector('.space-y-4');
+                    const originalContent = userList.innerHTML;
+                    userList.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-gray-500"></i><p class="mt-2">正在加载...</p></div>';
+                    
+                    // 模拟网络请求延迟
+                    setTimeout(() => {
+                        userList.innerHTML = originalContent;
+                        // 更新关注按钮的事件绑定
+                        const newFollowButtons = userList.querySelectorAll('.btn-secondary');
+                        newFollowButtons.forEach(button => {
+                            button.addEventListener('click', function() {
+                                if (this.textContent.includes('关注')) {
+                                    this.innerHTML = '<i class="fas fa-user-check"></i> 已关注';
+                                    this.classList.remove('btn-secondary');
+                                    this.classList.add('btn-primary');
+                                } else {
+                                    this.innerHTML = '<i class="fas fa-user-plus"></i> 关注';
+                                    this.classList.remove('btn-primary');
+                                    this.classList.add('btn-secondary');
+                                }
+                            });
+                        });
+                    }, 800);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

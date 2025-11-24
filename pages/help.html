@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 帮助中心特定样式 */
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            background-color: #f9fafb;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .faq-question:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .faq-question h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .faq-toggle {
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .faq-answer-inner {
+            padding: 1rem;
+            line-height: 1.6;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+        
+        .help-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .help-category-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .help-category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .help-category-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+        
+        .help-category-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .help-category-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">登录/注册</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-in-alt mr-2"></i>登录
+                        </a>
+                        <a href="register.html" class="dropdown-item">
+                            <i class="fas fa-user-plus mr-2"></i>注册
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="login.html" class="mobile-nav-link">登录</a>
+            <a href="register.html" class="mobile-nav-link">注册</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="../index.html" class="breadcrumb-link">首页</a>
+            </li>
+            <li class="breadcrumb-item">
+                <span class="text-gray-900">帮助中心</span>
+            </li>
+        </nav>
+        
+        <!-- 帮助中心内容 -->
+        <div class="help-center">
+            <div class="help-header">
+                <h1 class="help-title">帮助中心</h1>
+                <p class="help-subtitle">获取使用帮助、常见问题解答和更多支持</p>
+            </div>
+            
+            <!-- 帮助搜索 -->
+            <div class="help-search-container">
+                <div class="help-search-inner">
+                    <i class="fas fa-search help-search-icon"></i>
+                    <input type="text" class="help-search-input" placeholder="搜索帮助内容...">
+                    <button class="help-search-btn">搜索</button>
+                </div>
+            </div>
+            
+            <!-- 帮助分类 -->
+            <div class="help-categories">
+                <div class="help-category-card">
+                    <div class="help-category-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 class="help-category-title">账号与注册</h3>
+                    <p class="help-category-description">了解如何创建账号、找回密码和管理个人信息</p>
+                    <a href="#account-faq" class="text-blue-600 hover:underline">查看详情 <i class="fas fa-chevron-right ml-1"></i></a>
+                </div>
+                
+                <div class="help-category-card">
+                    <div class="help-category-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="help-category-title">发帖与互动</h3>
+                    <p class="help-category-description">学习如何创建帖子、回复评论和与其他用户互动</p>
+                    <a href="#post-faq" class="text-blue-600 hover:underline">查看详情 <i class="fas fa-chevron-right ml-1"></i></a>
+                </div>
+                
+                <div class="help-category-card">
+                    <div class="help-category-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="help-category-title">社区规范</h3>
+                    <p class="help-category-description">了解社区规则、内容标准和违规处理方式</p>
+                    <a href="#community-faq" class="text-blue-600 hover:underline">查看详情 <i class="fas fa-chevron-right ml-1"></i></a>
+                </div>
+                
+                <div class="help-category-card">
+                    <div class="help-category-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="help-category-title">常见问题</h3>
+                    <p class="help-category-description">浏览最常见的问题和解答</p>
+                    <a href="#common-faq" class="text-blue-600 hover:underline">查看详情 <i class="fas fa-chevron-right ml-1"></i></a>
+                </div>
+            </div>
+            
+            <!-- 常见问题解答 -->
+            <section class="help-section" id="account-faq">
+                <h2 class="section-title">账号与注册</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何创建新账号？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>创建新账号非常简单，只需点击网站右上角的"注册"按钮，然后按照提示填写您的用户名、邮箱地址和设置密码即可。完成注册后，您需要验证邮箱地址才能使用所有功能。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>忘记密码怎么办？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>如果您忘记了密码，请点击登录页面上的"忘记密码"链接，然后输入您注册时使用的邮箱地址。系统会向该邮箱发送重置密码的链接，您可以通过该链接设置新的密码。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何修改个人资料？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>登录后，点击右上角的用户头像，选择"个人设置"进入个人资料编辑页面。在这里，您可以修改头像、昵称、个性签名、所在地等信息。修改完成后，点击"保存"按钮即可。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何绑定/解绑第三方账号？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在"个人设置"页面中，选择"账号安全"选项卡，可以看到第三方账号绑定选项。点击相应的绑定按钮，按照提示完成授权即可绑定。如需解绑，点击"解绑"按钮并确认操作。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="help-section" id="post-faq">
+                <h2 class="section-title">发帖与互动</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何发布新帖子？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>登录后，点击网站右下角的"发布帖子"按钮或页面顶部的"发帖"链接。在弹出的发布窗口中，选择适当的分类，填写标题和内容，您还可以上传图片或附件。完成后点击"发布"按钮即可。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何回复帖子或评论？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在帖子详情页面，滚动到页面底部的评论区，在评论框中输入您的回复内容，然后点击"发表评论"按钮。如需回复他人的评论，点击该评论下方的"回复"按钮即可。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何点赞、收藏帖子？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在帖子列表或帖子详情页面，点击帖子下方的点赞图标即可点赞。点击收藏图标可以将帖子添加到您的收藏夹中。您可以在个人中心查看所有收藏的帖子。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何编辑或删除自己的帖子？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在您发布的帖子详情页面，点击右上角的"编辑"按钮可以修改帖子内容。点击"删除"按钮可以删除帖子。请注意，删除操作不可撤销，且帖子发布24小时后，删除权限可能会受到限制。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="help-section" id="community-faq">
+                <h2 class="section-title">社区规范</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>社区有哪些基本规则？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>我们的社区规则包括：尊重他人、禁止发布违法内容、禁止广告和垃圾信息、禁止人身攻击、保护个人隐私等。详细规则请查看我们的<a href="terms.html" class="text-blue-600 hover:underline">使用条款</a>页面。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何举报违规内容？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在帖子或评论的右上角，点击"更多"按钮（三个点），然后选择"举报"选项。在弹出的举报窗口中，选择适当的举报原因并填写详细说明，最后点击"提交"按钮。我们的管理员会尽快处理您的举报。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>账号被限制了怎么办？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>如果您的账号因违规被限制，系统会向您的注册邮箱发送详细说明。您可以通过<a href="contact.html" class="text-blue-600 hover:underline">联系我们</a>页面提交申诉，说明情况并承诺遵守社区规则，我们会根据具体情况进行处理。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="help-section" id="common-faq">
+                <h2 class="section-title">常见问题</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何搜索帖子或用户？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>在网站顶部的搜索框中输入关键词，然后点击搜索按钮或按回车键。您可以使用高级搜索功能筛选搜索结果，如按时间、分类、作者等条件进行筛选。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何关注其他用户？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>访问其他用户的个人主页，点击"关注"按钮即可。关注后，您可以在个人中心查看该用户的最新动态。您也可以随时取消关注。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>如何获取和使用积分？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>通过发布帖子、回复评论、登录签到等活动可以获取积分。积分可以用于兑换网站特权、参与特殊活动或提升用户等级。详细的积分规则可以在个人中心的"积分记录"页面查看。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>网站在移动端如何使用？</h3>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                <p>我们的网站支持响应式设计，可以在手机、平板等移动设备上正常访问。您也可以下载我们的移动应用获得更好的使用体验，应用可在各大应用商店搜索"无境探索"下载。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 获取更多帮助 -->
+            <section class="help-section get-more-help">
+                <div class="get-help-card">
+                    <h2>需要更多帮助？</h2>
+                    <p>如果您的问题没有在帮助中心找到答案，或者您有其他疑问，请通过以下方式联系我们：</p>
+                    <div class="help-options">
+                        <a href="contact.html" class="help-option-btn">
+                            <i class="fas fa-envelope"></i>
+                            <span>联系客服</span>
+                        </a>
+                        <a href="feedback.html" class="help-option-btn">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>意见反馈</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ 折叠功能
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // 帮助搜索功能
+            const searchInput = document.querySelector('.help-search-input');
+            const searchBtn = document.querySelector('.help-search-btn');
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm) {
+                    // 简单的搜索实现：高亮显示包含搜索词的FAQ
+                    const allFaqTexts = document.querySelectorAll('.faq-question h3, .faq-answer-inner');
+                    
+                    allFaqTexts.forEach(text => {
+                        const originalText = text.dataset.originalText || text.innerHTML;
+                        text.dataset.originalText = originalText;
+                        
+                        const highlightedText = originalText.replace(
+                            new RegExp(`(${searchTerm})`, 'gi'),
+                            '<span class="bg-yellow-200">$1</span>'
+                        );
+                        
+                        text.innerHTML = highlightedText;
+                    });
+                    
+                    // 滚动到第一个匹配项
+                    const firstMatch = document.querySelector('.bg-yellow-200').closest('.faq-item');
+                    if (firstMatch) {
+                        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstMatch.classList.add('active');
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

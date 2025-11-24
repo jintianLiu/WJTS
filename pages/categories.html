@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类浏览 - 无境探索论坛</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        'primary-light': '#3b82f6',
+                        'primary-dark': '#1d4ed8',
+                        secondary: '#64748b',
+                        accent: '#ec4899',
+                        // 分类专用颜色
+                        'category-asia': '#0ea5e9',
+                        'category-europe': '#8b5cf6',
+                        'category-namerica': '#f97316',
+                        'category-samerica': '#10b981',
+                        'category-africa': '#ef4444',
+                        'category-oceania': '#f59e0b',
+                        'category-tips': '#6366f1',
+                        'category-activities': '#ec4899'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            /* 分类卡片专用样式 */
+            .category-gradient {
+                @apply bg-gradient-to-br;
+            }
+            .category-card-hover {
+                @apply transition-all duration-500 hover:shadow-lg hover:-translate-y-2;
+            }
+            .category-badge::before {
+                content: '';
+                @apply absolute left-0 top-0 w-2 h-full rounded-l-md;
+            }
+            .sidebar-category-active {
+                @apply bg-primary/10 text-primary border-r-4 border-primary;
+            }
+        }
+    </style>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter text-gray-800">
+    <!-- 导航栏 -->
+    <header class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-8 w-8 rounded-full object-cover">
+                    <span class="text-xl font-bold text-primary">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="搜索旅行目的地、攻略或用户..." class="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- 导航链接 -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-primary transition-colors">首页</a>
+                    <a href="hot.html" class="text-gray-600 hover:text-primary transition-colors">热门话题</a>
+                    <a href="latest.html" class="text-gray-600 hover:text-primary transition-colors">最新发布</a>
+                    <a href="categories.html" class="text-primary font-medium">分类</a>
+                    <a href="travel-log.html" class="text-gray-600 hover:text-primary transition-colors">旅行日志</a>
+                    <a href="travel-tools.html" class="text-gray-600 hover:text-primary transition-colors">旅行工具</a>
+                </nav>
+                
+                <!-- 用户菜单 -->
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-full transition-colors relative">
+                        <i class="far fa-bell"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 focus:outline-none group">
+                            <img src="https://picsum.photos/40/40?random=user" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-transparent group-hover:border-primary transition-all">
+                            <span class="hidden md:inline text-sm font-medium">旅行者</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="md:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端搜索栏 -->
+            <div class="md:hidden pb-4">
+                <div class="relative w-full">
+                    <input type="text" placeholder="搜索旅行目的地、攻略或用户..." class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 移动端菜单 -->
+    <div class="md:hidden bg-white shadow-md fixed inset-0 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="font-bold text-lg">菜单</h3>
+            <button class="p-2 text-gray-600 hover:text-primary">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="../index.html" class="block py-2 text-gray-600 hover:text-primary">首页</a></li>
+                <li><a href="hot.html" class="block py-2 text-gray-600 hover:text-primary">热门话题</a></li>
+                <li><a href="latest.html" class="block py-2 text-gray-600 hover:text-primary">最新发布</a></li>
+                <li><a href="categories.html" class="block py-2 text-primary font-medium">分类</a></li>
+                <li><a href="travel-log.html" class="block py-2 text-gray-600 hover:text-primary">旅行日志</a></li>
+                <li><a href="travel-tools.html" class="block py-2 text-gray-600 hover:text-primary">旅行工具</a></li>
+                <li class="border-t pt-4">
+                    <a href="profile.html" class="flex items-center space-x-2 text-gray-600 hover:text-primary">
+                        <img src="https://picsum.photos/40/40?random=user" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li><a href="settings.html" class="block py-2 text-gray-600 hover:text-primary">设置</a></li>
+                <li><a href="login.html" class="block py-2 text-gray-600 hover:text-primary">退出登录</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!-- 页面标题栏 -->
+    <div class="bg-gradient-to-r from-primary to-primary-light text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">全部分类</h1>
+                    <p class="opacity-90">按兴趣浏览，发现更多精彩内容</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容 -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 侧边栏 -->
+            <aside class="hidden lg:block lg:w-64 space-y-6">
+                <!-- 分类导航 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">分类导航</h3>
+                    </div>
+                    <div class="p-2">
+                        <a href="#destinations" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-3"></i>
+                                <span>目的地</span>
+                            </div>
+                            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">12</span>
+                        </a>
+                        <a href="#travel-types" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-suitcase-rolling mr-3"></i>
+                                <span>旅行方式</span>
+                            </div>
+                            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">8</span>
+                        </a>
+                        <a href="#activities" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-hiking mr-3"></i>
+                                <span>活动体验</span>
+                            </div>
+                            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">15</span>
+                        </a>
+                        <a href="#tips" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-lightbulb mr-3"></i>
+                                <span>旅行贴士</span>
+                            </div>
+                            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">10</span>
+                        </a>
+                        <a href="#special" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-star mr-3"></i>
+                                <span>特色专题</span>
+                            </div>
+                            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">5</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 热门标签 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">热门标签</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-wrap gap-2">
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">日本</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">泰国</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">欧洲</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">美食</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">摄影</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">自驾游</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">背包客</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">徒步</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">海滩</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">民宿</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">签证</a>
+                            <a href="#" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors">机票</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 推荐群组 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">推荐群组</h3>
+                    </div>
+                    <div class="p-3">
+                        <div class="space-y-3">
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition-colors">
+                                <img src="https://picsum.photos/50/50?random=group1" alt="日本旅行" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="font-medium text-gray-800">日本旅行爱好者</p>
+                                    <p class="text-xs text-gray-500">3,542 成员</p>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition-colors">
+                                <img src="https://picsum.photos/50/50?random=group2" alt="背包客" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="font-medium text-gray-800">环球背包客</p>
+                                    <p class="text-xs text-gray-500">2,876 成员</p>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition-colors">
+                                <img src="https://picsum.photos/50/50?random=group3" alt="美食探索" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="font-medium text-gray-800">环球美食探索</p>
+                                    <p class="text-xs text-gray-500">1,954 成员</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="#" class="text-sm text-primary hover:text-primary-dark font-medium">查看更多</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- 主内容区 -->
+            <div class="flex-1">
+                <!-- 面包屑导航 -->
+                <nav class="flex items-center text-sm text-gray-500 mb-6">
+                    <a href="../index.html" class="hover:text-primary transition-colors">首页</a>
+                    <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                    <span class="text-gray-800 font-medium">分类</span>
+                </nav>
+                
+                <!-- 目的地分类 -->
+                <section id="destinations" class="mb-12">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-map-marker-alt text-primary mr-3"></i>
+                        目的地
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- 亚洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group category-card-hover category-card fade-in relative">
+                            <div class="absolute top-3 left-3 px-3 py-1 bg-category-asia text-white rounded-full text-xs font-medium z-10">热门</div>
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=asia" alt="亚洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">亚洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>1,245 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#japan" class="px-3 py-1 bg-category-asia/10 hover:bg-category-asia/20 text-category-asia text-xs rounded-full transition-colors">日本</a>
+                                    <a href="#thailand" class="px-3 py-1 bg-category-asia/10 hover:bg-category-asia/20 text-category-asia text-xs rounded-full transition-colors">泰国</a>
+                                    <a href="#korea" class="px-3 py-1 bg-category-asia/10 hover:bg-category-asia/20 text-category-asia text-xs rounded-full transition-colors">韩国</a>
+                                    <a href="#singapore" class="px-3 py-1 bg-category-asia/10 hover:bg-category-asia/20 text-category-asia text-xs rounded-full transition-colors">新加坡</a>
+                                    <a href="#more-asia" class="px-3 py-1 bg-category-asia/10 hover:bg-category-asia/20 text-category-asia text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 欧洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group category-card-hover category-card fade-in">
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=europe" alt="欧洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">欧洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>876 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#france" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">法国</a>
+                                    <a href="#italy" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">意大利</a>
+                                    <a href="#spain" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">西班牙</a>
+                                    <a href="#uk" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">英国</a>
+                                    <a href="#more-europe" class="px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 北美洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=northamerica" alt="北美洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">北美洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>654 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#usa" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">美国</a>
+                                    <a href="#canada" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">加拿大</a>
+                                    <a href="#mexico" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">墨西哥</a>
+                                    <a href="#more-northamerica" class="px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 大洋洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=oceania" alt="大洋洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">大洋洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>321 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#australia" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">澳大利亚</a>
+                                    <a href="#newzealand" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">新西兰</a>
+                                    <a href="#fiji" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">斐济</a>
+                                    <a href="#more-oceania" class="px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 南美洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=southamerica" alt="南美洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">南美洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>234 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#brazil" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">巴西</a>
+                                    <a href="#argentina" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">阿根廷</a>
+                                    <a href="#peru" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">秘鲁</a>
+                                    <a href="#more-southamerica" class="px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 非洲 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-48">
+                                <img src="https://picsum.photos/600/400?random=africa" alt="非洲" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">非洲</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>156 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="#southafrica" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">南非</a>
+                                    <a href="#egypt" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">埃及</a>
+                                    <a href="#kenya" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs rounded-full transition-colors">肯尼亚</a>
+                                    <a href="#more-africa" class="px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs rounded-full transition-colors">更多</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 旅行方式分类 -->
+                <section id="travel-types" class="mb-12">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-suitcase-rolling text-primary mr-3"></i>
+                        旅行方式
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- 自助游 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-40">
+                                <img src="https://picsum.photos/600/300?random=selfguided" alt="自助游" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">自助游</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>1,567 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 自驾游 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-40">
+                                <img src="https://picsum.photos/600/300?random=roadtrip" alt="自驾游" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">自驾游</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>892 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 背包客 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-40">
+                                <img src="https://picsum.photos/600/300?random=backpacker" alt="背包客" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                                    <div class="p-4 text-white">
+                                        <h3 class="text-xl font-bold mb-1">背包客</h3>
+                                        <div class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i>
+                                            <span>745 篇内容</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 活动体验分类 -->
+                <section id="activities" class="mb-12">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-hiking text-primary mr-3"></i>
+                        活动体验
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- 美食探索 -->
+                        <a href="#food" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-4 flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mr-4 group-hover:bg-red-200 transition-colors">
+                                    <i class="fas fa-utensils text-red-500"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">美食探索</h3>
+                                    <p class="text-xs text-gray-500">892 篇内容</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- 户外探险 -->
+                        <a href="#adventure" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-4 flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
+                                    <i class="fas fa-mountain text-green-500"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">户外探险</h3>
+                                    <p class="text-xs text-gray-500">765 篇内容</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- 文化体验 -->
+                        <a href="#culture" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-4 flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mr-4 group-hover:bg-yellow-200 transition-colors">
+                                    <i class="fas fa-landmark text-yellow-500"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">文化体验</h3>
+                                    <p class="text-xs text-gray-500">643 篇内容</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- 摄影创作 -->
+                        <a href="#photography" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-4 flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4 group-hover:bg-purple-200 transition-colors">
+                                    <i class="fas fa-camera text-purple-500"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">摄影创作</h3>
+                                    <p class="text-xs text-gray-500">521 篇内容</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+                
+                <!-- 旅行贴士分类 -->
+                <section id="tips" class="mb-12">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-lightbulb text-primary mr-3"></i>
+                        旅行贴士
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- 签证指南 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-5">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mr-4 shrink-0 group-hover:bg-blue-200 transition-colors">
+                                        <i class="fas fa-passport text-blue-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-lg text-gray-800 mb-2">签证指南</h3>
+                                        <p class="text-gray-600 text-sm mb-3">各国签证申请流程、所需材料及注意事项，助您顺利获取签证。</p>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-500">324 篇指南</span>
+                                            <span class="text-xs text-primary font-medium">查看全部 →</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 机票攻略 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-5">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mr-4 shrink-0 group-hover:bg-green-200 transition-colors">
+                                        <i class="fas fa-plane text-green-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-lg text-gray-800 mb-2">机票攻略</h3>
+                                        <p class="text-gray-600 text-sm mb-3">如何购买便宜机票、最佳预订时间、航空公司选择等实用技巧。</p>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-500">289 篇攻略</span>
+                                            <span class="text-xs text-primary font-medium">查看全部 →</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 住宿指南 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="p-5">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center mr-4 shrink-0 group-hover:bg-yellow-200 transition-colors">
+                                        <i class="fas fa-bed text-yellow-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-lg text-gray-800 mb-2">住宿指南</h3>
+                                        <p class="text-gray-600 text-sm mb-3">酒店预订技巧、民宿选择指南、青年旅舍体验以及特色住宿推荐。</p>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-500">256 篇指南</span>
+                                            <span class="text-xs text-primary font-medium">查看全部 →</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 特色专题 -->
+                <section id="special">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-star text-primary mr-3"></i>
+                        特色专题
+                    </h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- 疫情后旅行指南 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-56">
+                                <img src="https://picsum.photos/800/400?random=postcovid" alt="疫情后旅行指南" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6 text-white">
+                                    <span class="inline-block px-3 py-1 bg-red-500 rounded-full text-sm font-medium mb-3">热门专题</span>
+                                    <h3 class="text-2xl font-bold mb-2">疫情后旅行指南</h3>
+                                    <p class="text-gray-200 mb-3 line-clamp-2">全面解析疫情后各国旅行政策、安全防护措施、预订建议和热门目的地推荐。</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i> 56 篇文章
+                                        </span>
+                                        <span class="text-sm opacity-90">更新于 2024-03</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2024年度旅行趋势 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover category-card fade-in">
+                            <div class="relative h-56">
+                                <img src="https://picsum.photos/800/400?random=trends2024" alt="2024年度旅行趋势" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6 text-white">
+                                    <span class="inline-block px-3 py-1 bg-blue-500 rounded-full text-sm font-medium mb-3">全新专题</span>
+                                    <h3 class="text-2xl font-bold mb-2">2024年度旅行趋势</h3>
+                                    <p class="text-gray-200 mb-3 line-clamp-2">探索2024年最热门的旅行目的地、新兴旅行方式和流行的旅行体验活动。</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="flex items-center text-sm opacity-90">
+                                            <i class="fas fa-file-alt mr-1"></i> 42 篇文章
+                                        </span>
+                                        <span class="text-sm opacity-90">更新于 2024-04</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 浮动发布按钮 -->
+    <button class="fixed bottom-8 right-8 bg-primary hover:bg-primary-dark text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="w-8 h-8 rounded-full mr-2">
+                    无境探索
+                </h3>
+                    <p class="text-gray-400 mb-4">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-weibo text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-weixin text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
+                        <li><a href="hot.html" class="text-gray-400 hover:text-primary transition-colors">热门话题</a></li>
+                        <li><a href="latest.html" class="text-gray-400 hover:text-primary transition-colors">最新发布</a></li>
+                        <li><a href="categories.html" class="text-primary hover:text-primary-light transition-colors">全部分类</a></li>
+                        <li><a href="travel-log.html" class="text-gray-400 hover:text-white transition-colors">旅行日志</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">关于我们</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">论坛介绍</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white transition-colors">使用条款</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
+                        <li><a href="help.html" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">订阅更新</h4>
+                    <p class="text-gray-400 mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary flex-1 bg-gray-800 border-gray-700 text-white">
+                        <button type="submit" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-r-md transition-colors">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 mb-4 md:mb-0">&copy; 2024 无境探索论坛. 保留所有权利.</p>
+                <div class="flex space-x-6">
+                    <a href="terms.html" class="text-gray-500 hover:text-white transition-colors text-sm">使用条款</a>
+                    <a href="privacy.html" class="text-gray-500 hover:text-white transition-colors text-sm">隐私政策</a>
+                    <a href="cookies.html" class="text-gray-500 hover:text-white transition-colors text-sm">Cookie 政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.querySelector('.md\:hidden.p-2.text-gray-600').addEventListener('click', function() {
+            const mobileMenu = document.querySelector('.md\:hidden.bg-white.shadow-md');
+            mobileMenu.classList.toggle('translate-x-full');
+        });
+        
+        // 关闭移动端菜单
+        document.querySelector('.md\:hidden.p-2.text-gray-600.hover\:text-primary button').addEventListener('click', function() {
+            const mobileMenu = document.querySelector('.md\:hidden.bg-white.shadow-md');
+            mobileMenu.classList.add('translate-x-full');
+        });
+    </script>
+</body>
+</html>

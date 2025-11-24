@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>私信 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 私信页面特定样式 */
+        .messages-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 1rem;
+            height: calc(100vh - 130px);
+        }
+        
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-sidebar {
+                display: none;
+            }
+            
+            .chat-sidebar.active {
+                display: block;
+                z-index: 100;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: white;
+                height: 100vh;
+            }
+            
+            .chat-content {
+                height: calc(100vh - 130px);
+            }
+            
+            .chat-header-back {
+                display: flex !important;
+            }
+        }
+        
+        /* 聊天侧边栏 */
+        .chat-sidebar {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .chat-action-btn:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+        
+        .chat-search {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .chat-search-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            background-color: #f9fafb;
+        }
+        
+        .chat-search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .chat-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .chat-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .chat-tab:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+        
+        .chat-tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .chat-item {
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f3f4f6;
+            position: relative;
+        }
+        
+        .chat-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        .chat-item.active {
+            background-color: #eff6ff;
+        }
+        
+        .chat-item-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .chat-item-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-item-name {
+            font-weight: 500;
+            color: #111827;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-item-time {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            white-space: nowrap;
+        }
+        
+        .chat-item-preview {
+            font-size: 0.875rem;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .chat-item-preview i {
+            font-size: 0.75rem;
+        }
+        
+        .chat-item-unread {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            text-align: center;
+        }
+        
+        .chat-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .chat-status.online {
+            background-color: #10b981;
+        }
+        
+        .chat-status.offline {
+            background-color: #9ca3af;
+        }
+        
+        .chat-status.away {
+            background-color: #f59e0b;
+        }
+        
+        /* 聊天内容区 */
+        .chat-content {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 0.875rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+        
+        .chat-header-back {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #4b5563;
+        }
+        
+        .chat-header-back:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .chat-header-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-header-info {
+            flex: 1;
+        }
+        
+        .chat-header-name {
+            font-weight: 500;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .chat-header-status {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .chat-header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+        
+        .chat-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+        }
+        
+        .chat-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .chat-empty-text {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .chat-empty-subtext {
+            font-size: 0.875rem;
+            text-align: center;
+            max-width: 300px;
+        }
+        
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            max-width: 80%;
+        }
+        
+        .chat-message.me {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .chat-message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .chat-message-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .chat-message-content {
+            max-width: 100%;
+        }
+        
+        .chat-message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        
+        .chat-message.other .chat-message-bubble {
+            background-color: white;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-message.me .chat-message-bubble {
+            background-color: #2563eb;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-message-text {
+            line-height: 1.4;
+        }
+        
+        .chat-message-image {
+            width: 100%;
+            border-radius: 12px;
+            max-width: 300px;
+            object-fit: cover;
+        }
+        
+        .chat-message-time {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        
+        .chat-message.other .chat-message-time {
+            color: #9ca3af;
+            text-align: left;
+            margin-left: 44px; /* 头像宽度 + 间距 */
+        }
+        
+        .chat-message.me .chat-message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .chat-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: white;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+        
+        .chat-input-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .chat-input-tool {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .chat-input-tool:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .chat-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem 4rem 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 24px;
+            resize: none;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            min-height: 44px;
+            max-height: 120px;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .chat-send-btn {
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: #3b82f6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chat-send-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .chat-send-btn:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+        
+        /* 新消息弹窗 */
+        .new-message-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .new-message-modal.active {
+            display: flex;
+        }
+        
+        .new-message-container {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .new-message-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .new-message-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .new-message-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #4b5563;
+        }
+        
+        .new-message-close:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .new-message-search {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .new-message-search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+        
+        .new-message-search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .new-message-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .new-message-item {
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .new-message-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .new-message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .new-message-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .new-message-info {
+            flex: 1;
+        }
+        
+        .new-message-name {
+            font-weight: 500;
+            color: #111827;
+        }
+        
+        .new-message-status {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-asste/image/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="messages.html" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i>私信
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="messages.html" class="mobile-nav-link">私信</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">私信</span>
+        </div>
+        
+        <!-- 私信容器 -->
+        <div class="messages-container">
+            <!-- 聊天侧边栏 -->
+            <div class="chat-sidebar" id="chatSidebar">
+                <!-- 侧边栏头部 -->
+                <div class="chat-sidebar-header">
+                    <h2 class="chat-sidebar-title">消息</h2>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" id="newMessageBtn" title="新消息">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="chat-action-btn" title="更多">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="chat-search">
+                    <input type="text" placeholder="搜索消息..." class="chat-search-input">
+                </div>
+                
+                <!-- 聊天标签页 -->
+                <div class="chat-tabs">
+                    <div class="chat-tab active">所有消息</div>
+                    <div class="chat-tab">未读</div>
+                    <div class="chat-tab">重要</div>
+                </div>
+                
+                <!-- 聊天列表 -->
+                <div class="chat-list">
+                    <!-- 聊天项 -->
+                    <div class="chat-item active" data-user-id="1">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                            <div class="chat-status online"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">李明</div>
+                                <div class="chat-item-time">12:30</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <i class="fas fa-check-double"></i>
+                                <span>好的，我们下周一见！</span>
+                            </div>
+                        </div>
+                        <div class="chat-item-unread">3</div>
+                    </div>
+                    
+                    <div class="chat-item" data-user-id="2">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user2.jpg" alt="王华">
+                            <div class="chat-status offline"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">王华</div>
+                                <div class="chat-item-time">昨天</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <span>你推荐的那个餐厅真的很不错！</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-item" data-user-id="3">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user3.jpg" alt="张小红">
+                            <div class="chat-status away"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">张小红</div>
+                                <div class="chat-item-time">昨天</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <i class="fas fa-check"></i>
+                                <span>谢谢你分享的旅行攻略</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-item" data-user-id="4">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user4.jpg" alt="赵刚">
+                            <div class="chat-status online"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">赵刚</div>
+                                <div class="chat-item-time">3天前</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <span>你去云南的照片拍得真好看！</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-item" data-user-id="5">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user5.jpg" alt="孙雨">
+                            <div class="chat-status offline"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">孙雨</div>
+                                <div class="chat-item-time">上周</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <span>我们什么时候组织一次线下聚会？</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-item" data-user-id="6">
+                        <div class="chat-item-avatar">
+                            <img src="../forum-assets/images/avatars/user6.jpg" alt="周强">
+                            <div class="chat-status offline"></div>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-header">
+                                <div class="chat-item-name">周强</div>
+                                <div class="chat-item-time">2周前</div>
+                            </div>
+                            <div class="chat-item-preview">
+                                <span>关于西藏旅行，我有几个问题想请教你</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聊天内容区 -->
+            <div class="chat-content" id="chatContent">
+                <!-- 聊天头部 -->
+                <div class="chat-header">
+                    <button class="chat-header-back" id="backToChatList">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="chat-header-avatar">
+                        <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                        <div class="chat-status online"></div>
+                    </div>
+                    <div class="chat-header-info">
+                        <div class="chat-header-name">李明</div>
+                        <div class="chat-header-status">在线</div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="chat-action-btn" title="查看资料">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <button class="chat-action-btn" title="更多选项">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 聊天主体 -->
+                <div class="chat-body">
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- 聊天消息 -->
+                        <div class="chat-message other">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">嗨，你好！看到你最近去了青海湖，感觉怎么样？</div>
+                                </div>
+                                <div class="chat-message-time">昨天 14:20</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message me">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/me.jpg" alt="我">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">你好！青海湖真的太美了，湖水清澈湛蓝，周围的油菜花田也开得很漂亮。强烈推荐你去一次！</div>
+                                </div>
+                                <div class="chat-message-time">昨天 14:35</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message other">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">太好了！我正打算下个月去西北自驾游，你有什么路线推荐吗？</div>
+                                </div>
+                                <div class="chat-message-time">昨天 14:40</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message me">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/me.jpg" alt="我">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">我走的是西宁-青海湖-茶卡盐湖-德令哈-敦煌这条线，大概用了7天时间。风景非常多样化，从湖泊到沙漠都能体验到。</div>
+                                </div>
+                                <div class="chat-message-time">昨天 14:50</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message me">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/me.jpg" alt="我">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">我可以把详细的攻略发给你，包括住宿和美食推荐。</div>
+                                    <img src="../forum-assets/images/chat-image.jpg" alt="青海湖风景" class="chat-message-image mt-2">
+                                </div>
+                                <div class="chat-message-time">昨天 14:52</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message other">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">太棒了！照片真漂亮！谢谢你的分享。如果方便的话，我们可以约个时间见面聊吗？我想请教一些旅行细节。</div>
+                                </div>
+                                <div class="chat-message-time">今天 10:15</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message me">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/me.jpg" alt="我">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">没问题啊，我这周末有空，我们可以找个咖啡厅见面聊。</div>
+                                </div>
+                                <div class="chat-message-time">今天 10:30</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-message other">
+                            <div class="chat-message-avatar">
+                                <img src="../forum-assets/images/avatars/user1.jpg" alt="李明">
+                            </div>
+                            <div class="chat-message-content">
+                                <div class="chat-message-bubble">
+                                    <div class="chat-message-text">好的，我们下周一见！</div>
+                                </div>
+                                <div class="chat-message-time">今天 12:30</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 聊天底部输入区 -->
+                <div class="chat-footer">
+                    <div class="chat-input-container">
+                        <div class="chat-input-tools">
+                            <button class="chat-input-tool" title="表情">
+                                <i class="far fa-smile"></i>
+                            </button>
+                            <button class="chat-input-tool" title="图片">
+                                <i class="far fa-image"></i>
+                            </button>
+                            <button class="chat-input-tool" title="文件">
+                                <i class="far fa-file"></i>
+                            </button>
+                        </div>
+                        <div class="chat-input-wrapper">
+                            <textarea class="chat-input" placeholder="输入消息..." id="chatInput"></textarea>
+                            <button class="chat-send-btn" id="sendMessageBtn" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新消息弹窗 -->
+    <div class="new-message-modal" id="newMessageModal">
+        <div class="new-message-container">
+            <div class="new-message-header">
+                <h3 class="new-message-title">新消息</h3>
+                <button class="new-message-close" id="closeNewMessage">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="new-message-search">
+                <input type="text" placeholder="搜索用户..." class="new-message-search-input">
+            </div>
+            <div class="new-message-list">
+                <div class="new-message-item" data-user-id="7">
+                    <div class="new-message-avatar">
+                        <img src="../forum-assets/images/avatars/user7.jpg" alt="刘芳">
+                    </div>
+                    <div class="new-message-info">
+                        <div class="new-message-name">刘芳</div>
+                        <div class="new-message-status">上次在线: 今天</div>
+                    </div>
+                </div>
+                
+                <div class="new-message-item" data-user-id="8">
+                    <div class="new-message-avatar">
+                        <img src="../forum-assets/images/avatars/user8.jpg" alt="陈明">
+                    </div>
+                    <div class="new-message-info">
+                        <div class="new-message-name">陈明</div>
+                        <div class="new-message-status">上次在线: 昨天</div>
+                    </div>
+                </div>
+                
+                <div class="new-message-item" data-user-id="9">
+                    <div class="new-message-avatar">
+                        <img src="../forum-assets/images/avatars/user9.jpg" alt="吴佳">
+                    </div>
+                    <div class="new-message-info">
+                        <div class="new-message-name">吴佳</div>
+                        <div class="new-message-status">上次在线: 3天前</div>
+                    </div>
+                </div>
+                
+                <div class="new-message-item" data-user-id="10">
+                    <div class="new-message-avatar">
+                        <img src="../forum-assets/images/avatars/user10.jpg" alt="郑阳">
+                    </div>
+                    <div class="new-message-info">
+                        <div class="new-message-name">郑阳</div>
+                        <div class="new-message-status">上次在线: 上周</div>
+                    </div>
+                </div>
+                
+                <div class="new-message-item" data-user-id="11">
+                    <div class="new-message-avatar">
+                        <img src="../forum-assets/images/avatars/user11.jpg" alt="钱晨">
+                    </div>
+                    <div class="new-message-info">
+                        <div class="new-message-name">钱晨</div>
+                        <div class="new-message-status">上次在线: 2周前</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const chatSidebar = document.getElementById('chatSidebar');
+            const chatContent = document.getElementById('chatContent');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatItems = document.querySelectorAll('.chat-item');
+            const backToChatList = document.getElementById('backToChatList');
+            const newMessageBtn = document.getElementById('newMessageBtn');
+            const newMessageModal = document.getElementById('newMessageModal');
+            const closeNewMessage = document.getElementById('closeNewMessage');
+            const newMessageItems = document.querySelectorAll('.new-message-item');
+            
+            // 聊天项点击事件
+            chatItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有聊天项的active类
+                    chatItems.forEach(i => i.classList.remove('active'));
+                    // 添加当前聊天项的active类
+                    this.classList.add('active');
+                    
+                    // 在移动端，切换到聊天内容区域
+                    if (window.innerWidth <= 768) {
+                        chatSidebar.classList.remove('active');
+                    }
+                    
+                    // 获取用户信息
+                    const userId = this.getAttribute('data-user-id');
+                    const userName = this.querySelector('.chat-item-name').textContent;
+                    const userAvatar = this.querySelector('.chat-item-avatar img').src;
+                    
+                    // 更新聊天头部信息
+                    const chatHeaderName = document.querySelector('.chat-header-name');
+                    const chatHeaderAvatar = document.querySelector('.chat-header-avatar img');
+                    
+                    chatHeaderName.textContent = userName;
+                    chatHeaderAvatar.src = userAvatar;
+                    chatHeaderAvatar.alt = userName;
+                    
+                    // 在实际应用中，这里会加载与该用户的聊天记录
+                    // 模拟加载聊天记录
+                    console.log('加载用户', userId, '的聊天记录');
+                });
+            });
+            
+            // 返回聊天列表按钮
+            backToChatList.addEventListener('click', function() {
+                chatSidebar.classList.add('active');
+            });
+            
+            // 新消息按钮
+            newMessageBtn.addEventListener('click', function() {
+                newMessageModal.classList.add('active');
+            });
+            
+            // 关闭新消息弹窗
+            closeNewMessage.addEventListener('click', function() {
+                newMessageModal.classList.remove('active');
+            });
+            
+            // 选择新消息接收人
+            newMessageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    const userName = this.querySelector('.new-message-name').textContent;
+                    const userAvatar = this.querySelector('.new-message-avatar img').src;
+                    
+                    // 更新聊天头部信息
+                    const chatHeaderName = document.querySelector('.chat-header-name');
+                    const chatHeaderAvatar = document.querySelector('.chat-header-avatar img');
+                    
+                    chatHeaderName.textContent = userName;
+                    chatHeaderAvatar.src = userAvatar;
+                    chatHeaderAvatar.alt = userName;
+                    
+                    // 关闭新消息弹窗
+                    newMessageModal.classList.remove('active');
+                    
+                    // 在移动端，切换到聊天内容区域
+                    if (window.innerWidth <= 768) {
+                        chatSidebar.classList.remove('active');
+                    }
+                    
+                    // 在实际应用中，这里会创建新的聊天会话
+                    console.log('创建与用户', userId, '的新聊天会话');
+                });
+            });
+            
+            // 输入框事件
+            chatInput.addEventListener('input', function() {
+                // 启用/禁用发送按钮
+                sendMessageBtn.disabled = !this.value.trim();
+                
+                // 自动调整输入框高度
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight < 120 ? this.scrollHeight : 120) + 'px';
+            });
+            
+            // 发送消息按钮
+            sendMessageBtn.addEventListener('click', function() {
+                sendMessage();
+            });
+            
+            // 输入框回车发送消息
+            chatInput.addEventListener('keydown', function(e) {
+                // Shift+Enter换行，Enter发送
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // 发送消息函数
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+                
+                // 创建新消息元素
+                const newMessage = document.createElement('div');
+                newMessage.className = 'chat-message me';
+                newMessage.innerHTML = `
+                    <div class="chat-message-avatar">
+                        <img src="../forum-assets/images/avatars/me.jpg" alt="我">
+                    </div>
+                    <div class="chat-message-content">
+                        <div class="chat-message-bubble">
+                            <div class="chat-message-text">${message}</div>
+                        </div>
+                        <div class="chat-message-time">${getCurrentTime()}</div>
+                    </div>
+                `;
+                
+                // 添加消息到聊天区
+                chatMessages.appendChild(newMessage);
+                
+                // 清空输入框
+                chatInput.value = '';
+                
+                // 禁用发送按钮
+                sendMessageBtn.disabled = true;
+                
+                // 重置输入框高度
+                chatInput.style.height = 'auto';
+                
+                // 滚动到底部
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // 在实际应用中，这里会将消息发送到服务器
+                console.log('发送消息:', message);
+            }
+            
+            // 获取当前时间
+            function getCurrentTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+            
+            // 初始滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // 响应式处理
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768 && !chatSidebar.classList.contains('active')) {
+                    chatSidebar.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

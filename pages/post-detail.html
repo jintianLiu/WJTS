@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【已完结】川藏线骑行日记：最美的风景在路上 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comment-section {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .comment-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .related-posts {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar py-3 px-4" id="navbar">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 网站标志 -->
+            <div class="flex items-center">
+                <a href="../index.html" class="navbar-brand">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                    <span>无境探索</span>
+                </a>
+            </div>
+            
+            <!-- 桌面端导航 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="nav-link">
+                    <i class="fas fa-home mr-1"></i> 首页
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-compass mr-1"></i> 探索
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-map-marked-alt mr-1"></i> 攻略
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-camera mr-1"></i> 摄影
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-users mr-1"></i> 社区
+                </a>
+            </div>
+            
+            <!-- 右侧功能区 -->
+            <div class="flex items-center space-x-4">
+                <button class="search-btn">
+                    <i class="fas fa-search text-gray-600"></i>
+                </button>
+                <div class="hidden md:block relative">
+                    <input type="text" placeholder="搜索帖子、用户..." class="search-input pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent-color">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <button class="user-menu-btn">
+                    <i class="fas fa-user-circle text-2xl text-gray-700"></i>
+                </button>
+                <button class="md:hidden menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-menu hidden bg-white w-full py-2 mt-2 rounded-lg shadow-md absolute left-0 right-0 z-50" id="mobile-menu">
+            <div class="container mx-auto px-4">
+                <div class="relative mb-3">
+                    <input type="text" placeholder="搜索帖子、用户..." class="search-input w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-accent-color">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <a href="../index.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-home mr-1"></i> 首页
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-compass mr-1"></i> 探索
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-map-marked-alt mr-1"></i> 攻略
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-camera mr-1"></i> 摄影
+                </a>
+                <a href="#" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-users mr-1"></i> 社区
+                </a>
+                <div class="border-t border-gray-200 my-2"></div>
+                <a href="login.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-sign-in-alt mr-1"></i> 登录
+                </a>
+                <a href="register.html" class="block py-2 px-4 hover:bg-gray-100 rounded">
+                    <i class="fas fa-user-plus mr-1"></i> 注册
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 内容区域 -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 主内容区 -->
+            <div class="lg:w-3/4">
+                <!-- 面包屑导航 -->
+                <div class="text-sm text-gray-500 mb-6">
+                    <a href="../index.html" class="hover:text-accent-color">首页</a> &gt; 
+                    <a href="#" class="hover:text-accent-color">旅行日记</a> &gt; 
+                    <span>川藏线骑行日记</span>
+                </div>
+                
+                <!-- 帖子头部 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-center mb-4">
+                        <span class="bg-accent-color/10 text-accent-color text-xs font-medium px-2.5 py-0.5 rounded">骑行</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded ml-2">已完结</span>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">【已完结】川藏线骑行日记：最美的风景在路上</h1>
+                    
+                    <!-- 作者信息 -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/id/64/200/200" alt="用户头像" class="w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <div class="text-sm font-medium text-gray-900">骑行侠</div>
+                                <div class="text-xs text-gray-500">发布于 2024-05-15</div>
+                            </div>
+                            <button class="ml-4 px-3 py-1 border border-accent-color text-accent-color rounded-full text-sm hover:bg-accent-color hover:text-white transition duration-300">
+                                <i class="fas fa-plus mr-1"></i> 关注
+                            </button>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            阅读 12,345 · 评论 156
+                        </div>
+                    </div>
+                    
+                    <!-- 帖子内容 -->
+                    <div class="post-content text-gray-700 leading-relaxed">
+                        <p class="mb-4">这是我第三次骑行川藏线，每一次都有不同的体验和感受。有人问我为什么如此执着于这条充满挑战的道路，我想说，这里有世界上最壮美的风景，也有最纯粹的心灵触动。</p>
+                        
+                        <img src="https://picsum.photos/id/29/800/500" alt="川藏线风景">
+                        
+                        <p class="mb-4">D1 成都 - 雅安（147km）</p>
+                        <p class="mb-4">第一天的行程相对轻松，但对于久未训练的我来说仍然是个挑战。从成都出发，沿着318国道一路向西，心情既兴奋又忐忑。一路上遇到了许多同样骑行川藏线的伙伴，大家互相鼓励，共同前行。</p>
+                        
+                        <p class="mb-4">雅安的夜景很美，我们住在青衣江边的一个小客栈里，听着江水声入睡，期待着明天的旅程。</p>
+                        
+                        <img src="https://picsum.photos/id/42/800/500" alt="雅安夜景">
+                        
+                        <p class="mb-4">D2 雅安 - 新沟（90km）</p>
+                        <p class="mb-4">今天的行程开始进入山区，路况变得复杂起来。爬升的路段让我气喘吁吁，但沿途的竹林和溪流让人心旷神怡。到达新沟时已经是傍晚，全身酸痛但内心充实。</p>
+                        
+                        <blockquote class="border-l-4 border-accent-color pl-4 italic my-6">"有些路，你不走下去，就不会知道那边的风景有多美。"</blockquote>
+                        
+                        <p class="mb-4">D3 新沟 - 泸定（50km）</p>
+                        <p class="mb-4">今天的亮点是经过二郎山隧道，全长4176米，是川藏线上的重要地标。出了隧道，天气豁然开朗，阳光明媚，远处的雪山若隐若现。</p>
+                        
+                        <img src="https://picsum.photos/id/36/800/500" alt="二郎山风景">
+                        
+                        <p class="mb-4">到达泸定后，我们参观了著名的泸定桥，这座铁索桥见证了中国革命的历史。站在桥上，望着湍急的大渡河，心中感慨万千。</p>
+                        
+                        <p class="mb-4">接下来的路程会更加艰难，但我已经做好了准备。川藏线不仅是一次体力的挑战，更是一次心灵的旅程。我相信，最美的风景一定在路上。</p>
+                    </div>
+                    
+                    <!-- 帖子标签 -->
+                    <div class="flex flex-wrap gap-2 mt-8">
+                        <a href="#" class="text-sm text-gray-600 hover:text-accent-color">#骑行</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-accent-color">#川藏线</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-accent-color">#旅行日记</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-accent-color">#318国道</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-accent-color">#户外运动</a>
+                    </div>
+                    
+                    <!-- 互动按钮 -->
+                    <div class="flex justify-between items-center mt-6 pt-6 border-t border-gray-200">
+                        <button class="post-action-btn flex items-center text-gray-600 hover:text-accent-color">
+                            <i class="far fa-thumbs-up mr-2"></i>
+                            <span>点赞 (428)</span>
+                        </button>
+                        <button class="post-action-btn flex items-center text-gray-600 hover:text-accent-color">
+                            <i class="far fa-bookmark mr-2"></i>
+                            <span>收藏</span>
+                        </button>
+                        <button class="post-action-btn flex items-center text-gray-600 hover:text-accent-color">
+                            <i class="far fa-comment mr-2"></i>
+                            <span>评论 (156)</span>
+                        </button>
+                        <button class="post-action-btn flex items-center text-gray-600 hover:text-accent-color">
+                            <i class="far fa-share-square mr-2"></i>
+                            <span>分享</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 作者信息卡片 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 flex items-center">
+                    <img src="https://picsum.photos/id/64/200/200" alt="用户头像" class="w-16 h-16 rounded-full">
+                    <div class="ml-4 flex-1">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="font-medium text-gray-900">骑行侠</div>
+                                <div class="text-sm text-gray-500">资深骑行爱好者 · 已发布 42 篇内容</div>
+                            </div>
+                            <button class="px-4 py-1.5 bg-accent-color text-white rounded-full text-sm hover:bg-orange-600 transition duration-300">
+                                <i class="fas fa-plus mr-1"></i> 关注
+                            </button>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-600">热爱骑行，热爱旅行，用单车丈量世界的宽度。</div>
+                    </div>
+                </div>
+                
+                <!-- 评论区 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">评论区 (156)</h2>
+                        <div class="flex space-x-2">
+                            <button class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200">
+                                <i class="fas fa-sort-amount-down mr-1"></i> 最新
+                            </button>
+                            <button class="text-sm text-gray-600 px-3 py-1 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-fire mr-1"></i> 最热
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 发表评论 -->
+                    <div class="mb-8">
+                        <div class="flex space-x-4">
+                            <img src="https://picsum.photos/id/237/200/200" alt="当前用户头像" class="w-10 h-10 rounded-full">
+                            <div class="flex-1">
+                                <textarea placeholder="分享你的想法..." class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-color resize-none" rows="3"></textarea>
+                                <div class="flex justify-between items-center mt-3">
+                                    <div class="flex space-x-3">
+                                        <button class="text-gray-500 hover:text-accent-color"><i class="far fa-image"></i></button>
+                                        <button class="text-gray-500 hover:text-accent-color"><i class="far fa-smile"></i></button>
+                                        <button class="text-gray-500 hover:text-accent-color"><i class="far fa-at"></i></button>
+                                    </div>
+                                    <button class="px-4 py-2 bg-accent-color text-white rounded-lg hover:bg-orange-600 transition duration-300">
+                                        发表评论
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 评论列表 -->
+                    <div class="comment-list">
+                        <!-- 评论1 -->
+                        <div class="comment-item">
+                            <div class="flex space-x-4">
+                                <img src="https://picsum.photos/id/65/200/200" alt="评论用户头像" class="w-10 h-10 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <span class="font-medium text-gray-900 mr-2">旅行达人</span>
+                                        <span class="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">资深驴友</span>
+                                        <span class="ml-auto text-xs text-gray-500">3天前</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">太棒了！我也骑行过川藏线，那确实是一段终生难忘的旅程。二郎山隧道的变化真是让人感叹，现在比我当年骑行的时候好走多了。期待看到更多你的游记！</p>
+                                    <div class="mt-3 flex items-center space-x-4">
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-thumbs-up mr-1"></i> 42
+                                        </button>
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-comment mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- 子评论 -->
+                                    <div class="mt-4 pl-4 border-l-2 border-gray-100">
+                                        <div class="flex space-x-3">
+                                            <img src="https://picsum.photos/id/64/200/200" alt="作者头像" class="w-8 h-8 rounded-full">
+                                            <div class="flex-1">
+                                                <div class="flex items-center">
+                                                    <span class="font-medium text-gray-900 mr-2">骑行侠</span>
+                                                    <span class="text-xs bg-accent-color/10 text-accent-color px-1.5 py-0.5 rounded">作者</span>
+                                                    <span class="ml-auto text-xs text-gray-500">2天前</span>
+                                                </div>
+                                                <p class="mt-1 text-gray-700">谢谢支持！确实，现在的路况比以前好太多了，但依然充满挑战和美景。</p>
+                                                <div class="mt-2 flex items-center space-x-4">
+                                                    <button class="text-xs text-gray-500 hover:text-accent-color flex items-center">
+                                                        <i class="far fa-thumbs-up mr-1"></i> 15
+                                                    </button>
+                                                    <button class="text-xs text-gray-500 hover:text-accent-color flex items-center">
+                                                        <i class="far fa-comment mr-1"></i> 回复
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评论2 -->
+                        <div class="comment-item">
+                            <div class="flex space-x-4">
+                                <img src="https://picsum.photos/id/91/200/200" alt="评论用户头像" class="w-10 h-10 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <span class="font-medium text-gray-900">单车小子</span>
+                                        <span class="ml-auto text-xs text-gray-500">5天前</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">作为一个骑行新手，一直梦想着有朝一日能完成川藏线骑行。请问你有什么建议给第一次尝试长距离骑行的人吗？需要做哪些准备？</p>
+                                    <div class="mt-3 flex items-center space-x-4">
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-thumbs-up mr-1"></i> 38
+                                        </button>
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-comment mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评论3 -->
+                        <div class="comment-item">
+                            <div class="flex space-x-4">
+                                <img src="https://picsum.photos/id/45/200/200" alt="评论用户头像" class="w-10 h-10 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <span class="font-medium text-gray-900">摄影爱好者</span>
+                                        <span class="ml-auto text-xs text-gray-500">1周前</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">照片拍得真不错！请问用的是什么相机？在高原地区拍摄有什么特别需要注意的地方吗？</p>
+                                    <div class="mt-3 flex items-center space-x-4">
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-thumbs-up mr-1"></i> 29
+                                        </button>
+                                        <button class="text-sm text-gray-500 hover:text-accent-color flex items-center">
+                                            <i class="far fa-comment mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 加载更多评论 -->
+                    <div class="text-center mt-8">
+                        <button class="px-6 py-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition duration-300">
+                            加载更多评论
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="lg:w-1/4">
+                <!-- 相关推荐 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">相关推荐</h3>
+                    <div class="space-y-4">
+                        <a href="#" class="block group">
+                            <div class="flex space-x-3">
+                                <img src="https://picsum.photos/id/43/200/150" alt="推荐帖子" class="w-24 h-16 object-cover rounded-lg group-hover:opacity-90 transition duration-300">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900 group-hover:text-accent-color line-clamp-2">滇藏线骑行攻略：从大理到拉萨的绝美风景</h4>
+                                    <p class="text-xs text-gray-500 mt-1">阅读 8,765 · 2周前</p>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#" class="block group">
+                            <div class="flex space-x-3">
+                                <img src="https://picsum.photos/id/28/200/150" alt="推荐帖子" class="w-24 h-16 object-cover rounded-lg group-hover:opacity-90 transition duration-300">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900 group-hover:text-accent-color line-clamp-2">骑行装备清单：川藏线必备物品全解析</h4>
+                                    <p class="text-xs text-gray-500 mt-1">阅读 6,342 · 1个月前</p>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#" class="block group">
+                            <div class="flex space-x-3">
+                                <img src="https://picsum.photos/id/35/200/150" alt="推荐帖子" class="w-24 h-16 object-cover rounded-lg group-hover:opacity-90 transition duration-300">
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-gray-900 group-hover:text-accent-color line-clamp-2">新藏线骑行记：世界海拔最高的公路之旅</h4>
+                                    <p class="text-xs text-gray-500 mt-1">阅读 5,218 · 3个月前</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 热门话题 -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">热门话题</h3>
+                    <div class="space-y-3">
+                        <a href="#" class="flex items-center justify-between group">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">1</div>
+                                <span class="text-sm text-gray-800 group-hover:text-accent-color">#夏日旅行计划</span>
+                            </div>
+                            <span class="text-xs text-gray-500">2.3万讨论</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">2</div>
+                                <span class="text-sm text-gray-800 group-hover:text-accent-color">#小众旅行地推荐</span>
+                            </div>
+                            <span class="text-xs text-gray-500">1.8万讨论</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">3</div>
+                                <span class="text-sm text-gray-800 group-hover:text-accent-color">#骑行装备分享</span>
+                            </div>
+                            <span class="text-xs text-gray-500">1.5万讨论</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-gray-100 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">4</div>
+                                <span class="text-sm text-gray-800 group-hover:text-accent-color">#户外摄影技巧</span>
+                            </div>
+                            <span class="text-xs text-gray-500">1.2万讨论</span>
+                        </a>
+                        <a href="#" class="flex items-center justify-between group">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-gray-100 text-gray-600 rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">5</div>
+                                <span class="text-sm text-gray-800 group-hover:text-accent-color">#美食探店</span>
+                            </div>
+                            <span class="text-xs text-gray-500">9,876讨论</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 社区公告 -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">社区公告</h3>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-gray-900 mb-2">社区公约更新通知</h4>
+                        <p class="text-xs text-gray-600 mb-3">为了营造更好的社区环境，我们对社区公约进行了更新。请所有用户务必阅读并遵守新的规定。</p>
+                        <a href="#" class="text-xs text-accent-color hover:underline">查看详情 →</a>
+                    </div>
+                    <div class="mt-4 bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-gray-900 mb-2">【活动】夏日摄影大赛</h4>
+                        <p class="text-xs text-gray-600 mb-3">分享你的夏日旅行照片，赢取精美奖品！活动截止日期：2024年8月31日。</p>
+                        <a href="#" class="text-xs text-accent-color hover:underline">立即参与 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 发布按钮 -->
+    <button class="create-post-btn fixed right-6 bottom-6 w-14 h-14 bg-accent-color text-white rounded-full shadow-lg flex items-center justify-center hover:bg-orange-600 transition duration-300">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
+    
+    <!-- 页脚 -->
+    <footer class="footer py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                        <span class="ml-2 text-xl font-bold text-gray-900">无境探索</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">分享你的旅行故事，探索世界的每一个角落。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-500 hover:text-accent-color"><i class="fab fa-weixin text-xl"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-accent-color"><i class="fab fa-weibo text-xl"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-accent-color"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-accent-color"><i class="fab fa-youtube text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">探索</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">热门目的地</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">旅行攻略</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">摄影作品</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">美食推荐</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">户外活动</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">社区</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">关于我们</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">社区公约</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">隐私政策</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">帮助中心</a></li>
+                        <li><a href="#" class="text-sm text-gray-600 hover:text-accent-color">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">订阅</h4>
+                    <p class="text-sm text-gray-600 mb-4">订阅我们的通讯，获取最新旅行资讯和社区动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="your@email.com" class="px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-accent-color flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-lg hover:bg-orange-600 transition duration-300">
+                            订阅
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom pt-6 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-600">&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        // 帖子互动功能
+        document.querySelectorAll('.post-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const text = this.querySelector('span');
+                
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    this.classList.add('text-accent-color');
+                    
+                    // 更新点赞数量
+                    if (text.textContent.includes('点赞')) {
+                        let count = parseInt(text.textContent.match(/\d+/)[0]) + 1;
+                        text.textContent = `点赞 (${count})`;
+                    }
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    this.classList.remove('text-accent-color');
+                    
+                    // 更新点赞数量
+                    if (text.textContent.includes('点赞')) {
+                        let count = parseInt(text.textContent.match(/\d+/)[0]) - 1;
+                        text.textContent = `点赞 (${count})`;
+                    }
+                }
+            });
+        });
+        
+        // 评论点赞功能
+        document.querySelectorAll('.comment-item button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.querySelector('i').classList.contains('fa-thumbs-up')) {
+                    const icon = this.querySelector('i');
+                    const count = this.querySelector('span');
+                    
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.classList.add('text-accent-color');
+                        count.textContent = (parseInt(count.textContent) + 1).toString();
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.classList.remove('text-accent-color');
+                        count.textContent = (parseInt(count.textContent) - 1).toString();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛统计 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 统计页面特定样式 */
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stats-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-header p {
+            color: #6b7280;
+        }
+        
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.25rem;
+            color: white;
+        }
+        
+        .stat-icon-users {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stat-icon-posts {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .stat-icon-comments {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .stat-icon-categories {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .stats-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .stats-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .stats-section-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container.small {
+            height: 250px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 排名列表样式 */
+        .ranking-list {
+            list-style: none;
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ranking-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .ranking-number.first {
+            background-color: #f59e0b;
+        }
+        
+        .ranking-number.second {
+            background-color: #6b7280;
+        }
+        
+        .ranking-number.third {
+            background-color: #d97706;
+        }
+        
+        .ranking-number.normal {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .ranking-info {
+            flex: 1;
+        }
+        
+        .ranking-name {
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .ranking-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .ranking-value {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        /* 最近活动样式 */
+        .activity-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .activity-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .activity-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+        }
+        
+        .activity-item.post::before {
+            background-color: #3b82f6;
+        }
+        
+        .activity-item.comment::before {
+            background-color: #10b981;
+        }
+        
+        .activity-item.user::before {
+            background-color: #f59e0b;
+        }
+        
+        .activity-content {
+            background-color: #f9fafb;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            color: #111827;
+        }
+        
+        .activity-time {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .activity-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* 统计标签页 */
+        .stats-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .stats-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .stats-tab {
+            padding: 0.75rem 1.25rem;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .stats-tab:hover {
+            color: #374151;
+        }
+        
+        .stats-tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .stats-content {
+            display: none;
+        }
+        
+        .stats-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="messages.html" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i>私信
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="messages.html" class="mobile-nav-link">私信</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">论坛统计</span>
+        </div>
+        
+        <!-- 统计页面内容 -->
+        <div class="stats-container">
+            <!-- 页面标题 -->
+            <div class="stats-header">
+                <h1>论坛统计数据</h1>
+                <p>了解无境探索论坛的整体情况和活跃度指标</p>
+            </div>
+            
+            <!-- 统计标签页 -->
+            <div class="stats-tabs">
+                <div class="stats-tab active" data-tab="overview">概览</div>
+                <div class="stats-tab" data-tab="users">用户统计</div>
+                <div class="stats-tab" data-tab="content">内容统计</div>
+                <div class="stats-tab" data-tab="activity">活跃度</div>
+                <div class="stats-tab" data-tab="growth">增长趋势</div>
+            </div>
+            
+            <!-- 概览内容 -->
+            <div class="stats-content active" id="overview">
+                <!-- 主要统计数据卡片 -->
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value">12,345</div>
+                        <div class="stat-label">注册用户</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-posts">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-value">8,762</div>
+                        <div class="stat-label">帖子总数</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-comments">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-value">45,129</div>
+                        <div class="stat-label">评论回复</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-categories">
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">讨论分类</div>
+                    </div>
+                </div>
+                
+                <!-- 图表统计区域 -->
+                <div class="stats-grid">
+                    <!-- 活跃度趋势图 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">论坛活跃度趋势</h2>
+                            <select class="stats-section-select" id="activity-period-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                                <option value="365">最近1年</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 内容分布饼图 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">内容分类分布</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最近活动和热门内容 -->
+                <div class="stats-grid">
+                    <!-- 最近活动 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">最近活动</h2>
+                        </div>
+                        <div class="activity-timeline">
+                            <div class="activity-item post">
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        <div class="activity-title">新帖子发布</div>
+                                        <div class="activity-time">30分钟前</div>
+                                    </div>
+                                    <div class="activity-description">李明发布了新帖子《青海湖环湖骑行攻略》</div>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item comment">
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        <div class="activity-title">新评论</div>
+                                        <div class="activity-time">1小时前</div>
+                                    </div>
+                                    <div class="activity-description">王华回复了帖子《西藏自驾路线推荐》</div>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item user">
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        <div class="activity-title">新用户注册</div>
+                                        <div class="activity-time">2小时前</div>
+                                    </div>
+                                    <div class="activity-description">张小红加入了无境探索论坛</div>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item post">
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        <div class="activity-title">新帖子发布</div>
+                                        <div class="activity-time">3小时前</div>
+                                    </div>
+                                    <div class="activity-description">赵刚发布了新帖子《云南小众景点探秘》</div>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item comment">
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        <div class="activity-title">热门讨论</div>
+                                        <div class="activity-time">5小时前</div>
+                                    </div>
+                                    <div class="activity-description">《日本关西7日游攻略》获得了50条回复</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 热门用户排行 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">活跃用户排行</h2>
+                        </div>
+                        <ul class="ranking-list">
+                            <li class="ranking-item">
+                                <div class="ranking-number first">1</div>
+                                <div class="ranking-info">
+                                    <div class="ranking-name">李明</div>
+                                    <div class="ranking-meta">发布了125篇帖子，320条评论</div>
+                                </div>
+                                <div class="ranking-value">3200</div>
+                            </li>
+                            
+                            <li class="ranking-item">
+                                <div class="ranking-number second">2</div>
+                                <div class="ranking-info">
+                                    <div class="ranking-name">王华</div>
+                                    <div class="ranking-meta">发布了98篇帖子，410条评论</div>
+                                </div>
+                                <div class="ranking-value">2980</div>
+                            </li>
+                            
+                            <li class="ranking-item">
+                                <div class="ranking-number third">3</div>
+                                <div class="ranking-info">
+                                    <div class="ranking-name">张小红</div>
+                                    <div class="ranking-meta">发布了86篇帖子，250条评论</div>
+                                </div>
+                                <div class="ranking-value">2650</div>
+                            </li>
+                            
+                            <li class="ranking-item">
+                                <div class="ranking-number normal">4</div>
+                                <div class="ranking-info">
+                                    <div class="ranking-name">赵刚</div>
+                                    <div class="ranking-meta">发布了72篇帖子，180条评论</div>
+                                </div>
+                                <div class="ranking-value">2150</div>
+                            </li>
+                            
+                            <li class="ranking-item">
+                                <div class="ranking-number normal">5</div>
+                                <div class="ranking-info">
+                                    <div class="ranking-name">孙雨</div>
+                                    <div class="ranking-meta">发布了65篇帖子，210条评论</div>
+                                </div>
+                                <div class="ranking-value">1980</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 用户统计内容 -->
+            <div class="stats-content" id="users">
+                <!-- 用户相关图表 -->
+                <div class="stats-grid">
+                    <!-- 新增用户趋势 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">新增用户趋势</h2>
+                            <select class="stats-section-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                                <option value="365">最近1年</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="newUsersChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户活跃度分布 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">用户活跃度分布</h2>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="userActivityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 用户地域分布和设备分布 -->
+                <div class="stats-grid">
+                    <!-- 用户地域分布 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">用户地域分布</h2>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="userLocationChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户设备分布 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">用户设备分布</h2>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="userDeviceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 内容统计内容 -->
+            <div class="stats-content" id="content">
+                <!-- 内容相关图表 -->
+                <div class="stats-grid">
+                    <!-- 帖子发布趋势 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">帖子发布趋势</h2>
+                            <select class="stats-section-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                                <option value="365">最近1年</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="postsTrendChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 评论回复趋势 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">评论回复趋势</h2>
+                            <select class="stats-section-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                                <option value="365">最近1年</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="commentsTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 热门分类和热门标签 -->
+                <div class="stats-grid">
+                    <!-- 热门分类 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">热门分类</h2>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="popularCategoriesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 热门标签 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">热门标签</h2>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">旅行攻略</span>
+                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">美食推荐</span>
+                                <span class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">自驾</span>
+                                <span class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-medium">摄影</span>
+                                <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">背包客</span>
+                                <span class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">徒步</span>
+                                <span class="px-4 py-2 bg-pink-100 text-pink-800 rounded-full text-sm font-medium">民宿</span>
+                                <span class="px-4 py-2 bg-cyan-100 text-cyan-800 rounded-full text-sm font-medium">户外</span>
+                                <span class="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">景点推荐</span>
+                                <span class="px-4 py-2 bg-teal-100 text-teal-800 rounded-full text-sm font-medium">小众目的地</span>
+                                <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">行程规划</span>
+                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">文化体验</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 活跃度统计内容 -->
+            <div class="stats-content" id="activity">
+                <!-- 活跃度相关图表 -->
+                <div class="stats-section">
+                    <div class="stats-section-header">
+                        <h2 class="stats-section-title">每日活跃用户</h2>
+                        <select class="stats-section-select">
+                            <option value="7">最近7天</option>
+                            <option value="30" selected>最近30天</option>
+                            <option value="90">最近3个月</option>
+                            <option value="365">最近1年</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dailyActiveUsersChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 使用时长和访问频率 -->
+                <div class="stats-grid">
+                    <!-- 平均使用时长 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">平均使用时长</h2>
+                            <select class="stats-section-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                            </select>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="usageTimeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 平均访问频率 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">平均访问频率</h2>
+                            <select class="stats-section-select">
+                                <option value="7">最近7天</option>
+                                <option value="30" selected>最近30天</option>
+                                <option value="90">最近3个月</option>
+                            </select>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="visitFrequencyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 增长趋势内容 -->
+            <div class="stats-content" id="growth">
+                <!-- 增长趋势图表 -->
+                <div class="stats-section">
+                    <div class="stats-section-header">
+                        <h2 class="stats-section-title">论坛总体增长趋势</h2>
+                        <select class="stats-section-select">
+                            <option value="30">最近30天</option>
+                            <option value="90">最近3个月</option>
+                            <option value="365" selected>最近1年</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="growthTrendChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 增长率和留存率 -->
+                <div class="stats-grid">
+                    <!-- 月环比增长率 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">月环比增长率</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <div class="text-lg font-medium text-gray-700">用户增长</div>
+                                    <div class="text-3xl font-bold text-green-600">+12.5%</div>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium text-gray-700">帖子增长</div>
+                                    <div class="text-3xl font-bold text-green-600">+8.3%</div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="text-lg font-medium text-gray-700">评论增长</div>
+                                    <div class="text-3xl font-bold text-green-600">+15.2%</div>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-medium text-gray-700">活跃度增长</div>
+                                    <div class="text-3xl font-bold text-green-600">+9.7%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户留存率 -->
+                    <div class="stats-section">
+                        <div class="stats-section-header">
+                            <h2 class="stats-section-title">用户留存率</h2>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="retentionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签页切换
+            const tabs = document.querySelectorAll('.stats-tab');
+            const tabContents = document.querySelectorAll('.stats-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签页的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    // 显示对应内容
+                    document.getElementById(target).classList.add('active');
+                    
+                    // 触发图表渲染
+                    renderCharts();
+                });
+            });
+            
+            // 渲染所有图表
+            renderCharts();
+            
+            // 图表渲染函数
+            function renderCharts() {
+                // 活跃度趋势图
+                if (document.getElementById('activityChart')) {
+                    const activityCtx = document.getElementById('activityChart').getContext('2d');
+                    
+                    new Chart(activityCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                            datasets: [
+                                {
+                                    label: '帖子数',
+                                    data: [300, 450, 600, 550, 700, 800, 750, 900, 850, 1000, 1100, 1200],
+                                    borderColor: '#3b82f6',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                },
+                                {
+                                    label: '评论数',
+                                    data: [1200, 1500, 1800, 2000, 2200, 2500, 2800, 3000, 3200, 3500, 3800, 4000],
+                                    borderColor: '#10b981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                },
+                                {
+                                    label: '活跃用户',
+                                    data: [800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900],
+                                    borderColor: '#f59e0b',
+                                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // 内容分类分布图
+                if (document.getElementById('categoryChart')) {
+                    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+                    
+                    new Chart(categoryCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['旅行攻略', '美食推荐', '摄影分享', '住宿体验', '交通出行', '文化交流', '装备推荐', '其他'],
+                            datasets: [{
+                                data: [30, 20, 15, 12, 8, 7, 5, 3],
+                                backgroundColor: [
+                                    '#3b82f6',
+                                    '#10b981',
+                                    '#f59e0b',
+                                    '#ef4444',
+                                    '#8b5cf6',
+                                    '#ec4899',
+                                    '#06b6d4',
+                                    '#9ca3af'
+                                ],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                }
+                            },
+                            cutout: '60%'
+                        }
+                    });
+                }
+                
+                // 新增用户趋势图
+                if (document.getElementById('newUsersChart')) {
+                    const newUsersCtx = document.getElementById('newUsersChart').getContext('2d');
+                    
+                    new Chart(newUsersCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                            datasets: [{
+                                label: '新增用户',
+                                data: [600, 750, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700],
+                                backgroundColor: '#3b82f6',
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // 用户活跃度分布图
+                if (document.getElementById('userActivityChart')) {
+                    const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+                    
+                    new Chart(userActivityCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['每日活跃', '每周活跃', '每月活跃', '很少活跃', '不活跃'],
+                            datasets: [{
+                                data: [15, 25, 30, 20, 10],
+                                backgroundColor: [
+                                    '#10b981',
+                                    '#3b82f6',
+                                    '#f59e0b',
+                                    '#8b5cf6',
+                                    '#9ca3af'
+                                ],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

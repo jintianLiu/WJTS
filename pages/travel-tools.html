@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行工具 - 无境探索论坛</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        'primary-light': '#3b82f6',
+                        'primary-dark': '#1d4ed8',
+                        secondary: '#64748b',
+                        accent: '#ec4899'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+    </style>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .tool-card:nth-child(1) { animation-delay: 0.1s; }
+        .tool-card:nth-child(2) { animation-delay: 0.2s; }
+        .tool-card:nth-child(3) { animation-delay: 0.3s; }
+        .tool-card:nth-child(4) { animation-delay: 0.4s; }
+        .tool-card:nth-child(5) { animation-delay: 0.5s; }
+        .tool-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter text-gray-800">
+    <!-- 导航栏 -->
+    <header class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-8 w-8 rounded-full object-cover">
+                    <span class="text-xl font-bold text-primary">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="搜索旅行目的地、攻略或用户..." class="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- 导航链接 -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-primary transition-colors">首页</a>
+                    <a href="hot.html" class="text-gray-600 hover:text-primary transition-colors">热门话题</a>
+                    <a href="latest.html" class="text-gray-600 hover:text-primary transition-colors">最新发布</a>
+                    <a href="categories.html" class="text-gray-600 hover:text-primary transition-colors">分类</a>
+                    <a href="travel-log.html" class="text-gray-600 hover:text-primary transition-colors">旅行日志</a>
+                    <a href="travel-tools.html" class="text-primary font-medium">旅行工具</a>
+                </nav>
+                
+                <!-- 用户菜单 -->
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-full transition-colors relative">
+                        <i class="far fa-bell"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 focus:outline-none group">
+                            <img src="https://picsum.photos/40/40?random=user" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-transparent group-hover:border-primary transition-all">
+                            <span class="hidden md:inline text-sm font-medium">旅行者</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="md:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端搜索栏 -->
+            <div class="md:hidden pb-4">
+                <div class="relative w-full">
+                    <input type="text" placeholder="搜索旅行目的地、攻略或用户..." class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 移动端菜单 -->
+    <div class="md:hidden bg-white shadow-md fixed inset-0 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="p-4 border-b flex justify-between items-center">
+            <h3 class="font-bold text-lg">菜单</h3>
+            <button class="p-2 text-gray-600 hover:text-primary">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="../index.html" class="block py-2 text-gray-600 hover:text-primary">首页</a></li>
+                <li><a href="hot.html" class="block py-2 text-gray-600 hover:text-primary">热门话题</a></li>
+                <li><a href="latest.html" class="block py-2 text-gray-600 hover:text-primary">最新发布</a></li>
+                <li><a href="categories.html" class="block py-2 text-gray-600 hover:text-primary">分类</a></li>
+                <li><a href="travel-log.html" class="block py-2 text-gray-600 hover:text-primary">旅行日志</a></li>
+                <li><a href="travel-tools.html" class="block py-2 text-primary font-medium">旅行工具</a></li>
+                <li class="border-t pt-4">
+                    <a href="profile.html" class="flex items-center space-x-2 text-gray-600 hover:text-primary">
+                        <img src="https://picsum.photos/40/40?random=user" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li><a href="settings.html" class="block py-2 text-gray-600 hover:text-primary">设置</a></li>
+                <li><a href="login.html" class="block py-2 text-gray-600 hover:text-primary">退出登录</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- 页面标题栏 -->
+    <div class="bg-gradient-to-r from-primary to-primary-light text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">旅行工具</h1>
+                    <p class="opacity-90">实用工具助您轻松规划完美旅程</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容 -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 侧边栏 -->
+            <aside class="hidden lg:block lg:w-64 space-y-6">
+                <!-- 工具分类 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">工具分类</h3>
+                    </div>
+                    <div class="p-2">
+                        <a href="#currency" class="flex items-center justify-between p-3 rounded-md bg-gray-100 text-primary font-medium transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-dollar-sign mr-3"></i>
+                                <span>汇率计算</span>
+                            </div>
+                        </a>
+                        <a href="#time" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-3"></i>
+                                <span>时差换算</span>
+                            </div>
+                        </a>
+                        <a href="#packing" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-suitcase mr-3"></i>
+                                <span>行李打包清单</span>
+                            </div>
+                        </a>
+                        <a href="#weather" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-cloud-sun mr-3"></i>
+                                <span>天气预报</span>
+                            </div>
+                        </a>
+                        <a href="#budget" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-calculator mr-3"></i>
+                                <span>旅行预算</span>
+                            </div>
+                        </a>
+                        <a href="#converter" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-ruler-combined mr-3"></i>
+                                <span>单位换算</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 最近使用 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">最近使用</h3>
+                    </div>
+                    <div class="p-2">
+                        <a href="#currency" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-dollar-sign mr-3"></i>
+                                <span>汇率计算器</span>
+                            </div>
+                            <span class="text-xs text-gray-500">今天</span>
+                        </a>
+                        <a href="#weather" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-100 text-gray-700 transition-colors">
+                            <div class="flex items-center">
+                                <i class="fas fa-cloud-sun mr-3"></i>
+                                <span>天气预报</span>
+                            </div>
+                            <span class="text-xs text-gray-500">昨天</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 帮助提示 -->
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-info-circle text-blue-500 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800 mb-1">提示</h3>
+                            <p class="text-sm text-blue-700">我们的工具数据仅供参考，实际旅行前请查询最新官方信息。</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- 主内容区 -->
+            <div class="flex-1">
+                <!-- 面包屑导航 -->
+                <nav class="flex items-center text-sm text-gray-500 mb-6">
+                    <a href="../index.html" class="hover:text-primary transition-colors">首页</a>
+                    <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                    <span class="text-gray-800 font-medium">旅行工具</span>
+                </nav>
+                
+                <!-- 汇率计算器 -->
+                <section id="currency" class="bg-white rounded-lg shadow-sm overflow-hidden mb-8 fade-in">
+                    <div class="p-5 border-b flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-dollar-sign text-primary mr-3"></i>
+                            汇率计算器
+                        </h2>
+                        <span class="text-xs text-gray-500">更新于 2024-04-15</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">从</label>
+                                <div class="flex">
+                                    <select class="bg-gray-100 border-0 rounded-l-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all w-1/3">
+                                        <option value="CNY">CNY - 人民币</option>
+                                        <option value="USD">USD - 美元</option>
+                                        <option value="EUR">EUR - 欧元</option>
+                                        <option value="JPY">JPY - 日元</option>
+                                        <option value="KRW">KRW - 韩元</option>
+                                        <option value="THB">THB - 泰铢</option>
+                                    </select>
+                                    <input type="number" value="100" class="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">到</label>
+                                <div class="flex">
+                                    <select class="bg-gray-100 border-0 rounded-l-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all w-1/3">
+                                        <option value="USD">USD - 美元</option>
+                                        <option value="CNY" selected>CNY - 人民币</option>
+                                        <option value="EUR">EUR - 欧元</option>
+                                        <option value="JPY">JPY - 日元</option>
+                                        <option value="KRW">KRW - 韩元</option>
+                                        <option value="THB">THB - 泰铢</option>
+                                    </select>
+                                    <input type="number" value="650" class="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg bg-gray-50 cursor-not-allowed" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-center">
+                            <button class="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                                <i class="fas fa-exchange-alt text-gray-700"></i>
+                            </button>
+                        </div>
+                        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <div class="text-sm">
+                                    <span class="text-gray-600">1 USD =</span>
+                                    <span class="font-medium ml-1">6.50 CNY</span>
+                                </div>
+                                <div class="text-sm">
+                                    <span class="text-gray-600">1 EUR =</span>
+                                    <span class="font-medium ml-1">7.23 CNY</span>
+                                </div>
+                                <div class="text-sm">
+                                    <span class="text-gray-600">1 JPY =</span>
+                                    <span class="font-medium ml-1">0.045 CNY</span>
+                                </div>
+                                <div class="text-sm">
+                                    <span class="text-gray-600">1 KRW =</span>
+                                    <span class="font-medium ml-1">0.0048 CNY</span>
+                                </div>
+                                <div class="text-sm">
+                                    <span class="text-gray-600">1 THB =</span>
+                                    <span class="font-medium ml-1">0.19 CNY</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 时差换算 -->
+                <section id="time" class="bg-white rounded-lg shadow-sm overflow-hidden mb-8 fade-in">
+                    <div class="p-5 border-b">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-clock text-primary mr-3"></i>
+                            时差换算
+                        </h2>
+                    </div>
+                    <div class="p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">地点 1</label>
+                                <select class="w-full bg-gray-100 border-0 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all mb-2">
+                                    <option value="beijing">北京, 中国 (UTC+8)</option>
+                                    <option value="tokyo">东京, 日本 (UTC+9)</option>
+                                    <option value="london">伦敦, 英国 (UTC+0)</option>
+                                    <option value="newyork">纽约, 美国 (UTC-5)</option>
+                                    <option value="paris">巴黎, 法国 (UTC+1)</option>
+                                </select>
+                                <div class="p-3 bg-gray-50 rounded-lg">
+                                    <p class="text-xl font-medium text-center" id="time1">14:30</p>
+                                    <p class="text-sm text-gray-500 text-center" id="date1">2024年4月15日 星期一</p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">地点 2</label>
+                                <select class="w-full bg-gray-100 border-0 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all mb-2">
+                                    <option value="newyork">纽约, 美国 (UTC-5)</option>
+                                    <option value="tokyo">东京, 日本 (UTC+9)</option>
+                                    <option value="london">伦敦, 英国 (UTC+0)</option>
+                                    <option value="beijing" selected>北京, 中国 (UTC+8)</option>
+                                    <option value="paris">巴黎, 法国 (UTC+1)</option>
+                                </select>
+                                <div class="p-3 bg-gray-50 rounded-lg">
+                                    <p class="text-xl font-medium text-center" id="time2">1:30</p>
+                                    <p class="text-sm text-gray-500 text-center" id="date2">2024年4月15日 星期一</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <p class="text-sm text-blue-800 flex items-start">
+                                <i class="fas fa-info-circle mt-0.5 mr-2"></i>
+                                <span>纽约比北京晚13小时。请注意，部分国家可能实行夏令时，实际时差可能有所变化。</span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 行李打包清单 -->
+                <section id="packing" class="bg-white rounded-lg shadow-sm overflow-hidden mb-8 fade-in">
+                    <div class="p-5 border-b flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-suitcase text-primary mr-3"></i>
+                            行李打包清单
+                        </h2>
+                        <button class="text-primary hover:text-primary-dark text-sm font-medium flex items-center">
+                            <i class="fas fa-plus-circle mr-1"></i>
+                            保存清单
+                        </button>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex flex-wrap gap-3 mb-6">
+                            <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center">
+                                <i class="fas fa-umbrella-beach mr-2"></i> 海滩度假
+                            </button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fas fa-mountain mr-2"></i> 山地徒步
+                            </button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fas fa-city mr-2"></i> 城市观光
+                            </button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fas fa-snowflake mr-2"></i> 冬季旅行
+                            </button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fas fa-vial mr-2"></i> 自定义
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-700 mb-2">必带物品</h3>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">护照/身份证</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">钱包/信用卡</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">手机/充电器</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">旅行保险</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-700 mb-2">衣物</h3>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">泳衣 (2件)</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">沙滩裤/裙 (3条)</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">T恤 (5件)</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">防晒衫</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">帽子/太阳镜</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-700 mb-2">个人护理</h3>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">防晒霜 (SPF 50+)</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">洗漱用品套装</span>
+                                    </label>
+                                    <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary/30">
+                                        <span class="ml-3 text-gray-700">防虫喷雾</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <input type="text" placeholder="添加自定义物品..." class="flex-1 focus:outline-none bg-transparent text-gray-700">
+                                    <button class="ml-2 p-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 更多工具卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- 天气预报工具 -->
+                    <div id="weather" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover tool-card fade-in">
+                        <div class="p-5 border-b flex items-center">
+                            <i class="fas fa-cloud-sun text-primary text-2xl mr-3"></i>
+                            <h3 class="font-semibold text-gray-800">天气预报</h3>
+                        </div>
+                        <div class="p-5">
+                            <input type="text" placeholder="输入目的地" class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-primary/30">
+                            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg text-center">
+                                <div class="flex justify-center">
+                                    <i class="fas fa-sun text-3xl mb-2"></i>
+                                </div>
+                                <p class="text-3xl font-bold mb-1">28°C</p>
+                                <p class="text-sm opacity-90">晴天 · 湿度 65%</p>
+                            </div>
+                            <div class="mt-4 flex justify-between text-sm text-gray-600">
+                                <span>今天</span>
+                                <span>明天</span>
+                                <span>后天</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 旅行预算工具 -->
+                    <div id="budget" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover tool-card fade-in">
+                        <div class="p-5 border-b flex items-center">
+                            <i class="fas fa-calculator text-primary text-2xl mr-3"></i>
+                            <h3 class="font-semibold text-gray-800">旅行预算</h3>
+                        </div>
+                        <div class="p-5">
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">目的地</label>
+                                    <select class="w-full bg-gray-100 border-0 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm">
+                                        <option>日本</option>
+                                        <option>泰国</option>
+                                        <option>法国</option>
+                                        <option>美国</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">旅行天数</label>
+                                    <select class="w-full bg-gray-100 border-0 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm">
+                                        <option>3天</option>
+                                        <option>5天</option>
+                                        <option selected>7天</option>
+                                        <option>10天</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">人数</label>
+                                    <select class="w-full bg-gray-100 border-0 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm">
+                                        <option selected>1人</option>
+                                        <option>2人</option>
+                                        <option>3-4人</option>
+                                        <option>5人以上</option>
+                                    </select>
+                                </div>
+                                <button class="w-full bg-primary text-white rounded-lg py-2 hover:bg-primary-dark transition-colors text-sm font-medium">
+                                    计算预算
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 单位换算工具 -->
+                    <div id="converter" class="bg-white rounded-lg shadow-sm overflow-hidden group card-hover tool-card fade-in">
+                        <div class="p-5 border-b flex items-center">
+                            <i class="fas fa-ruler-combined text-primary text-2xl mr-3"></i>
+                            <h3 class="font-semibold text-gray-800">单位换算</h3>
+                        </div>
+                        <div class="p-5">
+                            <div class="space-y-3">
+                                <select class="w-full bg-gray-100 border-0 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm">
+                                    <option selected>长度 (公里/英里)</option>
+                                    <option>重量 (公斤/磅)</option>
+                                    <option>温度 (摄氏度/华氏度)</option>
+                                    <option>体积 (升/加仑)</option>
+                                </select>
+                                <div class="flex gap-2">
+                                    <input type="number" value="100" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm">
+                                    <span class="flex items-center px-2 bg-gray-100 rounded-lg text-sm text-gray-700">公里</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="number" value="62.14" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed text-sm" readonly>
+                                    <span class="flex items-center px-2 bg-gray-100 rounded-lg text-sm text-gray-700">英里</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="w-8 h-8 rounded-full mr-2">
+                        无境探索
+                    </h3>
+                    <p class="text-gray-400 mb-4">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-weibo text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-weixin text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
+                        <li><a href="hot.html" class="text-gray-400 hover:text-primary transition-colors">热门话题</a></li>
+                        <li><a href="latest.html" class="text-gray-400 hover:text-primary transition-colors">最新发布</a></li>
+                        <li><a href="categories.html" class="text-gray-400 hover:text-white transition-colors">全部分类</a></li>
+                        <li><a href="travel-log.html" class="text-gray-400 hover:text-white transition-colors">旅行日志</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">关于我们</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">论坛介绍</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white transition-colors">使用条款</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
+                        <li><a href="help.html" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">订阅更新</h4>
+                    <p class="text-gray-400 mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary flex-1 bg-gray-800 border-gray-700 text-white">
+                        <button type="submit" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-r-md transition-colors">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 mb-4 md:mb-0">&copy; 2024 无境探索论坛. 保留所有权利.</p>
+                <div class="flex space-x-6">
+                    <a href="terms.html" class="text-gray-500 hover:text-white transition-colors text-sm">使用条款</a>
+                    <a href="privacy.html" class="text-gray-500 hover:text-white transition-colors text-sm">隐私政策</a>
+                    <a href="cookies.html" class="text-gray-500 hover:text-white transition-colors text-sm">Cookie 政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButton = document.querySelector('.md\:hidden.p-2');
+            const mobileMenu = document.querySelector('.md\:hidden.bg-white');
+            
+            if (menuButton && mobileMenu) {
+                menuButton.addEventListener('click', function() {
+                    if (mobileMenu.classList.contains('translate-x-full')) {
+                        mobileMenu.classList.remove('translate-x-full');
+                    } else {
+                        mobileMenu.classList.add('translate-x-full');
+                    }
+                });
+                
+                const closeButton = mobileMenu.querySelector('.p-2');
+                if (closeButton) {
+                    closeButton.addEventListener('click', function() {
+                        mobileMenu.classList.add('translate-x-full');
+                    });
+                }
+            }
+            
+            // 设置当前时间
+            function updateCurrentTime() {
+                const now = new Date();
+                const time1 = document.getElementById('time1');
+                const date1 = document.getElementById('date1');
+                const time2 = document.getElementById('time2');
+                const date2 = document.getElementById('date2');
+                
+                if (time1 && date1) {
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    time1.textContent = `${hours}:${minutes}`;
+                    
+                    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+                    const year = now.getFullYear();
+                    const month = now.getMonth() + 1;
+                    const date = now.getDate();
+                    const weekday = weekdays[now.getDay()];
+                    date1.textContent = `${year}年${month}月${date}日 ${weekday}`;
+                }
+                
+                if (time2 && date2) {
+                    // 纽约时间（比北京时间晚13小时）
+                    const newYorkTime = new Date(now.getTime() - 13 * 60 * 60 * 1000);
+                    const nyHours = newYorkTime.getHours().toString().padStart(2, '0');
+                    const nyMinutes = newYorkTime.getMinutes().toString().padStart(2, '0');
+                    time2.textContent = `${nyHours}:${nyMinutes}`;
+                    
+                    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+                    const nyYear = newYorkTime.getFullYear();
+                    const nyMonth = newYorkTime.getMonth() + 1;
+                    const nyDate = newYorkTime.getDate();
+                    const nyWeekday = weekdays[newYorkTime.getDay()];
+                    date2.textContent = `${nyYear}年${nyMonth}月${nyDate}日 ${nyWeekday}`;
+                }
+            }
+            
+            updateCurrentTime();
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>

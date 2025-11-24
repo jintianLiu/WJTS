@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 搜索结果页面特定样式 */
+        .search-page {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        .search-sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: fit-content;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-sidebar h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-title {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        
+        .filter-options {
+            margin-left: 1rem;
+        }
+        
+        .filter-option {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-option input[type="checkbox"],
+        .filter-option input[type="radio"] {
+            margin-right: 0.5rem;
+            accent-color: #3b82f6;
+        }
+        
+        .filter-option label {
+            font-size: 0.875rem;
+            color: #4b5563;
+            cursor: pointer;
+        }
+        
+        .price-range {
+            margin-top: 0.75rem;
+        }
+        
+        .range-inputs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .range-input {
+            width: 48%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .apply-filters {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .apply-filters:hover {
+            background-color: #2563eb;
+        }
+        
+        .reset-filters {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: white;
+            color: #6b7280;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
+        
+        .reset-filters:hover {
+            background-color: #f9fafb;
+        }
+        
+        .search-main {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .search-header {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        
+        .search-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .search-input-field {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .search-input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .search-submit {
+            padding: 0.875rem 1.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .search-submit:hover {
+            background-color: #2563eb;
+        }
+        
+        .search-results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .search-count {
+            font-weight: 500;
+        }
+        
+        .search-sort {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .search-results {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .search-result-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .search-result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .result-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .author-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .result-category {
+            padding: 0.25rem 0.75rem;
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .result-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .result-title a:hover {
+            color: #3b82f6;
+        }
+        
+        .result-content {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .highlight {
+            background-color: #fef3c7;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+        
+        .result-stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .result-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .result-attachments {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .result-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+        
+        .pagination-link {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .pagination-link:hover:not(.active):not(:disabled) {
+            background-color: #f9fafb;
+        }
+        
+        .pagination-link.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-link:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .no-results {
+            background-color: white;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .no-results-icon {
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+        }
+        
+        .no-results h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-results p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        
+        .suggestions {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .suggestions h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .suggestion-tag {
+            padding: 0.5rem 0.75rem;
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-tag:hover {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+        
+        /* 响应式样式 */
+        @media (max-width: 1024px) {
+            .search-page {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .search-header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .search-input-container {
+                flex-direction: column;
+            }
+            
+            .search-results-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .result-meta {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .result-stats {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-asste/image/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input" value="旅行攻略" onkeypress="handleSearch(event)">
+                    <button class="search-btn" onclick="handleSearch(null)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="messages.html" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i>私信
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="messages.html" class="mobile-nav-link">私信</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">搜索结果</span>
+        </div>
+        
+        <!-- 搜索页面内容 -->
+        <div class="search-page">
+            <!-- 侧边筛选栏 -->
+            <div class="search-sidebar">
+                <h3>筛选选项</h3>
+                
+                <!-- 内容类型筛选 -->
+                <div class="filter-section">
+                    <div class="filter-title">内容类型</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="type-all" name="content-type" checked>
+                            <label for="type-all">全部内容</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="type-post" name="content-type">
+                            <label for="type-post">帖子</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="type-comment" name="content-type">
+                            <label for="type-comment">评论</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="type-user" name="content-type">
+                            <label for="type-user">用户</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="type-tag" name="content-type">
+                            <label for="type-tag">标签</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分类筛选 -->
+                <div class="filter-section">
+                    <div class="filter-title">论坛分类</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-all" name="category" checked>
+                            <label for="cat-all">全部分类</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-travel" name="category">
+                            <label for="cat-travel">旅行攻略</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-experience" name="category">
+                            <label for="cat-experience">旅行体验</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-destination" name="category">
+                            <label for="cat-destination">目的地推荐</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-tips" name="category">
+                            <label for="cat-tips">旅行贴士</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-equipment" name="category">
+                            <label for="cat-equipment">装备分享</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 发布时间筛选 -->
+                <div class="filter-section">
+                    <div class="filter-title">发布时间</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="radio" id="time-all" name="time-range" checked>
+                            <label for="time-all">不限</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="time-today" name="time-range">
+                            <label for="time-today">今天</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="time-week" name="time-range">
+                            <label for="time-week">本周</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="time-month" name="time-range">
+                            <label for="time-month">本月</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="time-year" name="time-range">
+                            <label for="time-year">今年</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 互动筛选 -->
+                <div class="filter-section">
+                    <div class="filter-title">互动筛选</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="has-image" name="interaction">
+                            <label for="has-image">包含图片</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="has-video" name="interaction">
+                            <label for="has-video">包含视频</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="has-comment" name="interaction">
+                            <label for="has-comment">有回复</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 按钮 -->
+                <button class="apply-filters">应用筛选</button>
+                <button class="reset-filters">重置筛选</button>
+            </div>
+            
+            <!-- 主内容区 -->
+            <div class="search-main">
+                <!-- 搜索头部 -->
+                <div class="search-header">
+                    <h1>搜索结果：旅行攻略</h1>
+                    <div class="search-input-container">
+                        <input type="text" class="search-input-field" placeholder="输入关键词搜索..." value="旅行攻略">
+                        <button class="search-submit">搜索</button>
+                    </div>
+                </div>
+                
+                <!-- 搜索信息 -->
+                <div class="search-results-info">
+                    <div class="search-count">找到 <strong>256</strong> 条相关结果</div>
+                    <div class="search-sort">
+                        排序方式：
+                        <select class="sort-select">
+                            <option value="relevance">相关度</option>
+                            <option value="date-desc">最新发布</option>
+                            <option value="date-asc">最早发布</option>
+                            <option value="comments">评论最多</option>
+                            <option value="views">浏览最多</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 搜索结果列表 -->
+                <div class="search-results">
+                    <!-- 结果项1 -->
+                    <div class="search-result-item">
+                        <div class="result-meta">
+                            <div class="result-author">
+                                <img src="../forum-assets/images/avatars/user1.jpg" alt="用户头像" class="author-avatar">
+                                旅行者小明
+                            </div>
+                            <span>2024-01-15 14:30</span>
+                            <span class="result-category">旅行攻略</span>
+                        </div>
+                        <h3 class="result-title">
+                            <a href="../index.html">2024年最全面的日本东京自由行<span class="highlight">旅行攻略</span>，含交通、住宿、美食完全指南</a>
+                        </h3>
+                        <div class="result-content">
+                            这是一份2024年最新的东京自由行<span class="highlight">旅行攻略</span>，包含了从出发前准备到回国后的全过程指南。我们将详细介绍东京的交通系统如何使用，不同区域的住宿推荐，以及必吃的美食和必去的景点。无论你是第一次去日本还是多次前往的旅行爱好者，这份<span class="highlight">攻略</span>都能为你的东京之行提供实用的参考...
+                        </div>
+                        <div class="result-attachments">
+                            <img src="../forum-assets/images/travel/tokyo1.jpg" alt="东京风景" class="result-image">
+                            <img src="../forum-assets/images/travel/tokyo2.jpg" alt="东京美食" class="result-image">
+                            <img src="../forum-assets/images/travel/tokyo3.jpg" alt="东京景点" class="result-image">
+                        </div>
+                        <div class="result-stats">
+                            <span class="result-stat"><i class="far fa-eye"></i> 3.2k</span>
+                            <span class="result-stat"><i class="far fa-comment"></i> 86</span>
+                            <span class="result-stat"><i class="far fa-thumbs-up"></i> 245</span>
+                            <span class="result-stat"><i class="far fa-bookmark"></i> 128</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 结果项2 -->
+                    <div class="search-result-item">
+                        <div class="result-meta">
+                            <div class="result-author">
+                                <img src="../forum-assets/images/avatars/user2.jpg" alt="用户头像" class="author-avatar">
+                                背包客阿杰
+                            </div>
+                            <span>2024-01-10 09:45</span>
+                            <span class="result-category">旅行攻略</span>
+                        </div>
+                        <h3 class="result-title">
+                            <a href="../index.html">欧洲自助游省钱<span class="highlight">攻略</span>：如何以最少的预算玩转欧洲六国</a>
+                        </h3>
+                        <div class="result-content">
+                            欧洲一直是许多旅行者的梦想目的地，但高昂的费用往往让人望而却步。在这篇<span class="highlight">攻略</span>中，我将分享如何以最少的预算畅游法国、意大利、西班牙、德国、奥地利和瑞士六国。从机票预订技巧、住宿选择、交通方式到餐饮省钱秘诀，全方位为你揭秘欧洲旅行的省钱之道...
+                        </div>
+                        <div class="result-attachments">
+                            <img src="../forum-assets/images/travel/europe1.jpg" alt="欧洲风景" class="result-image">
+                            <img src="../forum-assets/images/travel/europe2.jpg" alt="欧洲建筑" class="result-image">
+                        </div>
+                        <div class="result-stats">
+                            <span class="result-stat"><i class="far fa-eye"></i> 2.8k</span>
+                            <span class="result-stat"><i class="far fa-comment"></i> 72</span>
+                            <span class="result-stat"><i class="far fa-thumbs-up"></i> 198</span>
+                            <span class="result-stat"><i class="far fa-bookmark"></i> 145</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 结果项3 -->
+                    <div class="search-result-item">
+                        <div class="result-meta">
+                            <div class="result-author">
+                                <img src="../forum-assets/images/avatars/user3.jpg" alt="用户头像" class="author-avatar">
+                                环球旅行家
+                            </div>
+                            <span>2023-12-28 16:20</span>
+                            <span class="result-category">旅行贴士</span>
+                        </div>
+                        <h3 class="result-title">
+                            <a href="../index.html">资深旅行博主总结的100个实用<span class="highlight">旅行攻略</span>，让你的旅途更加顺畅</a>
+                        </h3>
+                        <div class="result-content">
+                            作为一个走过50多个国家的旅行博主，我总结了100个最实用的<span class="highlight">旅行攻略</span>和小贴士。这些建议涵盖了旅行的各个方面：行李打包技巧、护照和签证办理、旅行保险选择、语言沟通、安全防范、摄影技巧、当地文化礼仪等。无论是初次出行还是经验丰富的旅行者，这些<span class="highlight">攻略</span>都能帮助你避免许多常见的旅行问题...
+                        </div>
+                        <div class="result-stats">
+                            <span class="result-stat"><i class="far fa-eye"></i> 5.6k</span>
+                            <span class="result-stat"><i class="far fa-comment"></i> 132</span>
+                            <span class="result-stat"><i class="far fa-thumbs-up"></i> 421</span>
+                            <span class="result-stat"><i class="far fa-bookmark"></i> 289</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 结果项4 -->
+                    <div class="search-result-item">
+                        <div class="result-meta">
+                            <div class="result-author">
+                                <img src="../forum-assets/images/avatars/user4.jpg" alt="用户头像" class="author-avatar">
+                                户外达人
+                            </div>
+                            <span>2023-12-15 11:05</span>
+                            <span class="result-category">装备分享</span>
+                        </div>
+                        <h3 class="result-title">
+                            <a href="../index.html">徒步旅行必备装备<span class="highlight">攻略</span>：如何轻装出行又不遗漏必需品</a>
+                        </h3>
+                        <div class="result-content">
+                            徒步旅行是一种亲近自然的绝佳方式，但合适的装备选择至关重要。这篇<span class="highlight">攻略</span>将教你如何在轻量化和功能性之间找到平衡，根据不同的徒步路线和季节选择合适的装备。从背包、登山鞋、衣物到露营装备、急救包和导航工具，我们将详细介绍每种装备的选择标准和推荐产品...
+                        </div>
+                        <div class="result-attachments">
+                            <img src="../forum-assets/images/travel/hiking1.jpg" alt="徒步装备" class="result-image">
+                            <img src="../forum-assets/images/travel/hiking2.jpg" alt="徒步装备" class="result-image">
+                            <img src="../forum-assets/images/travel/hiking3.jpg" alt="徒步装备" class="result-image">
+                        </div>
+                        <div class="result-stats">
+                            <span class="result-stat"><i class="far fa-eye"></i> 1.9k</span>
+                            <span class="result-stat"><i class="far fa-comment"></i> 45</span>
+                            <span class="result-stat"><i class="far fa-thumbs-up"></i> 156</span>
+                            <span class="result-stat"><i class="far fa-bookmark"></i> 98</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 结果项5 -->
+                    <div class="search-result-item">
+                        <div class="result-meta">
+                            <div class="result-author">
+                                <img src="../forum-assets/images/avatars/user5.jpg" alt="用户头像" class="author-avatar">
+                                美食探险家
+                            </div>
+                            <span>2023-12-05 18:30</span>
+                            <span class="result-category">旅行体验</span>
+                        </div>
+                        <h3 class="result-title">
+                            <a href="../index.html">泰国清迈美食<span class="highlight">攻略</span>：从街头小吃到高级餐厅的味蕾之旅</a>
+                        </h3>
+                        <div class="result-content">
+                            清迈是泰国北部的美食天堂，这里汇聚了各种令人垂涎的泰国美食。这篇<span class="highlight">攻略</span>将带你探索清迈的美食地图，从最地道的街头小吃到值得一试的高级餐厅。我们将推荐必吃的冬阴功汤、青咖喱、芒果糯米饭等泰国经典菜肴，并分享如何在清迈的夜市和餐厅中找到最正宗的当地美食...
+                        </div>
+                        <div class="result-attachments">
+                            <img src="../forum-assets/images/travel/thai1.jpg" alt="泰国美食" class="result-image">
+                            <img src="../forum-assets/images/travel/thai2.jpg" alt="泰国美食" class="result-image">
+                            <img src="../forum-assets/images/travel/thai3.jpg" alt="泰国美食" class="result-image">
+                        </div>
+                        <div class="result-stats">
+                            <span class="result-stat"><i class="far fa-eye"></i> 3.4k</span>
+                            <span class="result-stat"><i class="far fa-comment"></i> 92</span>
+                            <span class="result-stat"><i class="far fa-thumbs-up"></i> 267</span>
+                            <span class="result-stat"><i class="far fa-bookmark"></i> 183</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination">
+                    <a href="#" class="pagination-link" disabled>上一页</a>
+                    <a href="#" class="pagination-link active">1</a>
+                    <a href="#" class="pagination-link">2</a>
+                    <a href="#" class="pagination-link">3</a>
+                    <a href="#" class="pagination-link">4</a>
+                    <a href="#" class="pagination-link">5</a>
+                    <span>...</span>
+                    <a href="#" class="pagination-link">26</a>
+                    <a href="#" class="pagination-link">下一页</a>
+                </div>
+                
+                <!-- 搜索建议 -->
+                <div class="suggestions">
+                    <h3>您可能感兴趣的搜索</h3>
+                    <div class="suggestion-tags">
+                        <span class="suggestion-tag" onclick="searchTag('日本旅行攻略')">日本旅行攻略</span>
+                        <span class="suggestion-tag" onclick="searchTag('欧洲自由行')">欧洲自由行</span>
+                        <span class="suggestion-tag" onclick="searchTag('徒步装备')">徒步装备</span>
+                        <span class="suggestion-tag" onclick="searchTag('旅行省钱技巧')">旅行省钱技巧</span>
+                        <span class="suggestion-tag" onclick="searchTag('美食旅行')">美食旅行</span>
+                        <span class="suggestion-tag" onclick="searchTag('摄影攻略')">摄影攻略</span>
+                        <span class="suggestion-tag" onclick="searchTag('背包客指南')">背包客指南</span>
+                        <span class="suggestion-tag" onclick="searchTag('亲子旅行')">亲子旅行</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 浮动发布按钮 -->
+    <div class="floating-button-container">
+        <a href="create-post.html" class="floating-button">
+            <i class="fas fa-pen"></i>
+        </a>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        // 搜索功能
+        function handleSearch(event) {
+            // 如果是按回车键触发
+            if (event && event.key !== 'Enter') {
+                return;
+            }
+            
+            const searchInput = document.querySelector('.search-input');
+            const searchTerm = searchInput.value.trim();
+            
+            if (searchTerm) {
+                // 这里可以添加实际的搜索逻辑
+                alert('搜索: ' + searchTerm);
+                // 在实际应用中，这里会刷新页面或重新加载搜索结果
+            }
+        }
+        
+        // 标签搜索功能
+        function searchTag(tag) {
+            // 更新搜索框内容
+            const searchInput = document.querySelector('.search-input');
+            searchInput.value = tag;
+            
+            // 触发搜索
+            handleSearch(null);
+        }
+        
+        // 应用筛选按钮
+        document.querySelector('.apply-filters').addEventListener('click', function() {
+            // 这里可以添加实际的筛选逻辑
+            alert('应用筛选条件');
+        });
+        
+        // 重置筛选按钮
+        document.querySelector('.reset-filters').addEventListener('click', function() {
+            // 重置所有筛选选项
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.id.includes('all')) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+            
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                if (radio.id.includes('all')) {
+                    radio.checked = true;
+                }
+            });
+        });
+        
+        // 分类复选框逻辑
+        const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+        categoryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.id === 'cat-all') {
+                    // 如果勾选了"全部分类"，取消勾选其他分类
+                    categoryCheckboxes.forEach(cb => {
+                        if (cb.id !== 'cat-all') {
+                            cb.checked = false;
+                        }
+                    });
+                } else {
+                    // 如果勾选了某个分类，取消勾选"全部分类"
+                    document.getElementById('cat-all').checked = false;
+                }
+            });
+        });
+        
+        // 内容类型复选框逻辑
+        const contentTypeCheckboxes = document.querySelectorAll('input[name="content-type"]');
+        contentTypeCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.id === 'type-all') {
+                    // 如果勾选了"全部内容"，取消勾选其他类型
+                    contentTypeCheckboxes.forEach(cb => {
+                        if (cb.id !== 'type-all') {
+                            cb.checked = false;
+                        }
+                    });
+                } else {
+                    // 如果勾选了某个类型，取消勾选"全部内容"
+                    document.getElementById('type-all').checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

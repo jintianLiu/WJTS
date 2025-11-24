@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户协议 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 用户协议页面特定样式 */
+        .terms-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .terms-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .terms-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .terms-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .terms-section {
+            margin-bottom: 2rem;
+        }
+        
+        .terms-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .terms-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .terms-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        .terms-section ul,
+        .terms-section ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        
+        .terms-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        .terms-section ul li {
+            list-style-type: disc;
+        }
+        
+        .terms-section ol li {
+            list-style-type: decimal;
+        }
+        
+        .terms-highlight {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .terms-highlight p {
+            margin-bottom: 0;
+        }
+        
+        .terms-footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .terms-container {
+                padding: 1.5rem 1rem;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .terms-header h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="messages.html" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i>私信
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="messages.html" class="mobile-nav-link">私信</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">用户协议</span>
+        </div>
+        
+        <!-- 用户协议内容 -->
+        <div class="terms-container">
+            <div class="terms-header">
+                <h1>无境探索用户协议</h1>
+                <p class="terms-date">更新日期：2024年1月1日</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>1. 协议接受</h2>
+                <p>欢迎您访问无境探索论坛（以下简称"本网站"）。本用户协议（以下简称"本协议"）是您与本网站之间的法律协议，规定了您访问和使用本网站的条款和条件。</p>
+                <p>通过访问或使用本网站，您表示您已阅读、理解并同意受本协议的约束。如果您不同意本协议的任何条款，请立即停止访问或使用本网站。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>2. 用户注册</h2>
+                <p>为了使用本网站的某些功能，您可能需要注册一个账号。在注册过程中，您同意提供真实、准确、完整的个人信息，并在信息变更时及时更新。</p>
+                <p>您负责维护您账号的保密性，并对您账号下的所有活动负责。如发现任何未经授权使用您账号的情况，您应立即通知本网站。</p>
+                <div class="terms-highlight">
+                    <p><strong>重要提示：</strong>请勿与他人共享您的账号信息或密码。每个用户只能创建和使用一个账号，禁止多账号操作。</p>
+                </div>
+            </div>
+            
+            <div class="terms-section">
+                <h2>3. 用户行为规范</h2>
+                <p>在使用本网站时，您同意遵守以下行为规范：</p>
+                <ul>
+                    <li>遵守中华人民共和国法律法规及相关国际公约；</li>
+                    <li>尊重其他用户的合法权益；</li>
+                    <li>不发布任何违法、违规、色情、暴力、血腥、恐怖、歧视或侮辱性的内容；</li>
+                    <li>不发布虚假信息、造谣传谣或进行欺诈活动；</li>
+                    <li>不侵犯他人的知识产权、商业秘密或其他合法权益；</li>
+                    <li>不干扰本网站的正常运行，不使用任何自动化工具或脚本进行数据爬取、批量注册等行为；</li>
+                    <li>不传播垃圾信息、广告信息或恶意链接；</li>
+                    <li>不进行任何可能损害本网站声誉或利益的行为。</li>
+                </ul>
+            </div>
+            
+            <div class="terms-section">
+                <h2>4. 内容规范</h2>
+                <p>本网站允许用户发布、上传内容（包括但不限于文字、图片、音频、视频等），您应确保您发布的内容符合以下要求：</p>
+                <ul>
+                    <li>您对发布的内容拥有合法的所有权或使用权；</li>
+                    <li>发布的内容不侵犯任何第三方的知识产权、肖像权、名誉权等合法权益；</li>
+                    <li>发布的内容不违反法律法规的规定，不损害国家安全、公共利益和社会秩序；</li>
+                    <li>发布的内容真实、准确、有价值，不包含虚假信息或误导性内容；</li>
+                    <li>尊重原创，引用他人内容时应注明出处；</li>
+                    <li>不发布任何形式的广告、推广或营销内容，除非获得本网站的明确许可。</li>
+                </ul>
+                <p>本网站有权在不事先通知的情况下删除任何违反上述规定的内容，并对发布违规内容的用户采取相应的措施。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>5. 知识产权</h2>
+                <p>本网站的所有内容（包括但不限于文字、图片、视频、音频、软件、程序、数据等）的版权、商标权、专利权、商业秘密等知识产权均归本网站或其关联方所有。未经本网站或相关权利人的明确书面许可，您不得以任何方式使用、复制、修改、分发、出售或展示本网站的任何内容。</p>
+                <p>用户在本网站发布的内容，用户保留其知识产权，但授予本网站永久的、不可撤销的、全球性的、免费的使用权，包括但不限于复制、修改、发布、翻译、分发和展示该内容的权利。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>6. 隐私保护</h2>
+                <p>本网站重视用户的隐私保护。本网站收集、使用、存储和保护用户个人信息的方式将遵循本网站的《隐私政策》。通过使用本网站，您同意本网站按照《隐私政策》处理您的个人信息。</p>
+                <p>请您在使用本网站前仔细阅读本网站的《隐私政策》，以了解本网站如何保护您的隐私。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>7. 免责声明</h2>
+                <p>本网站不对用户发布的内容的真实性、准确性、完整性、合法性或适用性负责。用户在本网站上的任何行为和言论仅代表用户个人观点，与本网站无关。</p>
+                <p>本网站不对因用户使用本网站而导致的任何直接、间接、偶然、特殊或后果性的损害负责，包括但不限于利润损失、数据丢失、商誉损害等。</p>
+                <p>本网站不对因技术故障、网络中断、黑客攻击、自然灾害等不可抗力因素导致的服务中断或数据丢失负责。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>8. 服务变更、中断或终止</h2>
+                <p>本网站有权在必要时变更、中断或终止部分或全部服务，无需对用户或第三方负责。本网站将在可行的情况下提前通知用户，但不保证一定会提供通知。</p>
+                <p>如果用户违反本协议的任何条款，本网站有权暂停或终止用户的账号及其相关服务，而无需对用户或第三方负责。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>9. 协议修改</h2>
+                <p>本网站有权随时修改本协议的条款，并在本网站上公布修改后的协议。修改后的协议自公布之日起生效。如果您继续使用本网站，则视为您已接受修改后的协议。如果您不同意修改后的协议，请立即停止使用本网站。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>10. 法律适用与争议解决</h2>
+                <p>本协议的订立、执行、解释及争议的解决均适用中华人民共和国法律。</p>
+                <p>如就本协议的内容或执行发生任何争议，双方应首先通过友好协商解决；协商不成的，任何一方均有权向本网站所在地有管辖权的人民法院提起诉讼。</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>11. 其他条款</h2>
+                <p>本协议构成您与本网站之间关于使用本网站的完整协议，取代之前的任何书面或口头协议。</p>
+                <p>如果本协议的任何条款被认定为无效或不可执行，该条款将被视为可分割的，不影响其余条款的效力和执行。</p>
+                <p>本网站未行使或执行本协议的任何权利或规定，不构成对该权利或规定的放弃。</p>
+            </div>
+            
+            <div class="terms-footer">
+                <p>感谢您使用无境探索论坛！如有任何疑问，请联系我们：support@wujingtan suo.com</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+</body>
+</html>

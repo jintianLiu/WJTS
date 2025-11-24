@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布新帖 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 发帖页面特定样式 */
+        .editor-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .editor-toolbar {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+        
+        .editor-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            background-color: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        
+        .editor-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .editor-btn.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+        }
+        
+        .editor-separator {
+            width: 1px;
+            background-color: #e5e7eb;
+            margin: 0 0.5rem;
+        }
+        
+        .editor-content {
+            padding: 1rem;
+        }
+        
+        .editor-textarea {
+            width: 100%;
+            min-height: 300px;
+            border: none;
+            resize: vertical;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #111827;
+            font-family: inherit;
+        }
+        
+        .editor-textarea:focus {
+            outline: none;
+        }
+        
+        .editor-footer {
+            background-color: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-upload {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .upload-btn:hover {
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        .upload-input {
+            display: none;
+        }
+        
+        .post-form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+        
+        .post-form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-help {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tag:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .tag.active {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-color: #93c5fd;
+        }
+        
+        .custom-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .custom-tag-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .custom-tag-btn {
+            padding: 0.5rem 1rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        
+        .custom-tag-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .preview-item {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .preview-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+        
+        .preview-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-primary:disabled {
+            background-color: #93c5fd;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .visibility-selector {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .visibility-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        .visibility-option:hover {
+            background-color: #f9fafb;
+        }
+        
+        .visibility-option.selected {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+        
+        .visibility-option input[type="radio"] {
+            display: none;
+        }
+        
+        .visibility-icon {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        
+        .visibility-option.selected .visibility-icon {
+            color: #2563eb;
+        }
+        
+        .visibility-text {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+        
+        .visibility-option.selected .visibility-text {
+            color: #1e40af;
+            font-weight: 500;
+        }
+        
+        .visibility-desc {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        /* 发帖指南样式 */
+        .post-guide {
+            background-color: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .post-guide-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .post-guide-list {
+            list-style: none;
+            color: #075985;
+        }
+        
+        .post-guide-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .post-guide-item:before {
+            content: "•";
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">发布新帖</span>
+        </div>
+        
+        <!-- 发帖指南 -->
+        <div class="post-guide">
+            <h3 class="post-guide-title">
+                <i class="fas fa-lightbulb"></i>
+                发帖指南
+            </h3>
+            <ul class="post-guide-list">
+                <li class="post-guide-item">请确保您的帖子内容符合社区规范，避免发布违规信息</li>
+                <li class="post-guide-item">选择合适的分类，以便其他用户能够更容易找到您的内容</li>
+                <li class="post-guide-item">添加相关标签，提升帖子的曝光率和可搜索性</li>
+                <li class="post-guide-item">上传图片时请确保您拥有相应的版权或使用权限</li>
+                <li class="post-guide-item">标题应简洁明了，准确反映帖子内容，避免使用夸张或误导性词汇</li>
+            </ul>
+        </div>
+        
+        <!-- 发帖表单 -->
+        <div class="post-form">
+            <h2 class="post-form-title">发布新帖</h2>
+            
+            <form id="postForm">
+                <!-- 标题输入 -->
+                <div class="form-group">
+                    <label for="postTitle" class="form-label">标题 <span class="text-red-500">*</span></label>
+                    <input type="text" id="postTitle" class="form-control" placeholder="请输入帖子标题..." required>
+                    <div class="form-help" id="titleCount">0/100</div>
+                </div>
+                
+                <!-- 分类选择 -->
+                <div class="form-group">
+                    <label for="postCategory" class="form-label">选择分类 <span class="text-red-500">*</span></label>
+                    <select id="postCategory" class="form-control form-select" required>
+                        <option value="">请选择分类</option>
+                        <option value="travel-experience">旅行经验</option>
+                        <option value="destination-recommendation">目的地推荐</option>
+                        <option value="travel-tips">旅行攻略</option>
+                        <option value="accommodation">住宿体验</option>
+                        <option value="food-tourism">美食探索</option>
+                        <option value="transportation">交通出行</option>
+                        <option value="photography">旅行摄影</option>
+                        <option value="gear-equipment">旅行装备</option>
+                        <option value="budget-travel">穷游锦囊</option>
+                        <option value="cultural-exchange">文化交流</option>
+                        <option value="adventure-activity">探险活动</option>
+                        <option value="family-travel">亲子旅行</option>
+                    </select>
+                </div>
+                
+                <!-- 标签选择 -->
+                <div class="form-group">
+                    <label class="form-label">添加标签 <span class="text-gray-500">(最多选择5个)</span></label>
+                    <div class="tags-container">
+                        <span class="tag" data-tag="国内游">国内游</span>
+                        <span class="tag" data-tag="出境游">出境游</span>
+                        <span class="tag" data-tag="自由行">自由行</span>
+                        <span class="tag" data-tag="跟团游">跟团游</span>
+                        <span class="tag" data-tag="自驾游">自驾游</span>
+                        <span class="tag" data-tag="背包客">背包客</span>
+                        <span class="tag" data-tag="摄影">摄影</span>
+                        <span class="tag" data-tag="美食">美食</span>
+                        <span class="tag" data-tag="历史">历史</span>
+                        <span class="tag" data-tag="文化">文化</span>
+                        <span class="tag" data-tag="自然风光">自然风光</span>
+                        <span class="tag" data-tag="城市探索">城市探索</span>
+                        <span class="tag" data-tag="度假">度假</span>
+                        <span class="tag" data-tag="徒步">徒步</span>
+                        <span class="tag" data-tag="露营">露营</span>
+                    </div>
+                    <div class="custom-tag mt-3">
+                        <input type="text" id="customTag" class="custom-tag-input" placeholder="或添加自定义标签">
+                        <button type="button" id="addCustomTag" class="custom-tag-btn">添加</button>
+                    </div>
+                    <input type="hidden" id="selectedTags" value="">
+                </div>
+                
+                <!-- 帖子内容编辑器 -->
+                <div class="form-group">
+                    <label for="postContent" class="form-label">帖子内容 <span class="text-red-500">*</span></label>
+                    <div class="editor-container">
+                        <!-- 编辑器工具栏 -->
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" title="加粗" data-command="bold">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="斜体" data-command="italic">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="下划线" data-command="underline">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <div class="editor-separator"></div>
+                            <button type="button" class="editor-btn" title="标题" data-command="formatBlock" data-value="h2">
+                                <i class="fas fa-heading"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="引用" data-command="formatBlock" data-value="blockquote">
+                                <i class="fas fa-quote-right"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="代码" data-command="formatBlock" data-value="code">
+                                <i class="fas fa-code"></i>
+                            </button>
+                            <div class="editor-separator"></div>
+                            <button type="button" class="editor-btn" title="无序列表" data-command="insertUnorderedList">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="有序列表" data-command="insertOrderedList">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="缩进" data-command="indent">
+                                <i class="fas fa-indent"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="减少缩进" data-command="outdent">
+                                <i class="fas fa-outdent"></i>
+                            </button>
+                            <div class="editor-separator"></div>
+                            <button type="button" class="editor-btn" title="插入链接" data-command="createLink" id="insertLinkBtn">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="editor-btn" title="插入图片" id="insertImageBtn">
+                                <i class="fas fa-image"></i>
+                            </button>
+                            <div class="editor-separator"></div>
+                            <button type="button" class="editor-btn" title="清除格式" data-command="removeFormat">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- 编辑器内容区域 -->
+                        <div class="editor-content">
+                            <div id="postContent" contenteditable="true" class="editor-textarea" placeholder="请输入帖子内容..."></div>
+                        </div>
+                        
+                        <!-- 编辑器底部 -->
+                        <div class="editor-footer">
+                            <div class="editor-upload">
+                                <label for="imageUpload" class="upload-btn">
+                                    <i class="fas fa-upload mr-2"></i>上传图片
+                                </label>
+                                <input type="file" id="imageUpload" class="upload-input" accept="image/*" multiple>
+                                <label for="fileUpload" class="upload-btn">
+                                    <i class="fas fa-paperclip mr-2"></i>上传附件
+                                </label>
+                                <input type="file" id="fileUpload" class="upload-input" multiple>
+                            </div>
+                            <div class="editor-help" id="contentCount">0/10000</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 图片预览 -->
+                <div id="imagePreview" class="image-preview hidden"></div>
+                
+                <!-- 帖子摘要 -->
+                <div class="form-group">
+                    <label for="postSummary" class="form-label">帖子摘要 <span class="text-gray-500">(选填)</span></label>
+                    <textarea id="postSummary" class="form-control form-textarea" placeholder="简要描述您的帖子内容，最多200字..."></textarea>
+                    <div class="form-help" id="summaryCount">0/200</div>
+                </div>
+                
+                <!-- 可见性设置 -->
+                <div class="form-group">
+                    <label class="form-label">可见性设置</label>
+                    <div class="visibility-selector">
+                        <label class="visibility-option selected">
+                            <input type="radio" name="visibility" value="public" checked>
+                            <div class="visibility-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div>
+                                <div class="visibility-text">公开</div>
+                                <div class="visibility-desc">所有人可见</div>
+                            </div>
+                        </label>
+                        <label class="visibility-option">
+                            <input type="radio" name="visibility" value="friends">
+                            <div class="visibility-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div>
+                                <div class="visibility-text">好友可见</div>
+                                <div class="visibility-desc">仅关注我的人可见</div>
+                            </div>
+                        </label>
+                        <label class="visibility-option">
+                            <input type="radio" name="visibility" value="private">
+                            <div class="visibility-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div>
+                                <div class="visibility-text">私密</div>
+                                <div class="visibility-desc">仅自己可见</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- 其他选项 -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="allowComments" class="form-checkbox" checked>
+                        <label for="allowComments">允许评论</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="notifyReplies" class="form-checkbox" checked>
+                        <label for="notifyReplies">有新回复时通知我</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="saveAsDraft" class="form-checkbox">
+                        <label for="saveAsDraft">保存为草稿</label>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">取消</button>
+                    <button type="button" class="btn btn-secondary" id="previewBtn">预览</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">发布帖子</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const postTitle = document.getElementById('postTitle');
+            const titleCount = document.getElementById('titleCount');
+            const postContent = document.getElementById('postContent');
+            const contentCount = document.getElementById('contentCount');
+            const postSummary = document.getElementById('postSummary');
+            const summaryCount = document.getElementById('summaryCount');
+            const postForm = document.getElementById('postForm');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const previewBtn = document.getElementById('previewBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const editorBtns = document.querySelectorAll('.editor-btn');
+            const selectedTags = document.getElementById('selectedTags');
+            const tagElements = document.querySelectorAll('.tag');
+            const customTag = document.getElementById('customTag');
+            const addCustomTag = document.getElementById('addCustomTag');
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const visibilityOptions = document.querySelectorAll('.visibility-option');
+            const saveAsDraft = document.getElementById('saveAsDraft');
+            
+            // 初始化标签数据
+            let tags = [];
+            
+            // 字符计数功能
+            postTitle.addEventListener('input', function() {
+                const count = this.value.length;
+                titleCount.textContent = `${count}/100`;
+                if (count > 100) {
+                    titleCount.classList.add('text-red-500');
+                    this.value = this.value.substring(0, 100);
+                    titleCount.textContent = '100/100';
+                } else {
+                    titleCount.classList.remove('text-red-500');
+                }
+            });
+            
+            postContent.addEventListener('input', function() {
+                const count = this.textContent.length;
+                contentCount.textContent = `${count}/10000`;
+                if (count > 10000) {
+                    contentCount.classList.add('text-red-500');
+                    // 这里不截断内容，但可以提示用户
+                } else {
+                    contentCount.classList.remove('text-red-500');
+                }
+            });
+            
+            postSummary.addEventListener('input', function() {
+                const count = this.value.length;
+                summaryCount.textContent = `${count}/200`;
+                if (count > 200) {
+                    summaryCount.classList.add('text-red-500');
+                    this.value = this.value.substring(0, 200);
+                    summaryCount.textContent = '200/200';
+                } else {
+                    summaryCount.classList.remove('text-red-500');
+                }
+            });
+            
+            // 编辑器工具栏功能
+            editorBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const command = this.getAttribute('data-command');
+                    const value = this.getAttribute('data-value') || null;
+                    
+                    // 特殊处理插入链接和图片
+                    if (command === 'createLink') {
+                        const url = prompt('请输入链接地址:', 'https://');
+                        if (url) {
+                            document.execCommand(command, false, url);
+                        }
+                        return;
+                    }
+                    
+                    if (command === 'insertImage') {
+                        // 触发文件选择
+                        imageUpload.click();
+                        return;
+                    }
+                    
+                    // 普通命令
+                    document.execCommand(command, false, value);
+                    postContent.focus();
+                    
+                    // 切换按钮状态
+                    if (['bold', 'italic', 'underline', 'insertUnorderedList', 'insertOrderedList'].includes(command)) {
+                        const isActive = document.queryCommandState(command);
+                        this.classList.toggle('active', isActive);
+                    }
+                });
+            });
+            
+            // 标签选择功能
+            tagElements.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const tagValue = this.getAttribute('data-tag');
+                    
+                    if (this.classList.contains('active')) {
+                        // 取消选择
+                        this.classList.remove('active');
+                        tags = tags.filter(t => t !== tagValue);
+                    } else {
+                        // 添加选择，最多5个
+                        if (tags.length < 5) {
+                            this.classList.add('active');
+                            tags.push(tagValue);
+                        } else {
+                            alert('最多只能选择5个标签');
+                        }
+                    }
+                    
+                    selectedTags.value = tags.join(',');
+                });
+            });
+            
+            // 添加自定义标签
+            addCustomTag.addEventListener('click', function() {
+                const tagValue = customTag.value.trim();
+                if (tagValue) {
+                    if (tags.includes(tagValue)) {
+                        alert('该标签已存在');
+                        return;
+                    }
+                    
+                    if (tags.length < 5) {
+                        // 创建新标签元素
+                        const newTag = document.createElement('span');
+                        newTag.className = 'tag active';
+                        newTag.setAttribute('data-tag', tagValue);
+                        newTag.textContent = tagValue;
+                        
+                        // 添加点击事件
+                        newTag.addEventListener('click', function() {
+                            this.remove();
+                            tags = tags.filter(t => t !== tagValue);
+                            selectedTags.value = tags.join(',');
+                        });
+                        
+                        // 添加到标签容器
+                        tagElements[0].parentNode.insertBefore(newTag, customTag.parentElement);
+                        
+                        // 更新标签数据
+                        tags.push(tagValue);
+                        selectedTags.value = tags.join(',');
+                        customTag.value = '';
+                    } else {
+                        alert('最多只能选择5个标签');
+                    }
+                }
+            });
+            
+            // 图片上传预览
+            imageUpload.addEventListener('change', function(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    imagePreview.classList.remove('hidden');
+                    
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            
+                            const img = document.createElement('img');
+                            img.className = 'preview-img';
+                            img.src = event.target.result;
+                            img.alt = file.name;
+                            
+                            const removeBtn = document.createElement('div');
+                            removeBtn.className = 'preview-remove';
+                            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                            removeBtn.addEventListener('click', function() {
+                                previewItem.remove();
+                                if (imagePreview.children.length === 0) {
+                                    imagePreview.classList.add('hidden');
+                                }
+                            });
+                            
+                            previewItem.appendChild(img);
+                            previewItem.appendChild(removeBtn);
+                            imagePreview.appendChild(previewItem);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+            
+            // 可见性选择
+            visibilityOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    visibilityOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                });
+            });
+            
+            // 取消按钮
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('确定要取消发布吗？未保存的内容将会丢失。')) {
+                    window.location.href = '../index.html';
+                }
+            });
+            
+            // 预览按钮 - 简单实现
+            previewBtn.addEventListener('click', function() {
+                // 这里可以实现一个简单的预览功能
+                alert('预览功能暂未实现。在实际应用中，这里会显示帖子的预览效果。');
+            });
+            
+            // 表单提交
+            postForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 表单验证
+                if (!postTitle.value.trim()) {
+                    alert('请输入帖子标题');
+                    postTitle.focus();
+                    return;
+                }
+                
+                if (!postContent.textContent.trim()) {
+                    alert('请输入帖子内容');
+                    postContent.focus();
+                    return;
+                }
+                
+                if (!document.getElementById('postCategory').value) {
+                    alert('请选择帖子分类');
+                    return;
+                }
+                
+                // 构建帖子数据
+                const postData = {
+                    title: postTitle.value.trim(),
+                    category: document.getElementById('postCategory').value,
+                    tags: tags,
+                    content: postContent.innerHTML,
+                    summary: postSummary.value.trim(),
+                    visibility: document.querySelector('input[name="visibility"]:checked').value,
+                    allowComments: document.getElementById('allowComments').checked,
+                    notifyReplies: document.getElementById('notifyReplies').checked,
+                    saveAsDraft: saveAsDraft.checked
+                };
+                
+                console.log('帖子数据:', postData);
+                
+                // 模拟提交成功
+                if (saveAsDraft.checked) {
+                    alert('帖子已保存为草稿！');
+                } else {
+                    alert('帖子发布成功！');
+                    // 发布成功后跳转到首页或帖子详情页
+                    window.location.href = '../index.html';
+                }
+            });
+            
+            // 为contenteditable元素添加placeholder支持
+            postContent.addEventListener('focus', function() {
+                if (!this.textContent.trim()) {
+                    this.classList.remove('placeholder');
+                    this.innerHTML = '';
+                }
+            });
+            
+            postContent.addEventListener('blur', function() {
+                if (!this.textContent.trim()) {
+                    this.innerHTML = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 隐私政策页面特定样式 */
+        .privacy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .privacy-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .privacy-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .privacy-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .privacy-section {
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .privacy-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .privacy-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        .privacy-section ul,
+        .privacy-section ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        
+        .privacy-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        
+        .privacy-section ul li {
+            list-style-type: disc;
+        }
+        
+        .privacy-section ol li {
+            list-style-type: decimal;
+        }
+        
+        .privacy-highlight {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .privacy-highlight p {
+            margin-bottom: 0;
+        }
+        
+        .privacy-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background-color: #f9fafb;
+        }
+        
+        .privacy-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+        
+        .privacy-footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .privacy-container {
+                padding: 1.5rem 1rem;
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .privacy-header h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="messages.html" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i>私信
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="messages.html" class="mobile-nav-link">私信</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">隐私政策</span>
+        </div>
+        
+        <!-- 隐私政策内容 -->
+        <div class="privacy-container">
+            <div class="privacy-header">
+                <h1>无境探索隐私政策</h1>
+                <p class="privacy-date">更新日期：2024年1月1日</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>1. 引言</h2>
+                <p>无境探索论坛（以下简称"我们"或"本网站"）非常重视用户隐私保护。本隐私政策旨在向您说明我们如何收集、使用、存储、共享您的个人信息，以及您对这些信息所享有的控制权和权利。</p>
+                <p>请您在使用本网站前仔细阅读本隐私政策。通过使用本网站，您表示您同意我们按照本隐私政策处理您的个人信息。如果您不同意本隐私政策的任何条款，请立即停止使用本网站。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>2. 我们收集的信息</h2>
+                <p>我们收集的信息主要包括以下几类：</p>
+                
+                <h3>2.1 您提供的信息</h3>
+                <p>当您注册账号、使用我们的服务或与我们联系时，您可能会向我们提供以下信息：</p>
+                <ul>
+                    <li>注册信息：包括您的用户名、密码、电子邮件地址、手机号码等；</li>
+                    <li>个人资料信息：包括您的头像、昵称、个性签名、性别、年龄、所在地、兴趣爱好等；</li>
+                    <li>内容信息：包括您发布的帖子、评论、回复、私信等内容；</li>
+                    <li>联系信息：包括您通过联系表单或其他方式提供的姓名、电子邮件地址、电话号码等。</li>
+                </ul>
+                
+                <h3>2.2 自动收集的信息</h3>
+                <p>当您访问或使用我们的网站时，我们可能会自动收集以下信息：</p>
+                <ul>
+                    <li>设备信息：包括设备型号、操作系统版本、浏览器类型、IP地址等；</li>
+                    <li>日志信息：包括访问时间、访问页面、停留时间、点击路径等；</li>
+                    <li>Cookie和类似技术信息：我们使用Cookie和类似技术来收集和存储有关您的使用情况的信息，以便为您提供更好的服务体验。</li>
+                </ul>
+                
+                <h3>2.3 第三方提供的信息</h3>
+                <p>我们可能会从第三方合作伙伴处获取您的相关信息，例如社交媒体平台、身份验证服务提供商等。这些信息的收集和使用将遵循相关法律法规和第三方的隐私政策。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>3. 我们如何使用您的信息</h2>
+                <p>我们使用您的信息主要用于以下目的：</p>
+                <ul>
+                    <li>提供、维护和改进我们的服务；</li>
+                    <li>创建和管理您的账号；</li>
+                    <li>处理您的请求和交易；</li>
+                    <li>与您沟通，包括发送服务通知、更新、营销信息等；</li>
+                    <li>个性化您的使用体验，例如为您推荐相关内容；</li>
+                    <li>进行数据分析和研究，以改进我们的服务；</li>
+                    <li>保护我们、我们的用户或公众的权利、财产或安全；</li>
+                    <li>遵守法律法规和法律程序的要求。</li>
+                </ul>
+                <div class="privacy-highlight">
+                    <p><strong>重要提示：</strong>我们不会在未经您明确同意的情况下，将您的个人信息用于本隐私政策未提及的其他目的。</p>
+                </div>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>4. 我们如何共享您的信息</h2>
+                <p>我们不会在未经您明确同意的情况下，向第三方出售、出租、交易或以其他方式转让您的个人信息。但在以下情况下，我们可能会共享您的信息：</p>
+                
+                <div class="privacy-card">
+                    <h4>4.1 获得您的明确同意</h4>
+                    <p>在获得您的明确同意后，我们可能会与第三方共享您的个人信息。</p>
+                </div>
+                
+                <div class="privacy-card">
+                    <h4>4.2 服务提供商</h4>
+                    <p>我们可能会与我们的服务提供商共享您的信息，这些服务提供商帮助我们提供、维护和改进我们的服务，例如托管服务、数据分析、客户支持等。这些服务提供商只能在为我们提供服务的过程中使用您的信息，并且必须采取适当的保密措施。</p>
+                </div>
+                
+                <div class="privacy-card">
+                    <h4>4.3 法律要求</h4>
+                    <p>我们可能会在以下情况下披露您的信息：</p>
+                    <ul>
+                        <li>遵守适用的法律法规；</li>
+                        <li>遵守法院命令、法律程序或政府要求；</li>
+                        <li>保护我们、我们的用户或公众的权利、财产或安全；</li>
+                        <li>防止欺诈或滥用行为。</li>
+                    </ul>
+                </div>
+                
+                <div class="privacy-card">
+                    <h4>4.4 业务转让</h4>
+                    <p>如果我们发生合并、收购、资产转让或类似交易，我们可能会将您的信息转让给相关方，但我们会要求受让方继续遵守本隐私政策的规定，保护您的个人信息。</p>
+                </div>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>5. 信息安全</h2>
+                <p>我们采取各种安全措施来保护您的个人信息，防止未经授权的访问、使用、披露、修改或销毁。这些措施包括：</p>
+                <ul>
+                    <li>数据加密：我们使用加密技术保护数据的传输和存储；</li>
+                    <li>访问控制：我们实施严格的访问控制政策，限制对个人信息的访问；</li>
+                    <li>安全审计：我们定期进行安全审计和风险评估；</li>
+                    <li>员工培训：我们对员工进行隐私和安全培训。</li>
+                </ul>
+                <p>尽管我们采取了这些安全措施，但请注意，没有任何安全措施是完全可靠的，我们不能保证您的信息绝对安全。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>6. 您的权利</h2>
+                <p>根据相关法律法规，您可能享有以下权利：</p>
+                <ul>
+                    <li>访问权：您有权访问我们持有的关于您的个人信息；</li>
+                    <li>更正权：如果您的个人信息不准确或不完整，您有权要求我们更正；</li>
+                    <li>删除权：在特定情况下，您有权要求我们删除您的个人信息；</li>
+                    <li>限制处理权：在特定情况下，您有权要求我们限制对您个人信息的处理；</li>
+                    <li>数据可携权：在特定情况下，您有权以结构化、常用和机器可读的格式接收您提供给我们的个人信息；</li>
+                    <li>反对权：您有权反对我们对您个人信息的处理；</li>
+                    <li>撤回同意权：如果我们基于您的同意处理您的个人信息，您有权随时撤回您的同意。</li>
+                </ul>
+                <p>如果您想行使这些权利，请通过本隐私政策末尾提供的联系方式与我们联系。我们将在合理的时间内回复您的请求。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>7. Cookie和类似技术</h2>
+                <p>我们使用Cookie和类似技术（如网络信标、像素标签等）来收集和存储有关您的使用情况的信息，以便为您提供更好的服务体验。这些技术可以帮助我们：</p>
+                <ul>
+                    <li>识别您的身份和偏好；</li>
+                    <li>记住您的登录状态；</li>
+                    <li>跟踪您的浏览活动；</li>
+                    <li>分析网站使用情况；</li>
+                    <li>提供个性化的内容和广告。</li>
+                </ul>
+                <p>大多数网络浏览器默认接受Cookie，但您通常可以修改浏览器设置以拒绝Cookie。请注意，如果您拒绝Cookie，您可能无法使用本网站的某些功能。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>8. 未成年人保护</h2>
+                <p>我们非常重视对未成年人个人信息的保护。如果您未满18周岁，请在监护人的指导下使用我们的服务，并确保在提交个人信息前获得监护人的同意。</p>
+                <p>如果我们发现我们在未获得监护人同意的情况下收集了未成年人的个人信息，我们将立即删除相关信息。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>9. 隐私政策的更新</h2>
+                <p>我们可能会不时更新本隐私政策。当我们进行重大更改时，我们将在网站上发布更新后的隐私政策，并在必要时通过电子邮件或其他方式通知您。请定期查看本隐私政策的更新。</p>
+                <p>如果您继续使用本网站，则视为您已接受更新后的隐私政策。如果您不同意更新后的隐私政策，请立即停止使用本网站。</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>10. 联系我们</h2>
+                <p>如果您对本隐私政策有任何疑问或建议，或者您想行使您的权利，请通过以下方式与我们联系：</p>
+                <ul>
+                    <li>电子邮件：privacy@wujingtan suo.com</li>
+                    <li>邮寄地址：北京市朝阳区探索大厦1001室</li>
+                </ul>
+                <p>我们将在收到您的请求后的30天内回复您。</p>
+            </div>
+            
+            <div class="privacy-footer">
+                <p>感谢您信任无境探索论坛！我们将始终致力于保护您的隐私和个人信息安全。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+</body>
+</html>

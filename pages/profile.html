@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人资料 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 个人资料特定样式 */
+        .profile-header {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-avatar-edit {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .profile-stat-item {
+            text-align: center;
+            margin: 0 1.5rem;
+        }
+        
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .profile-stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+        
+        .profile-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .profile-tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        
+        .profile-content-section {
+            display: none;
+        }
+        
+        .profile-content-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .user-post-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s;
+        }
+        
+        .user-post-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-post-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+        
+        .user-post-meta {
+            display: flex;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .user-post-content {
+            color: #4b5563;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .user-post-stats {
+            display: flex;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .user-post-stat {
+            display: flex;
+            align-items: center;
+            margin-right: 1.5rem;
+        }
+        
+        .user-post-stat i {
+            margin-right: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 个人资料头部 -->
+    <div class="profile-header">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col items-center">
+                <div class="profile-avatar">
+                    <img src="https://picsum.photos/200/200?random=1" alt="用户头像">
+                    <div class="profile-avatar-edit">
+                        <i class="fas fa-camera"></i> 更换头像
+                    </div>
+                </div>
+                
+                <h1 class="text-2xl font-bold">旅行者</h1>
+                <p class="text-gray-600">探索世界的每一个角落</p>
+                
+                <div class="profile-actions mt-3">
+                    <button class="btn btn-primary">编辑资料</button>
+                    <button class="btn btn-secondary ml-3">关注</button>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">128</div>
+                        <div class="profile-stat-label">主题</div>
+                    </div>
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">563</div>
+                        <div class="profile-stat-label">回复</div>
+                    </div>
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">156</div>
+                        <div class="profile-stat-label">关注</div>
+                    </div>
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">243</div>
+                        <div class="profile-stat-label">粉丝</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4">
+        <!-- 个人资料标签页 -->
+        <div class="profile-tabs">
+            <div class="profile-tab active" data-tab="posts">我的主题</div>
+            <div class="profile-tab" data-tab="replies">我的回复</div>
+            <div class="profile-tab" data-tab="favorites">我的收藏</div>
+            <div class="profile-tab" data-tab="following">我的关注</div>
+            <div class="profile-tab" data-tab="settings">账号设置</div>
+        </div>
+        
+        <!-- 标签页内容 -->
+        <div class="profile-content">
+            <!-- 我的主题 -->
+            <div class="profile-content-section active" id="posts">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">我的主题</h2>
+                    <div class="flex space-x-2">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-filter mr-1"></i> 筛选
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-sort mr-1"></i> 排序
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 帖子列表 -->
+                <div class="user-posts-list">
+                    <!-- 帖子1 -->
+                    <div class="user-post-card">
+                        <h3 class="user-post-title">
+                            <a href="post-detail.html">日本关西七日游攻略：大阪、京都、奈良完美行程</a>
+                        </h3>
+                        <div class="user-post-meta">
+                            <span><i class="fas fa-folder-open mr-1"></i>日本旅游</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="far fa-clock mr-1"></i>2024-05-15</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-eye mr-1"></i>1,283</span>
+                        </div>
+                        <p class="user-post-content">
+                            这次关西之行计划了很久，终于在樱花季完成了七日游。行程涵盖了大阪、京都和奈良，兼顾了经典景点和小众体验。在这里分享我的详细攻略，包括交通、住宿、美食和景点推荐...
+                        </p>
+                        <div class="user-post-stats">
+                            <div class="user-post-stat">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>42</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-comment"></i>
+                                <span>23</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-bookmark"></i>
+                                <span>15</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 帖子2 -->
+                    <div class="user-post-card">
+                        <h3 class="user-post-title">
+                            <a href="post-detail.html">深度探秘云南小众景点，远离喧嚣的绝美之地</a>
+                        </h3>
+                        <div class="user-post-meta">
+                            <span><i class="fas fa-folder-open mr-1"></i>国内旅游</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="far fa-clock mr-1"></i>2024-04-28</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-eye mr-1"></i>876</span>
+                        </div>
+                        <p class="user-post-content">
+                            云南不止有大理、丽江这些热门景点，还有许多未被过度开发的绝美之地。这次我深入云南腹地，发现了几个令人惊叹的小众景点，在这里分享给大家，希望能给喜欢探索的朋友一些参考...
+                        </p>
+                        <div class="user-post-stats">
+                            <div class="user-post-stat">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>36</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-comment"></i>
+                                <span>18</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-bookmark"></i>
+                                <span>24</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 帖子3 -->
+                    <div class="user-post-card">
+                        <h3 class="user-post-title">
+                            <a href="post-detail.html">欧洲背包客指南：如何用最少的钱玩遍欧洲</a>
+                        </h3>
+                        <div class="user-post-meta">
+                            <span><i class="fas fa-folder-open mr-1"></i>欧洲旅游</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="far fa-clock mr-1"></i>2024-03-12</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-eye mr-1"></i>1,542</span>
+                        </div>
+                        <p class="user-post-content">
+                            作为一个资深背包客，我已经用背包客的方式走遍了欧洲大部分国家。在这篇指南中，我会分享如何规划经济实惠的欧洲之旅，包括如何购买便宜机票、选择性价比高的住宿、使用公共交通以及寻找当地美食...
+                        </p>
+                        <div class="user-post-stats">
+                            <div class="user-post-stat">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>78</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-comment"></i>
+                                <span>45</span>
+                            </div>
+                            <div class="user-post-stat">
+                                <i class="far fa-bookmark"></i>
+                                <span>63</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-6">
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <span class="pagination-item">...</span>
+                    <a href="#" class="pagination-item">8</a>
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 我的回复 -->
+            <div class="profile-content-section" id="replies">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">我的回复</h2>
+                    <div class="flex space-x-2">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-filter mr-1"></i> 筛选
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 回复列表 -->
+                <div class="user-replies-list">
+                    <!-- 回复1 -->
+                    <div class="user-post-card">
+                        <div class="user-post-meta">
+                            <span>回复了主题：</span>
+                            <a href="post-detail.html" class="text-blue-600 hover:underline ml-1">去泰国清迈有什么好玩的推荐吗？</a>
+                        </div>
+                        <p class="user-post-content">
+                            清迈真的很适合慢生活，我上个月刚从那里回来。强烈推荐去素贴山看双龙寺，傍晚时分景色特别美。还有周日夜市一定要去，各种手工艺品和当地美食，记得砍价！另外，清迈的咖啡馆文化很浓，可以找几家特色咖啡馆坐坐，很惬意。
+                        </p>
+                        <div class="user-post-meta mt-2">
+                            <span><i class="far fa-clock mr-1"></i>2024-05-20 14:30</span>
+                            <button class="text-blue-600 hover:underline ml-4">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 回复2 -->
+                    <div class="user-post-card">
+                        <div class="user-post-meta">
+                            <span>回复了主题：</span>
+                            <a href="post-detail.html" class="text-blue-600 hover:underline ml-1">自驾川藏线需要准备什么？</a>
+                        </div>
+                        <p class="user-post-content">
+                            自驾川藏线最重要的是车辆检查和高原反应药物。建议出发前做一次全面的车辆保养，特别是轮胎、刹车和发动机。准备一些常用药物，如红景天、高原安等。另外，一定要带足保暖衣物，即使是夏天，高原地区温差也很大。最重要的是，不要疲劳驾驶，行程不要安排得太赶。
+                        </p>
+                        <div class="user-post-meta mt-2">
+                            <span><i class="far fa-clock mr-1"></i>2024-05-18 09:15</span>
+                            <button class="text-blue-600 hover:underline ml-4">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-6">
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <span class="pagination-item">...</span>
+                    <a href="#" class="pagination-item">5</a>
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 我的收藏 -->
+            <div class="profile-content-section" id="favorites">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">我的收藏</h2>
+                    <div class="flex space-x-2">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-filter mr-1"></i> 筛选
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 收藏列表 -->
+                <div class="user-favorites-list">
+                    <!-- 收藏1 -->
+                    <div class="user-post-card">
+                        <h3 class="user-post-title">
+                            <a href="post-detail.html">2024年最值得去的10个小众海岛推荐</a>
+                        </h3>
+                        <div class="user-post-meta">
+                            <span><i class="fas fa-user mr-1"></i>海岛探险家</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-folder-open mr-1"></i>海岛度假</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="far fa-clock mr-1"></i>2024-05-10</span>
+                        </div>
+                        <p class="user-post-content">
+                            厌倦了马尔代夫、巴厘岛这些人满为患的热门海岛？这篇文章为你推荐10个2024年最值得去的小众海岛，人少景美，性价比高，让你的度假体验更加独特和难忘...
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <div class="user-post-stats">
+                                <div class="user-post-stat">
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>128</span>
+                                </div>
+                                <div class="user-post-stat">
+                                    <i class="far fa-comment"></i>
+                                    <span>56</span>
+                                </div>
+                            </div>
+                            <button class="text-red-500 hover:underline">
+                                <i class="fas fa-bookmark"></i> 取消收藏
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 收藏2 -->
+                    <div class="user-post-card">
+                        <h3 class="user-post-title">
+                            <a href="post-detail.html">徒步爱好者必看：全球十大经典徒步路线</a>
+                        </h3>
+                        <div class="user-post-meta">
+                            <span><i class="fas fa-user mr-1"></i>徒步达人</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-folder-open mr-1"></i>户外探险</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="far fa-clock mr-1"></i>2024-04-25</span>
+                        </div>
+                        <p class="user-post-content">
+                            对于热爱徒步的旅行者来说，没有什么比征服一条经典徒步路线更令人兴奋的了。本文精选了全球十大经典徒步路线，从初级到高级，满足不同徒步爱好者的需求...
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <div class="user-post-stats">
+                                <div class="user-post-stat">
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>98</span>
+                                </div>
+                                <div class="user-post-stat">
+                                    <i class="far fa-comment"></i>
+                                    <span>32</span>
+                                </div>
+                            </div>
+                            <button class="text-red-500 hover:underline">
+                                <i class="fas fa-bookmark"></i> 取消收藏
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-6">
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 我的关注 -->
+            <div class="profile-content-section" id="following">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">我的关注</h2>
+                    <div class="flex space-x-2">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-search mr-1"></i> 搜索
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 关注用户列表 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 关注用户1 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 flex items-center">
+                        <img src="https://picsum.photos/100/100?random=10" alt="用户头像" class="w-16 h-16 rounded-full object-cover">
+                        <div class="ml-4 flex-1">
+                            <h3 class="font-medium">旅行摄影师</h3>
+                            <p class="text-sm text-gray-500">用镜头记录世界的美丽</p>
+                        </div>
+                        <button class="btn btn-secondary px-3 py-1 text-sm">
+                            已关注
+                        </button>
+                    </div>
+                    
+                    <!-- 关注用户2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 flex items-center">
+                        <img src="https://picsum.photos/100/100?random=11" alt="用户头像" class="w-16 h-16 rounded-full object-cover">
+                        <div class="ml-4 flex-1">
+                            <h3 class="font-medium">美食猎人</h3>
+                            <p class="text-sm text-gray-500">寻找全球各地的美食</p>
+                        </div>
+                        <button class="btn btn-secondary px-3 py-1 text-sm">
+                            已关注
+                        </button>
+                    </div>
+                    
+                    <!-- 关注用户3 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 flex items-center">
+                        <img src="https://picsum.photos/100/100?random=12" alt="用户头像" class="w-16 h-16 rounded-full object-cover">
+                        <div class="ml-4 flex-1">
+                            <h3 class="font-medium">背包客指南</h3>
+                            <p class="text-sm text-gray-500">经济实惠的旅行攻略</p>
+                        </div>
+                        <button class="btn btn-secondary px-3 py-1 text-sm">
+                            已关注
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-6">
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="pagination-item active">1</a>
+                    <a href="#" class="pagination-item">2</a>
+                    <a href="#" class="pagination-item">3</a>
+                    <span class="pagination-item">...</span>
+                    <a href="#" class="pagination-item">7</a>
+                    <a href="#" class="pagination-item">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 账号设置 -->
+            <div class="profile-content-section" id="settings">
+                <h2 class="text-xl font-semibold mb-4">账号设置</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- 设置导航 -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white p-4 rounded-lg border border-gray-200">
+                            <h3 class="font-medium mb-4 pb-2 border-b">设置选项</h3>
+                            <ul class="space-y-2">
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded bg-blue-50 text-blue-600">基本信息</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">安全设置</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">通知设置</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">隐私设置</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">账号绑定</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">注销账号</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 设置表单 -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white p-6 rounded-lg border border-gray-200">
+                            <h3 class="text-lg font-medium mb-4">基本信息</h3>
+                            <form>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="form-group">
+                                        <label for="username" class="form-label">用户名</label>
+                                        <input type="text" id="username" class="form-control" value="旅行者" disabled>
+                                        <small class="text-gray-500">用户名不可修改</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="nickname" class="form-label">昵称</label>
+                                        <input type="text" id="nickname" class="form-control" value="旅行者">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">电子邮箱</label>
+                                        <input type="email" id="email" class="form-control" value="traveler@example.com">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="phone" class="form-label">手机号码</label>
+                                        <input type="tel" id="phone" class="form-control" value="138****6789">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="bio" class="form-label">个性签名</label>
+                                    <textarea id="bio" class="form-control form-textarea" placeholder="介绍一下自己吧...">探索世界的每一个角落</textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="location" class="form-label">所在地</label>
+                                    <input type="text" id="location" class="form-control" value="北京">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="website" class="form-label">个人网站/博客</label>
+                                    <input type="url" id="website" class="form-control" value="">
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3 mt-6">
+                                    <button type="button" class="btn btn-secondary">取消</button>
+                                    <button type="submit" class="btn btn-primary">保存修改</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签页切换
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const contentSections = document.querySelectorAll('.profile-content-section');
+            
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签页的active类
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签页的active类
+                    tab.classList.add('active');
+                    
+                    // 获取当前标签页对应的内容区域ID
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // 隐藏所有内容区域
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    // 显示对应内容区域
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 更换头像按钮点击事件
+            const avatarEditBtn = document.querySelector('.profile-avatar-edit');
+            if (avatarEditBtn) {
+                avatarEditBtn.addEventListener('click', function() {
+                    // 创建隐藏的文件输入
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/*';
+                    fileInput.style.display = 'none';
+                    fileInput.addEventListener('change', function(e) {
+                        if (e.target.files && e.target.files[0]) {
+                            // 这里应该上传文件到服务器
+                            // 这里简单模拟更新头像
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                document.querySelector('.profile-avatar img').src = event.target.result;
+                                alert('头像更新成功！');
+                            };
+                            reader.readAsDataURL(e.target.files[0]);
+                        }
+                    });
+                    document.body.appendChild(fileInput);
+                    fileInput.click();
+                    document.body.removeChild(fileInput);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

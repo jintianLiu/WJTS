@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号设置 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        /* 设置页面特定样式 */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .settings-sidebar {
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+        
+        .settings-sidebar-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .settings-nav-list {
+            list-style: none;
+        }
+        
+        .settings-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .settings-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            color: #4b5563;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .settings-nav-link:hover {
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        
+        .settings-nav-link.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .settings-nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.125rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .settings-content {
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+        
+        .settings-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        .form-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+        
+        .form-radio {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .form-help {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .avatar-upload {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        
+        .avatar-upload:hover .avatar-upload-overlay {
+            opacity: 1;
+        }
+        
+        .avatar-input {
+            display: none;
+        }
+        
+        .section-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-box-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        
+        .progress {
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 9999px;
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .notification-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .notification-text {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-time {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+        
+        .settings-section {
+            display: none;
+        }
+        
+        .settings-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">旅行者</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>个人资料
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i>账号设置
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="profile.html" class="mobile-nav-link">个人资料</a>
+            <a href="settings.html" class="mobile-nav-link">账号设置</a>
+            <a href="login.html" class="mobile-nav-link">退出登录</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <a href="../index.html" class="breadcrumb-item">首页</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">账号设置</span>
+        </div>
+        
+        <!-- 设置页面内容 -->
+        <div class="settings-container">
+            <!-- 侧边导航 -->
+            <div class="settings-sidebar">
+                <div class="settings-sidebar-title">设置选项</div>
+                <ul class="settings-nav-list">
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link active" data-section="basic">
+                            <i class="fas fa-user-circle"></i>
+                            <span>基本信息</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="security">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>安全设置</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="notifications">
+                            <i class="fas fa-bell"></i>
+                            <span>通知设置</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="privacy">
+                            <i class="fas fa-lock"></i>
+                            <span>隐私设置</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="connections">
+                            <i class="fas fa-link"></i>
+                            <span>账号绑定</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="blocks">
+                            <i class="fas fa-ban"></i>
+                            <span>黑名单</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link" data-section="data">
+                            <i class="fas fa-database"></i>
+                            <span>数据管理</span>
+                        </a>
+                    </li>
+                    <li class="settings-nav-item">
+                        <a href="#" class="settings-nav-link text-red-500" data-section="delete">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>注销账号</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 主要内容区域 -->
+            <div class="settings-content">
+                <!-- 基本信息设置 -->
+                <div class="settings-section active" id="basic">
+                    <h2 class="settings-section-title">基本信息</h2>
+                    
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username" class="form-label">用户名</label>
+                                <input type="text" id="username" class="form-control" value="旅行者" disabled>
+                                <div class="form-help">用户名不可修改</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nickname" class="form-label">昵称</label>
+                                <input type="text" id="nickname" class="form-control" value="旅行者">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">电子邮箱</label>
+                                <input type="email" id="email" class="form-control" value="traveler@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone" class="form-label">手机号码</label>
+                                <input type="tel" id="phone" class="form-control" value="138****6789">
+                                <div class="form-help">手机号码已验证</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bio" class="form-label">个性签名</label>
+                            <textarea id="bio" class="form-control form-textarea" placeholder="介绍一下自己吧...">探索世界的每一个角落</textarea>
+                            <div class="form-help">最多150个字符</div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="location" class="form-label">所在地</label>
+                                <input type="text" id="location" class="form-control" value="北京">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="website" class="form-label">个人网站/博客</label>
+                                <input type="url" id="website" class="form-control" placeholder="https://">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gender" class="form-label">性别</label>
+                                <select id="gender" class="form-control form-select">
+                                    <option value="">请选择</option>
+                                    <option value="male">男</option>
+                                    <option value="female">女</option>
+                                    <option value="other" selected>保密</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthday" class="form-label">生日</label>
+                                <input type="date" id="birthday" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">社交媒体账号</label>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="微博账号">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Instagram账号">
+                                </div>
+                            </div>
+                            <div class="form-help">填写您的社交媒体账号，方便其他用户了解更多关于您的信息</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary">取消</button>
+                            <button type="submit" class="btn btn-primary">保存修改</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- 安全设置 -->
+                <div class="settings-section" id="security">
+                    <h2 class="settings-section-title">安全设置</h2>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">登录方式</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="email-login" class="form-checkbox" checked>
+                                <label for="email-login">邮箱登录</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="phone-login" class="form-checkbox" checked>
+                                <label for="phone-login">手机登录</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">修改密码</div>
+                        <div class="form-group">
+                            <label for="current-password" class="form-label">当前密码</label>
+                            <input type="password" id="current-password" class="form-control">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-password" class="form-label">新密码</label>
+                                <input type="password" id="new-password" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password" class="form-label">确认新密码</label>
+                                <input type="password" id="confirm-password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-help">密码长度至少8位，包含字母和数字</div>
+                        <button type="button" class="btn btn-primary mt-4">修改密码</button>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">两步验证</div>
+                        <p class="mb-4">启用两步验证可以提高您账号的安全性，登录时需要额外验证。</p>
+                        <button type="button" class="btn btn-primary">启用两步验证</button>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">登录历史</div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-2">时间</th>
+                                        <th class="text-left py-2">IP地址</th>
+                                        <th class="text-left py-2">设备</th>
+                                        <th class="text-left py-2">位置</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="py-2">2024-05-25 14:30</td>
+                                        <td class="py-2">192.168.1.1</td>
+                                        <td class="py-2">Chrome / Windows</td>
+                                        <td class="py-2">北京</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2">2024-05-24 09:15</td>
+                                        <td class="py-2">192.168.1.1</td>
+                                        <td class="py-2">Safari / iOS</td>
+                                        <td class="py-2">北京</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 通知设置 -->
+                <div class="settings-section" id="notifications">
+                    <h2 class="settings-section-title">通知设置</h2>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">通知方式</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="email-notifications" class="form-checkbox" checked>
+                                <label for="email-notifications">邮件通知</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="push-notifications" class="form-checkbox" checked>
+                                <label for="push-notifications">推送通知</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="sms-notifications" class="form-checkbox">
+                                <label for="sms-notifications">短信通知</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">互动通知</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="comment-notifications" class="form-checkbox" checked>
+                                <label for="comment-notifications">有人评论我的帖子</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="reply-notifications" class="form-checkbox" checked>
+                                <label for="reply-notifications">有人回复我的评论</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="like-notifications" class="form-checkbox" checked>
+                                <label for="like-notifications">有人点赞我的内容</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="follow-notifications" class="form-checkbox" checked>
+                                <label for="follow-notifications">有人关注我</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="mention-notifications" class="form-checkbox" checked>
+                                <label for="mention-notifications">有人@提及我</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">系统通知</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="system-notifications" class="form-checkbox" checked>
+                                <label for="system-notifications">系统公告和更新</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="newsletter-notifications" class="form-checkbox" checked>
+                                <label for="newsletter-notifications">周刊和活动推送</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="recommendation-notifications" class="form-checkbox">
+                                <label for="recommendation-notifications">个性化内容推荐</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">重置为默认</button>
+                        <button type="button" class="btn btn-primary">保存设置</button>
+                    </div>
+                </div>
+                
+                <!-- 隐私设置 -->
+                <div class="settings-section" id="privacy">
+                    <h2 class="settings-section-title">隐私设置</h2>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">个人资料可见性</div>
+                        <div class="form-group">
+                            <label for="profile-visibility" class="form-label">谁可以查看我的个人资料</label>
+                            <select id="profile-visibility" class="form-control form-select">
+                                <option value="public">所有人</option>
+                                <option value="registered" selected>注册用户</option>
+                                <option value="followers">关注我的人</option>
+                                <option value="private">仅自己可见</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="show-email" class="form-checkbox">
+                                <label for="show-email">在个人资料中显示我的邮箱</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="show-phone" class="form-checkbox">
+                                <label for="show-phone">在个人资料中显示我的手机号</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="show-birthday" class="form-checkbox">
+                                <label for="show-birthday">在个人资料中显示我的生日</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="show-activity" class="form-checkbox" checked>
+                                <label for="show-activity">显示我的在线状态</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">搜索隐私</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="search-engine-index" class="form-checkbox">
+                                <label for="search-engine-index">允许搜索引擎收录我的个人资料</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="searchable" class="form-checkbox" checked>
+                                <label for="searchable">允许在论坛内搜索到我</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">消息接收设置</div>
+                        <div class="form-group">
+                            <label for="message-visibility" class="form-label">谁可以给我发私信</label>
+                            <select id="message-visibility" class="form-control form-select">
+                                <option value="everyone">所有人</option>
+                                <option value="registered">注册用户</option>
+                                <option value="followers" selected>关注我的人</option>
+                                <option value="none">不允许任何人</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">取消</button>
+                        <button type="button" class="btn btn-primary">保存设置</button>
+                    </div>
+                </div>
+                
+                <!-- 账号绑定 -->
+                <div class="settings-section" id="connections">
+                    <h2 class="settings-section-title">账号绑定</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="section-box">
+                            <div class="section-box-title">微信</div>
+                            <p class="mb-4">绑定微信账号，方便快捷登录和分享内容。</p>
+                            <button type="button" class="btn btn-primary">立即绑定</button>
+                        </div>
+                        
+                        <div class="section-box">
+                            <div class="section-box-title">QQ</div>
+                            <p class="mb-4">绑定QQ账号，方便快捷登录和分享内容。</p>
+                            <button type="button" class="btn btn-primary">立即绑定</button>
+                        </div>
+                        
+                        <div class="section-box">
+                            <div class="section-box-title">微博</div>
+                            <p class="mb-4">绑定微博账号，方便快捷登录和分享内容。</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-green-600">已绑定</span>
+                                <button type="button" class="btn btn-secondary">解除绑定</button>
+                            </div>
+                        </div>
+                        
+                        <div class="section-box">
+                            <div class="section-box-title">Google</div>
+                            <p class="mb-4">绑定Google账号，方便快捷登录。</p>
+                            <button type="button" class="btn btn-primary">立即绑定</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 黑名单 -->
+                <div class="settings-section" id="blocks">
+                    <h2 class="settings-section-title">黑名单</h2>
+                    
+                    <p class="mb-4">您当前没有将任何用户加入黑名单。添加到黑名单的用户将无法关注您、给您发送私信或评论您的帖子。</p>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">添加用户到黑名单</div>
+                        <div class="flex">
+                            <input type="text" class="form-control flex-1" placeholder="输入用户名或邮箱">
+                            <button type="button" class="btn btn-primary ml-2">添加</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 数据管理 -->
+                <div class="settings-section" id="data">
+                    <h2 class="settings-section-title">数据管理</h2>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">我的数据</div>
+                        <p class="mb-4">您可以下载您在无境探索上的所有个人数据，包括您发布的内容、评论和个人信息。</p>
+                        <button type="button" class="btn btn-primary">请求数据导出</button>
+                        <div class="form-help mt-2">请求后，我们会在48小时内准备好您的数据</div>
+                    </div>
+                    
+                    <div class="section-box">
+                        <div class="section-box-title">浏览历史</div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="save-history" class="form-checkbox" checked>
+                                <label for="save-history">保存我的浏览历史</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary mt-4">清除浏览历史</button>
+                    </div>
+                </div>
+                
+                <!-- 注销账号 -->
+                <div class="settings-section" id="delete">
+                    <h2 class="settings-section-title text-red-600">注销账号</h2>
+                    
+                    <div class="section-box bg-red-50 border-red-200">
+                        <p class="mb-4 text-red-700">注意：注销账号是不可撤销的操作。一旦您的账号被注销，所有与您账号相关的数据将被永久删除，包括您发布的内容、评论、消息和个人信息等。</p>
+                        
+                        <h3 class="font-semibold text-red-800 mb-2">注销账号前请确认以下事项：</h3>
+                        <ul class="list-disc list-inside mb-4 text-red-700">
+                            <li>您已备份所有重要数据</li>
+                            <li>您已清空账号中的所有资产（如果有）</li>
+                            <li>您了解注销后账号无法恢复</li>
+                        </ul>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="confirm-delete" class="form-checkbox">
+                                <label for="confirm-delete" class="text-red-800">我已阅读并确认上述信息，仍然决定注销账号</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="delete-password" class="form-label text-red-800">请输入密码确认</label>
+                            <input type="password" id="delete-password" class="form-control">
+                        </div>
+                        
+                        <button type="button" class="btn btn-danger" disabled>注销账号</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置标签页切换
+            const navLinks = document.querySelectorAll('.settings-nav-link');
+            const sections = document.querySelectorAll('.settings-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有链接的active类
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // 添加当前链接的active类
+                    this.classList.add('active');
+                    
+                    // 获取当前链接对应的section ID
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // 隐藏所有section
+                    sections.forEach(section => section.classList.remove('active'));
+                    // 显示对应section
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+            
+            // 密码字段验证
+            const newPassword = document.getElementById('new-password');
+            const confirmPassword = document.getElementById('confirm-password');
+            
+            if (newPassword && confirmPassword) {
+                newPassword.addEventListener('input', validatePasswords);
+                confirmPassword.addEventListener('input', validatePasswords);
+            }
+            
+            function validatePasswords() {
+                if (newPassword.value && confirmPassword.value) {
+                    if (newPassword.value !== confirmPassword.value) {
+                        confirmPassword.setCustomValidity('两次输入的密码不一致');
+                    } else {
+                        confirmPassword.setCustomValidity('');
+                    }
+                }
+            }
+            
+            // 注销账号确认逻辑
+            const confirmDelete = document.getElementById('confirm-delete');
+            const deletePassword = document.getElementById('delete-password');
+            const deleteAccountBtn = document.querySelector('.btn-danger');
+            
+            if (confirmDelete && deletePassword && deleteAccountBtn) {
+                function updateDeleteButton() {
+                    if (confirmDelete.checked && deletePassword.value) {
+                        deleteAccountBtn.disabled = false;
+                    } else {
+                        deleteAccountBtn.disabled = true;
+                    }
+                }
+                
+                confirmDelete.addEventListener('change', updateDeleteButton);
+                deletePassword.addEventListener('input', updateDeleteButton);
+                
+                deleteAccountBtn.addEventListener('click', function() {
+                    if (confirm('确定要注销账号吗？此操作不可撤销，所有数据将被永久删除。')) {
+                        alert('账号注销请求已提交，请检查您的邮箱完成注销流程。');
+                    }
+                });
+            }
+            
+            // 表单提交处理
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // 显示保存成功提示
+                    alert('设置已成功保存！');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

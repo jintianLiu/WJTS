@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4">
+            <div class="navbar-content">
+                <a href="../index.html" class="navbar-logo">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="logo-img">
+                    <span class="logo-text">无境探索</span>
+                </a>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <input type="text" placeholder="搜索帖子、用户或话题..." class="search-input">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- 桌面导航链接 -->
+                <div class="nav-links">
+                    <a href="../index.html" class="nav-link">首页</a>
+                    <a href="hot.html" class="nav-link">热门话题</a>
+                    <a href="latest.html" class="nav-link">最新发布</a>
+                    <a href="categories.html" class="nav-link">分类</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">登录/注册</span>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="login.html" class="dropdown-item">
+                            <i class="fas fa-sign-in-alt mr-2"></i>登录
+                        </a>
+                        <a href="register.html" class="dropdown-item">
+                            <i class="fas fa-user-plus mr-2"></i>注册
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div class="mobile-nav">
+            <a href="../index.html" class="mobile-nav-link">首页</a>
+            <a href="hot.html" class="mobile-nav-link">热门话题</a>
+            <a href="latest.html" class="mobile-nav-link">最新发布</a>
+            <a href="categories.html" class="mobile-nav-link">分类</a>
+            <a href="login.html" class="mobile-nav-link">登录</a>
+            <a href="register.html" class="mobile-nav-link">注册</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container mx-auto px-4">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="../index.html" class="breadcrumb-link">首页</a>
+            </li>
+            <li class="breadcrumb-item">
+                <span class="text-gray-900">关于我们</span>
+            </li>
+        </nav>
+        
+        <!-- 关于我们内容 -->
+        <div class="about-page">
+            <div class="about-header">
+                <h1 class="about-title">关于无境探索</h1>
+                <p class="about-subtitle">探索未知，分享精彩</p>
+            </div>
+            
+            <div class="about-content">
+                <!-- 论坛简介 -->
+                <section class="about-section">
+                    <div class="about-section-content">
+                        <h2 class="section-title"><i class="fas fa-info-circle mr-2"></i>论坛简介</h2>
+                        <p>无境探索是一个专注于旅行分享与交流的社区平台，成立于2020年。我们致力于为旅行者提供一个分享旅行经验、交流旅行心得、获取旅行灵感的空间。</p>
+                        <p>无论你是资深旅行爱好者，还是刚刚开始探索世界的新手，在这里都能找到志同道合的朋友，发现令人惊叹的目的地，获取实用的旅行建议。</p>
+                        <p>我们相信，每一次旅行都是一次成长，每一段旅程都有值得分享的故事。无境探索，让旅行不再孤单。</p>
+                    </div>
+                </section>
+                
+                <!-- 我们的使命 -->
+                <section class="about-section">
+                    <div class="about-section-content">
+                        <h2 class="section-title"><i class="fas fa-bullseye mr-2"></i>我们的使命</h2>
+                        <p>我们的使命是连接全球旅行者，促进旅行知识的传播与交流，让更多人能够享受旅行的乐趣，探索世界的美好。</p>
+                        <div class="mission-cards">
+                            <div class="mission-card">
+                                <div class="mission-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="mission-title">连接旅行者</h3>
+                                <p>创建一个友好、包容的社区，让旅行者可以互相认识、交流和支持。</p>
+                            </div>
+                            <div class="mission-card">
+                                <div class="mission-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <h3 class="mission-title">分享知识</h3>
+                                <p>鼓励用户分享实用的旅行经验、攻略和建议，帮助他人更好地规划旅行。</p>
+                            </div>
+                            <div class="mission-card">
+                                <div class="mission-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <h3 class="mission-title">探索世界</h3>
+                                <p>激发人们探索未知世界的热情，发现地球上更多美丽的地方和文化。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 社区价值观 -->
+                <section class="about-section">
+                    <div class="about-section-content">
+                        <h2 class="section-title"><i class="fas fa-heart mr-2"></i>社区价值观</h2>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <div class="value-number">01</div>
+                                <div class="value-content">
+                                    <h3 class="value-title">互助共享</h3>
+                                    <p>我们鼓励用户互相帮助，无私分享自己的经验和知识，共同成长。</p>
+                                </div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-number">02</div>
+                                <div class="value-content">
+                                    <h3 class="value-title">尊重包容</h3>
+                                    <p>我们尊重每个人的旅行方式和观点，倡导包容和理解的社区氛围。</p>
+                                </div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-number">03</div>
+                                <div class="value-content">
+                                    <h3 class="value-title">真实可靠</h3>
+                                    <p>我们致力于提供真实、准确的旅行信息，帮助用户做出更好的决策。</p>
+                                </div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-number">04</div>
+                                <div class="value-content">
+                                    <h3 class="value-title">安全第一</h3>
+                                    <p>我们重视旅行安全，提醒用户注意安全事项，分享安全经验。</p>
+                                </div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-number">05</div>
+                                <div class="value-content">
+                                    <h3 class="value-title">环保旅行</h3>
+                                    <p>我们倡导负责任的旅行方式，尊重自然环境和当地文化，减少旅行对环境的影响。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 发展历程 -->
+                <section class="about-section">
+                    <div class="about-section-content">
+                        <h2 class="section-title"><i class="fas fa-history mr-2"></i>发展历程</h2>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">2020年</div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">论坛成立</h3>
+                                    <p>无境探索论坛正式成立，开始为旅行者提供交流平台。</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2021年</div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">用户突破1万</h3>
+                                    <p>论坛注册用户突破1万人，成为国内知名的旅行社区之一。</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2022年</div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">移动端上线</h3>
+                                    <p>推出移动端应用，让用户可以随时随地分享和交流。</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2023年</div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">内容升级</h3>
+                                    <p>增加视频分享功能，丰富社区内容形式。</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2024年</div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">全新改版</h3>
+                                    <p>论坛进行全面改版，提升用户体验，增加更多实用功能。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 团队介绍 -->
+                <section class="about-section">
+                    <div class="about-section-content">
+                        <h2 class="section-title"><i class="fas fa-users mr-2"></i>团队介绍</h2>
+                        <p>我们是一个热爱旅行、充满活力的团队。团队成员来自不同背景，但都有一个共同的爱好——探索世界。我们致力于打造最好的旅行社区，为用户提供优质的服务和体验。</p>
+                        <div class="team-members">
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <img src="https://picsum.photos/200/200?random=30" alt="团队成员">
+                                </div>
+                                <h3 class="member-name">张三</h3>
+                                <p class="member-role">创始人 & CEO</p>
+                                <p class="member-bio">资深旅行爱好者，曾走过50多个国家，拥有丰富的旅行经验。</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <img src="https://picsum.photos/200/200?random=31" alt="团队成员">
+                                </div>
+                                <h3 class="member-name">李四</h3>
+                                <p class="member-role">产品经理</p>
+                                <p class="member-bio">专注于用户体验设计，致力于打造最友好的旅行社区平台。</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <img src="https://picsum.photos/200/200?random=32" alt="团队成员">
+                                </div>
+                                <h3 class="member-name">王五</h3>
+                                <p class="member-role">技术总监</p>
+                                <p class="member-bio">资深全栈工程师，负责论坛技术架构和开发工作。</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <img src="https://picsum.photos/200/200?random=33" alt="团队成员">
+                                </div>
+                                <h3 class="member-name">赵六</h3>
+                                <p class="member-role">社区运营</p>
+                                <p class="member-bio">热爱交流和分享，负责社区氛围维护和内容运营。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 加入我们 -->
+                <section class="about-section">
+                    <div class="about-section-content join-us">
+                        <h2 class="section-title"><i class="fas fa-handshake mr-2"></i>加入我们</h2>
+                        <p>无论你是旅行爱好者、摄影师、美食家，还是有独特见解的探索者，我们都欢迎你加入无境探索社区！</p>
+                        <div class="join-us-actions">
+                            <a href="register.html" class="join-btn">立即注册</a>
+                            <a href="contact.html" class="contact-btn">联系我们</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <h3 class="footer-logo">无境探索</h3>
+                    <p class="footer-text">探索未知，分享精彩。无境探索论坛是旅行者的聚集地，在这里你可以分享旅行故事，交流旅行经验，结识志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">快速链接</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="../index.html" class="footer-link">首页</a></li>
+                        <li class="footer-link-item"><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li class="footer-link-item"><a href="latest.html" class="footer-link">最新发布</a></li>
+                        <li class="footer-link-item"><a href="categories.html" class="footer-link">全部分类</a></li>
+                        <li class="footer-link-item"><a href="active-users.html" class="footer-link">活跃用户</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">关于我们</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link-item"><a href="about.html" class="footer-link">论坛介绍</a></li>
+                        <li class="footer-link-item"><a href="contact.html" class="footer-link">联系我们</a></li>
+                        <li class="footer-link-item"><a href="terms.html" class="footer-link">使用条款</a></li>
+                        <li class="footer-link-item"><a href="privacy.html" class="footer-link">隐私政策</a></li>
+                        <li class="footer-link-item"><a href="help.html" class="footer-link">帮助中心</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-heading">订阅更新</h4>
+                    <p class="footer-text mb-4">订阅我们的新闻通讯，获取最新的旅行资讯和论坛动态。</p>
+                    <form class="flex">
+                        <input type="email" placeholder="输入你的邮箱地址" class="px-4 py-2 rounded-l-md focus:outline-none flex-1">
+                        <button type="submit" class="bg-accent-color text-white px-4 py-2 rounded-r-md">订阅</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="../forum-assets/js/main.js"></script>
+</body>
+</html>

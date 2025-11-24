@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的收藏 - 无境探索</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="../forum-assets/css/style.css">
+    <style>
+        .collection-item {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .collection-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .filter-btn.active {
+            background-color: #2c7a7b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar py-3 px-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 网站标志 -->
+            <div class="flex items-center">
+                <a href="../index.html" class="navbar-brand">
+                    <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                    <span>无境探索</span>
+                </a>
+            </div>
+            
+            <!-- 搜索栏 -->
+            <div class="search-bar">
+                <form id="search-form">
+                    <i class="fas fa-search"></i>
+                    <input id="search-input" type="text" placeholder="搜索帖子、用户或标签...">
+                </form>
+            </div>
+            
+            <!-- 导航链接 -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link"><i class="fas fa-home mr-1"></i> 首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="hot.html" class="nav-link"><i class="fas fa-fire mr-1"></i> 热门</a>
+                </li>
+                <li class="nav-item">
+                    <a href="latest.html" class="nav-link"><i class="fas fa-clock mr-1"></i> 最新</a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link"><i class="fas fa-th-large mr-1"></i> 分类</a>
+                </li>
+            </ul>
+            
+            <!-- 用户菜单 -->
+            <div class="user-menu">
+                <img src="https://picsum.photos/200/200?random=1" alt="用户头像" class="user-avatar">
+                <div class="dropdown-menu">
+                    <a href="profile.html" class="dropdown-item"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                    <a href="messages.html" class="dropdown-item"><i class="fas fa-envelope mr-2"></i> 私信 <span class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                    <a href="collections.html" class="dropdown-item active"><i class="fas fa-bookmark mr-2"></i> 我的收藏</a>
+                    <a href="history.html" class="dropdown-item"><i class="fas fa-history mr-2"></i> 浏览历史</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="settings.html" class="dropdown-item"><i class="fas fa-cog mr-2"></i> 设置</a>
+                    <a href="login.html" class="dropdown-item"><i class="fas fa-sign-out-alt mr-2"></i> 退出登录</a>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden px-4 py-2 bg-white border-t">
+            <ul class="navbar-nav flex flex-col">
+                <li class="nav-item mb-1">
+                    <a href="../index.html" class="nav-link block py-2"><i class="fas fa-home mr-2"></i> 首页</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="hot.html" class="nav-link block py-2"><i class="fas fa-fire mr-2"></i> 热门</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="latest.html" class="nav-link block py-2"><i class="fas fa-clock mr-2"></i> 最新</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="categories.html" class="nav-link block py-2"><i class="fas fa-th-large mr-2"></i> 分类</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="profile.html" class="nav-link block py-2"><i class="fas fa-user mr-2"></i> 个人中心</a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="settings.html" class="nav-link block py-2"><i class="fas fa-cog mr-2"></i> 设置</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <div class="container mx-auto mt-6 px-4">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb mb-6">
+            <ol class="flex items-center space-x-2">
+                <li><a href="../index.html" class="text-gray-500 hover:text-primary"><i class="fas fa-home mr-1"></i>首页</a></li>
+                <li><i class="fas fa-chevron-right text-xs text-gray-400"></i></li>
+                <li><span class="font-medium text-gray-800">我的收藏</span></li>
+            </ol>
+        </nav>
+
+        <!-- 页面标题 -->
+        <div class="page-header mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">我的收藏</h1>
+            <p class="text-gray-600 mt-1">您收藏的所有精彩内容都在这里</p>
+        </div>
+
+        <!-- 筛选栏 -->
+        <div class="filter-bar mb-6 bg-white p-4 rounded-lg shadow-sm">
+            <div class="flex flex-wrap items-center gap-3">
+                <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium transition-all">
+                    全部收藏
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 transition-all">
+                    旅行探索
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 transition-all">
+                    摄影分享
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 transition-all">
+                    美食推荐
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200 transition-all">
+                    住宿体验
+                </button>
+                <button class="ml-auto px-4 py-2 text-sm font-medium text-red-500 hover:text-red-700 flex items-center" id="clear-collections">
+                    <i class="fas fa-trash-alt mr-1"></i> 清空收藏
+                </button>
+            </div>
+        </div>
+
+        <!-- 收藏列表 -->
+        <div class="collections-list space-y-4">
+            <!-- 收藏项1 -->
+            <div class="collection-item bg-white p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="md:w-1/4">
+                        <img src="https://picsum.photos/600/400?random=10" alt="川藏线骑行" class="w-full h-40 object-cover rounded-md">
+                    </div>
+                    <div class="md:w-3/4">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <h3 class="text-lg font-semibold text-gray-900 hover:text-primary mb-2">
+                                <a href="post-detail.html">【已完结】川藏线骑行日记：最美的风景在路上</a>
+                            </h3>
+                            <button class="uncollect-btn text-gray-500 hover:text-red-500">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 line-clamp-2 mb-3">
+                            历时31天，骑行2142公里，从成都到拉萨，穿越了二郎山、折多山、高尔寺山...记录下这段难忘的旅程，分享川藏线沿途的壮美风光和人文故事。
+                        </p>
+                        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-4">
+                            <span class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=2" alt="用户头像" class="w-6 h-6 rounded-full mr-1">
+                                旅行达人小明
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-folder-open mr-1"></i>
+                                旅行探索
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                2023-09-15
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
+                                3.2万
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-comment mr-1"></i>
+                                256
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏项2 -->
+            <div class="collection-item bg-white p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="md:w-1/4">
+                        <img src="https://picsum.photos/600/400?random=11" alt="云南美食" class="w-full h-40 object-cover rounded-md">
+                    </div>
+                    <div class="md:w-3/4">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <h3 class="text-lg font-semibold text-gray-900 hover:text-primary mb-2">
+                                <a href="post-detail.html">云南深度美食指南：从昆明到丽江的味蕾之旅</a>
+                            </h3>
+                            <button class="uncollect-btn text-gray-500 hover:text-red-500">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 line-clamp-2 mb-3">
+                            云南是一个美食天堂，每个地区都有其独特的风味。本文详细介绍了从昆明到丽江沿途的必吃美食，包括过桥米线、汽锅鸡、腊排骨火锅等经典菜品。
+                        </p>
+                        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-4">
+                            <span class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=3" alt="用户头像" class="w-6 h-6 rounded-full mr-1">
+                                美食探险家
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-folder-open mr-1"></i>
+                                美食推荐
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                2023-10-05
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
+                                1.8万
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-comment mr-1"></i>
+                                178
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏项3 -->
+            <div class="collection-item bg-white p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="md:w-1/4">
+                        <img src="https://picsum.photos/600/400?random=12" alt="风光摄影" class="w-full h-40 object-cover rounded-md">
+                    </div>
+                    <div class="md:w-3/4">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <h3 class="text-lg font-semibold text-gray-900 hover:text-primary mb-2">
+                                <a href="post-detail.html">新手必看：旅行风光摄影入门技巧全解析</a>
+                            </h3>
+                            <button class="uncollect-btn text-gray-500 hover:text-red-500">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 line-clamp-2 mb-3">
+                            想要拍出令人惊艳的旅行照片？本文从器材选择、构图技巧、光线运用、后期处理等方面，为摄影新手提供全面的旅行风光摄影入门指导。
+                        </p>
+                        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-4">
+                            <span class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=4" alt="用户头像" class="w-6 h-6 rounded-full mr-1">
+                                摄影爱好者小红
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-folder-open mr-1"></i>
+                                摄影分享
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                2023-11-20
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
+                                2.5万
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-comment mr-1"></i>
+                                324
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏项4 -->
+            <div class="collection-item bg-white p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="md:w-1/4">
+                        <img src="https://picsum.photos/600/400?random=13" alt="民宿体验" class="w-full h-40 object-cover rounded-md">
+                    </div>
+                    <div class="md:w-3/4">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <h3 class="text-lg font-semibold text-gray-900 hover:text-primary mb-2">
+                                <a href="post-detail.html">2023年最值得体验的10家特色民宿，第5家让人流连忘返</a>
+                            </h3>
+                            <button class="uncollect-btn text-gray-500 hover:text-red-500">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 line-clamp-2 mb-3">
+                            精选全国10家极具特色的精品民宿，从设计风格、地理位置、服务体验等多维度进行评价，为您的旅行住宿提供参考。
+                        </p>
+                        <div class="flex flex-wrap items-center text-sm text-gray-500 space-x-4">
+                            <span class="flex items-center">
+                                <img src="https://picsum.photos/100/100?random=5" alt="用户头像" class="w-6 h-6 rounded-full mr-1">
+                                旅行体验师
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-folder-open mr-1"></i>
+                                住宿体验
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                2023-12-01
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-eye mr-1"></i>
+                                1.5万
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-comment mr-1"></i>
+                                98
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination mt-8 flex justify-center">
+            <nav class="inline-flex rounded-md shadow">
+                <a href="#" class="py-2 px-4 border border-gray-300 rounded-l-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </a>
+                <a href="#" class="py-2 px-4 border-t border-b border-gray-300 bg-primary text-sm font-medium text-white">
+                    1
+                </a>
+                <a href="#" class="py-2 px-4 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    2
+                </a>
+                <a href="#" class="py-2 px-4 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    3
+                </a>
+                <span class="py-2 px-3 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700">
+                    ...
+                </span>
+                <a href="#" class="py-2 px-4 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    8
+                </a>
+                <a href="#" class="py-2 px-4 border border-gray-300 rounded-r-md bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="mt-10 bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="../forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                        <span class="ml-2 text-xl font-bold">无境探索</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        无境探索，让旅行不再孤单，让分享连接世界。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../index.html" class="text-gray-400 hover:text-white">首页</a></li>
+                        <li><a href="hot.html" class="text-gray-400 hover:text-white">热门话题</a></li>
+                        <li><a href="categories.html" class="text-gray-400 hover:text-white">论坛分类</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">关于我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">帮助中心</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="help.html" class="text-gray-400 hover:text-white">使用帮助</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">隐私政策</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">服务条款</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关注我们</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weixin text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-weibo text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <p>© 2023 无境探索 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script>
+        // 移动端菜单切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // 筛选按钮切换
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    // 这里可以添加筛选逻辑
+                });
+            });
+            
+            // 取消收藏功能
+            const uncollectButtons = document.querySelectorAll('.uncollect-btn');
+            uncollectButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const collectionItem = this.closest('.collection-item');
+                    if (confirm('确定要取消收藏这篇文章吗？')) {
+                        collectionItem.style.opacity = '0';
+                        collectionItem.style.height = '0';
+                        collectionItem.style.margin = '0';
+                        collectionItem.style.padding = '0';
+                        collectionItem.style.overflow = 'hidden';
+                        collectionItem.style.transition = 'all 0.3s ease';
+                        setTimeout(() => {
+                            collectionItem.remove();
+                        }, 300);
+                    }
+                });
+            });
+            
+            // 清空收藏功能
+            const clearCollectionsBtn = document.getElementById('clear-collections');
+            if (clearCollectionsBtn) {
+                clearCollectionsBtn.addEventListener('click', function() {
+                    if (confirm('确定要清空所有收藏吗？此操作不可恢复。')) {
+                        const collectionsList = document.querySelector('.collections-list');
+                        collectionsList.innerHTML = `
+                            <div class="text-center py-16">
+                                <i class="fas fa-bookmark text-4xl text-gray-300 mb-4"></i>
+                                <p class="text-gray-500">您的收藏夹为空</p>
+                                <a href="../index.html" class="mt-4 inline-block px-6 py-2 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors">
+                                    去探索内容
+                                </a>
+                            </div>
+                        `;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

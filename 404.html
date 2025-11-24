@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面未找到 - 无境探索论坛</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #06b6d4;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-link {
+            position: relative;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+        
+        .nav-link.active {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
+            border-radius: 1px;
+        }
+        
+        .container {
+            flex: 1;
+        }
+        
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 2rem 1rem;
+        }
+        
+        .error-code {
+            font-size: 12rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom right, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.8;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .error-description {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        
+        .error-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--light-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            background: linear-gradient(to bottom right, var(--accent-color), var(--secondary-color));
+        }
+        
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: -80px;
+            animation: float 12s ease-in-out infinite 2s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+            }
+        }
+        
+        .search-form {
+            display: flex;
+            max-width: 500px;
+            width: 100%;
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .search-button {
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: opacity var(--transition-fast);
+        }
+        
+        .search-button:hover {
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 8rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .error-description {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .error-title {
+                font-size: 1.75rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-logo i {
+            color: var(--accent-color);
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-link:hover {
+            color: var(--accent-color);
+            transform: translateX(3px);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-bottom-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+        
+        .footer-bottom-link:hover {
+            color: var(--accent-color);
+        }
+        
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- 品牌标识 -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center">
+                        <i class="fa fa-compass text-white text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">无境探索</span>
+                </a>
+                
+                <!-- 导航链接 -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link active">首页</a>
+                    <a href="#" class="nav-link">发现</a>
+                    <a href="#" class="nav-link">分类</a>
+                    <a href="#" class="nav-link">热门</a>
+                </div>
+                
+                <!-- 用户菜单 -->
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="hidden md:block px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200">登录</a>
+                    <a href="register.html" class="hidden md:block px-4 py-2 rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition-colors duration-200">注册</a>
+                    <button class="md:hidden p-2 text-gray-600 hover:text-pink-500 transition-colors duration-200">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <div class="error-container relative">
+            <!-- 浮动背景形状 -->
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+            </div>
+            
+            <!-- 错误信息 -->
+            <div class="error-code">404</div>
+            <h1 class="error-title">抱歉，您访问的页面不存在</h1>
+            <p class="error-description">
+                您尝试访问的页面可能已被删除、移动或名称已更改。
+                请检查您输入的网址是否正确，或使用下方按钮返回首页。
+            </p>
+            
+            <!-- 搜索框 -->
+            <form class="search-form">
+                <input type="text" placeholder="搜索其他内容..." class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+            
+            <!-- 操作按钮 -->
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fa fa-home"></i>
+                    返回首页
+                </a>
+                <a href="#" id="back-button" class="btn btn-secondary">
+                    <i class="fa fa-history"></i>
+                    返回上一页
+                </a>
+            </div>
+            
+            <!-- 热门链接 -->
+            <div class="mt-10 max-w-3xl w-full">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">您可能感兴趣的内容</h3>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <a href="index.html" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">首页</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">热门话题</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">最新发布</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">全部分类</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">活跃用户</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">旅行日志</a>
+                    <a href="#" class="px-4 py-2 bg-white rounded-full text-sm text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200">旅行工具</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container mx-auto px-4">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <i class="fa fa-compass"></i>
+                        无境探索
+                    </div>
+                    <p class="footer-text">无境探索论坛是一个致力于分享旅行体验、交流旅行技巧的社区平台。无论你是资深旅行者还是旅行新手，这里都能找到志同道合的朋友。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fa fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fa fa-wechat"></i></a>
+                        <a href="#" class="social-link"><i class="fa fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fa fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="footer-heading">快速链接</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html" class="footer-link">首页</a></li>
+                        <li><a href="#" class="footer-link">分类浏览</a></li>
+                        <li><a href="#" class="footer-link">热门话题</a></li>
+                        <li><a href="#" class="footer-link">最新活动</a></li>
+                        <li><a href="#" class="footer-link">精华内容</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-heading">关于我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">网站介绍</a></li>
+                        <li><a href="#" class="footer-link">加入我们</a></li>
+                        <li><a href="#" class="footer-link">用户协议</a></li>
+                        <li><a href="#" class="footer-link">隐私政策</a></li>
+                        <li><a href="#" class="footer-link">联系我们</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-heading">订阅更新</h3>
+                    <p class="footer-text">订阅我们的电子报，获取最新的旅行资讯和社区动态。</p>
+                    <form>
+                        <div class="flex">
+                            <input type="email" placeholder="输入你的邮箱" class="search-input flex-1 rounded-r-none">
+                            <button type="submit" class="search-button rounded-l-none">
+                                订阅
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-links">
+                    <a href="#" class="footer-bottom-link">用户协议</a>
+                    <a href="#" class="footer-bottom-link">隐私政策</a>
+                    <a href="#" class="footer-bottom-link">帮助中心</a>
+                    <a href="#" class="footer-bottom-link">网站地图</a>
+                </div>
+                <p>&copy; 2024 无境探索论坛. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="forum-assets/js/scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 搜索表单提交
+            const searchForm = document.querySelector('.search-form');
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchInput = this.querySelector('.search-input');
+                if (searchInput.value.trim()) {
+                    // 如果有全局通知函数，则使用它
+                    if (typeof showNotification === 'function') {
+                        showNotification('搜索功能即将上线，敬请期待！', 'info');
+                    } else {
+                        alert('搜索功能即将上线，敬请期待！');
+                    }
+                } else {
+                    // 如果有全局通知函数，则使用它
+                    if (typeof showNotification === 'function') {
+                        showNotification('请输入搜索内容', 'warning');
+                    } else {
+                        alert('请输入搜索内容');
+                    }
+                }
+            });
+            
+            // 返回上一页按钮
+            const backButton = document.getElementById('back-button');
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (document.referrer) {
+                    window.history.back();
+                } else {
+                    // 如果有全局通知函数，则使用它
+                    if (typeof showNotification === 'function') {
+                        showNotification('没有可返回的页面', 'info');
+                    }
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            });
+            
+            // 页面加载动画效果
+            const errorCode = document.querySelector('.error-code');
+            setTimeout(() => {
+                errorCode.style.transform = 'scale(1.1)';
+                errorCode.style.transition = 'transform 0.5s ease';
+                setTimeout(() => {
+                    errorCode.style.transform = 'scale(1)';
+                }, 300);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧洲小众旅行目的地推荐 - 无境探索论坛</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="forum-assets/css/style.css">
+    <style>
+        /* 帖子详情页特定样式 */
+        .post-detail-container {
+            padding: 2rem 0;
+        }
+
+        .post-header {
+            margin-bottom: 2rem;
+        }
+
+        .post-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            padding: 2px;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .author-title {
+            font-size: 0.875rem;
+            color: var(--primary-color);
+        }
+
+        .post-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .post-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-tag {
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .post-tag:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            object-fit: cover;
+            aspect-ratio: 16 / 9;
+        }
+
+        .post-content {
+            font-size: 1.0625rem;
+            line-height: 1.75;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--dark-color);
+        }
+
+        .post-content h3 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .post-content ul,
+        .post-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content ul li::marker {
+            color: var(--accent-color);
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .post-action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .action-button:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .action-button.liked,
+        .action-button.bookmarked {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .action-button.liked i,
+        .action-button.bookmarked i {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .post-share {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .share-label {
+            font-size: 0.9375rem;
+            color: var(--text-muted);
+        }
+
+        .share-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .share-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-light);
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .share-button.weibo:hover {
+            background-color: #e6162d;
+        }
+
+        .share-button.wechat:hover {
+            background-color: #07c160;
+        }
+
+        .share-button.twitter:hover {
+            background-color: #1da1f2;
+        }
+
+        .share-button.facebook:hover {
+            background-color: #1877f2;
+        }
+
+        .author-profile {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background-color: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .author-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-details {
+            flex: 1;
+        }
+
+        .author-name-large {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .author-description {
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+        }
+
+        .author-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .author-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .follow-button {
+            padding: 0.625rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .follow-button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .follow-button.following {
+            background-color: var(--bg-light);
+            color: var(--dark-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .comments-section {
+            margin-bottom: 3rem;
+        }
+
+        .comments-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .comments-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comments-count {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .comment-sort {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sort-label {
+            font-size: 0.9375rem;
+            color: var(--text-muted);
+        }
+
+        .sort-select {
+            font-size: 0.9375rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .comment-form {
+            background-color: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-form-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-form-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            resize: vertical;
+            font-family: inherit;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .comment-form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comment-form-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .comment-form-button {
+            padding: 0.625rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            background-color: var(--accent-color);
+            color: white;
+            transition: all var(--transition-fast);
+        }
+
+        .comment-form-button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .comment-form-button:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .comment-form-tool {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comment-tool-button {
+            color: var(--text-muted);
+            transition: color var(--transition-fast);
+        }
+
+        .comment-tool-button:hover {
+            color: var(--accent-color);
+        }
+
+        .comment-list {
+            margin-bottom: 2rem;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .comment-time {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .comment-text {
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            transition: color var(--transition-fast);
+        }
+
+        .comment-action:hover {
+            color: var(--accent-color);
+        }
+
+        .comment-action.liked {
+            color: var(--accent-color);
+        }
+
+        .comment-replies {
+            margin-top: 1.5rem;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .reply-button {
+            cursor: pointer;
+        }
+
+        .related-posts {
+            margin-bottom: 3rem;
+        }
+
+        .related-posts-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .related-posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-post-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .related-post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .related-post-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+        }
+
+        .related-post-content {
+            padding: 1.25rem;
+        }
+
+        .related-post-category {
+            display: inline-block;
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .related-post-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .related-post-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .related-post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-post-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .related-post-time {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        @media (max-width: 768px) {
+            .post-title {
+                font-size: 1.75rem;
+            }
+
+            .post-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .post-stats {
+                align-self: stretch;
+                justify-content: space-between;
+            }
+
+            .post-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .author-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .author-stats {
+                justify-content: center;
+            }
+
+            .comments-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .comment-form-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .related-posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- 品牌标识 -->
+                <a href="index.html" class="navbar-brand">
+                    <img src="forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                    <span>无境探索</span>
+                </a>
+
+                <!-- 搜索栏 -->
+                <div class="search-container hidden md:flex items-center relative">
+                    <form class="search-form" action="#" method="get">
+                        <input type="search" placeholder="搜索话题、用户或内容..." class="search-input" name="q" autocomplete="off">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                    <!-- 搜索建议容器 -->
+                    <div class="search-suggestions hidden absolute top-full left-0 right-0 mt-1 bg-white shadow-lg rounded-lg z-10 max-h-60 overflow-y-auto"></div>
+                </div>
+
+                <!-- 导航链接 -->
+                <ul class="nav-links hidden md:flex items-center space-x-6">
+                    <li><a href="index.html" class="nav-link">首页</a></li>
+                    <li><a href="hot.html" class="nav-link">热门</a></li>
+                    <li><a href="#" class="nav-link">分类</a></li>
+                    <li><a href="#" class="nav-link">最新</a></li>
+                </ul>
+
+                <!-- 用户菜单 -->
+                <div class="user-menu flex items-center space-x-4">
+                    <a href="create-post.html" class="create-post-btn">
+                        <i class="fas fa-plus"></i>
+                        <span class="hidden md:inline ml-1">发布</span>
+                    </a>
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <img src="forum-asste/image/default-avatar.png" alt="用户头像" class="w-8 h-8 rounded-full">
+                        </div>
+                        <div class="user-dropdown hidden">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user"></i> 个人中心
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i> 设置
+                            </a>
+                            <a href="login.html" class="dropdown-item">
+                                <i class="fas fa-sign-in-alt"></i> 登录
+                            </a>
+                            <a href="register.html" class="dropdown-item">
+                                <i class="fas fa-user-plus"></i> 注册
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-btn md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu hidden">
+            <div class="container mx-auto px-4 py-3">
+                <div class="search-container flex items-center relative mb-4">
+                    <form class="search-form w-full" action="#" method="get">
+                        <input type="search" placeholder="搜索话题、用户或内容..." class="search-input" name="q" autocomplete="off">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <ul class="nav-links flex flex-col space-y-3">
+                    <li><a href="index.html" class="nav-link">首页</a></li>
+                    <li><a href="hot.html" class="nav-link">热门</a></li>
+                    <li><a href="#" class="nav-link">分类</a></li>
+                    <li><a href="#" class="nav-link">最新</a></li>
+                    <li><a href="login.html" class="nav-link">登录</a></li>
+                    <li><a href="register.html" class="nav-link">注册</a></li>
+                    <li><a href="create-post.html" class="nav-link">发布内容</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 面包屑导航 -->
+    <div class="container mx-auto px-4 py-3">
+        <nav class="breadcrumb">
+            <ul class="flex items-center space-x-2">
+                <li><a href="index.html" class="breadcrumb-link">首页</a></li>
+                <li><span class="breadcrumb-separator">/</span></li>
+                <li><a href="#" class="breadcrumb-link">旅行探索</a></li>
+                <li><span class="breadcrumb-separator">/</span></li>
+                <li><span class="breadcrumb-current">欧洲小众旅行目的地推荐</span></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 帖子详情主内容区 -->
+    <div class="container mx-auto px-4">
+        <div class="post-detail-container">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 主要内容区域 -->
+                <div class="lg:col-span-2">
+                    <!-- 帖子头部 -->
+                    <div class="post-header">
+                        <h1 class="post-title">欧洲小众旅行目的地推荐，远离人山人海的绝佳体验</h1>
+                        
+                        <div class="post-meta">
+                            <div class="post-author">
+                                <img src="forum-assets/img/user1.jpg" alt="作者头像" class="author-avatar">
+                                <div class="author-info">
+                                    <span class="author-name">旅行达人小明</span>
+                                    <span class="author-title">资深旅行家 · 环球旅行8年</span>
+                                </div>
+                            </div>
+                            
+                            <div class="post-stats">
+                                <div class="post-stat-item">
+                                    <i class="far fa-clock"></i>
+                                    <span>2024年6月15日</span>
+                                </div>
+                                <div class="post-stat-item">
+                                    <i class="far fa-eye"></i>
+                                    <span>12,458 阅读</span>
+                                </div>
+                                <div class="post-stat-item">
+                                    <i class="far fa-comment"></i>
+                                    <span>326 评论</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="post-tags">
+                            <a href="#" class="post-tag">#小众旅行</a>
+                            <a href="#" class="post-tag">#欧洲旅行</a>
+                            <a href="#" class="post-tag">#旅行推荐</a>
+                            <a href="#" class="post-tag">#特色目的地</a>
+                            <a href="#" class="post-tag">#深度游</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 帖子主体内容 -->
+                    <div class="post-content">
+                        <img src="forum-assets/img/europe-travel.jpg" alt="欧洲小众景点" class="post-image">
+                        
+                        <p>厌倦了巴黎、罗马等热门旅游城市的人山人海？本文为你推荐10个欧洲小众但风景绝美的旅行目的地，让你的旅程更加独特难忘。</p>
+                        
+                        <h2>为什么选择小众目的地？</h2>
+                        <p>随着全球旅游业的蓬勃发展，传统热门景点往往人满为患，游客体验大打折扣。选择小众目的地有以下优势：</p>
+                        <ul>
+                            <li>避开旅游旺季的拥挤人潮</li>
+                            <li>体验更加原汁原味的当地文化</li>
+                            <li>通常可以享受更实惠的价格</li>
+                            <li>拍摄更少游客入镜的美照</li>
+                            <li>探索未被过度开发的自然景观</li>
+                        </ul>
+                        
+                        <h2>欧洲小众旅行目的地推荐</h2>
+                        
+                        <h3>1. 斯洛文尼亚 - 布莱德湖</h3>
+                        <p>位于阿尔卑斯山脉南麓的布莱德湖，被称为"欧洲的眼睛"。湖中央的小岛和城堡构成了完美的明信片风景。相比周边的意大利和奥地利，这里的游客要少得多，但景色却毫不逊色。</p>
+                        <blockquote>最佳旅行时间：6月-9月，此时气候宜人，湖水清澈。</blockquote>
+                        
+                        <h3>2. 罗马尼亚 - 特兰西瓦尼亚</h3>
+                        <p>除了吸血鬼传说，特兰西瓦尼亚还有着令人惊叹的中世纪城堡、古老的萨克森村庄和壮观的喀尔巴阡山脉。锡吉什瓦拉、拜恩古堡等小镇保存完好，仿佛时光停滞。</p>
+                        
+                        <h3>3. 爱沙尼亚 - 塔林</h3>
+                        <p>爱沙尼亚首都塔林的老城区被联合国教科文组织列为世界文化遗产，是欧洲保存最完好的中世纪城市之一。狭窄的 cobblestone 街道、哥特式建筑和古老的城墙，让人感觉仿佛穿越回中世纪。</p>
+                        
+                        <h3>4. 葡萄牙 - 阿尔加维</h3>
+                        <p>虽然葡萄牙已经逐渐受到游客欢迎，但阿尔加维地区的许多海滩和小镇仍然相对宁静。壮观的岩层、金色的沙滩和清澈的海水，使其成为欧洲最好的秘密海滩目的地之一。</p>
+                        
+                        <h3>5. 克罗地亚 - 赫瓦尔岛</h3>
+                        <p>相比杜布罗夫尼克，赫瓦尔岛提供了更加宁静的地中海体验。薰衣草田、橄榄树、古老的石城和清澈的海水，使这里成为放松身心的理想之地。</p>
+                        
+                        <h3>6. 冰岛 - 东部峡湾</h3>
+                        <p>大多数游客只去冰岛的黄金圈和蓝湖，但东部峡湾地区却拥有更加原始和壮观的自然景观。高耸的山脉、深邃的峡湾、瀑布和冰川，以及丰富的野生动物，使其成为户外爱好者的天堂。</p>
+                        
+                        <h3>7. 西班牙 - 圣塞巴斯蒂安</h3>
+                        <p>位于西班牙北部的圣塞巴斯蒂安拥有美丽的海滩、世界级的美食和独特的巴斯克文化。相比巴塞罗那和马德里，这里更加宁静，却同样充满活力。</p>
+                        
+                        <h3>8. 波兰 - 克拉科夫</h3>
+                        <p>克拉科夫是波兰最美丽的城市之一，拥有保存完好的中世纪老城区和城堡。这里的历史感浓厚，但游客数量相对较少，是体验东欧文化的绝佳去处。</p>
+                        
+                        <h3>9. 匈牙利 - 圣安德烈</h3>
+                        <p>位于布达佩斯以北约20公里的圣安德烈，是一个充满艺术气息的小镇。彩色的建筑、狭窄的街道和众多的画廊，使其成为逃离城市喧嚣的理想之地。</p>
+                        
+                        <h3>10. 希腊 - 米科诺斯岛之外的基克拉泽斯群岛</h3>
+                        <p>除了米科诺斯和圣托里尼，基克拉泽斯群岛还有许多美丽但游客较少的岛屿，如锡弗诺斯、米洛斯和阿莫尔戈斯。这些岛屿保留了更传统的希腊生活方式和美丽的海滩。</p>
+                        
+                        <h2>旅行小贴士</h2>
+                        <p>前往这些小众目的地旅行时，有几点建议：</p>
+                        <ol>
+                            <li>提前做好研究，因为这些地方的旅游基础设施可能不如热门景点完善</li>
+                            <li>学习一些当地语言的基本短语，会大大提升你的旅行体验</li>
+                            <li>尝试与当地人交流，获取最地道的推荐</li>
+                            <li>尊重当地文化和习俗</li>
+                            <li>考虑租车或参加当地小团，以便更灵活地探索</li>
+                        </ol>
+                        
+                        <p>希望这份欧洲小众旅行目的地推荐能为你的下一次旅行提供灵感。记住，有时候最美的风景往往在人少的地方等待着你去发现。</p>
+                    </div>
+                    
+                    <!-- 帖子操作按钮 -->
+                    <div class="post-actions">
+                        <div class="post-action-buttons">
+                            <button class="action-button" id="like-button">
+                                <i class="far fa-heart"></i>
+                                <span>点赞 (1,285)</span>
+                            </button>
+                            <button class="action-button" id="bookmark-button">
+                                <i class="far fa-bookmark"></i>
+                                <span>收藏</span>
+                            </button>
+                            <button class="action-button" id="comment-button">
+                                <i class="far fa-comment"></i>
+                                <span>评论</span>
+                            </button>
+                        </div>
+                        
+                        <div class="post-share">
+                            <span class="share-label">分享：</span>
+                            <div class="share-buttons">
+                                <button class="share-button weibo" title="分享到微博">
+                                    <i class="fab fa-weibo"></i>
+                                </button>
+                                <button class="share-button wechat" title="分享到微信">
+                                    <i class="fab fa-weixin"></i>
+                                </button>
+                                <button class="share-button twitter" title="分享到Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </button>
+                                <button class="share-button facebook" title="分享到Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 作者信息 -->
+                    <div class="author-profile">
+                        <img src="forum-assets/img/user1.jpg" alt="作者头像" class="author-avatar-large">
+                        
+                        <div class="author-details">
+                            <h3 class="author-name-large">旅行达人小明</h3>
+                            <p class="author-description">资深旅行家，环球旅行8年，足迹遍布50多个国家。专注于发现小众而美丽的旅行目的地，分享真实的旅行体验和实用的旅行技巧。</p>
+                            
+                            <div class="author-stats">
+                                <div class="author-stat-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>现居上海</span>
+                                </div>
+                                <div class="author-stat-item">
+                                    <i class="fas fa-pen-fancy"></i>
+                                    <span>发布了128篇文章</span>
+                                </div>
+                                <div class="author-stat-item">
+                                    <i class="fas fa-users"></i>
+                                    <span>23.5k 粉丝</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="follow-button" id="follow-button">关注作者</button>
+                    </div>
+                    
+                    <!-- 评论区 -->
+                    <div class="comments-section">
+                        <div class="comments-header">
+                            <h3 class="comments-title">
+                                <i class="fas fa-comments"></i>
+                                评论
+                                <span class="comments-count">(326)</span>
+                            </h3>
+                            
+                            <div class="comment-sort">
+                                <span class="sort-label">排序方式：</span>
+                                <div class="sort-select">
+                                    <span>最新</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评论表单 -->
+                        <div class="comment-form">
+                            <div class="comment-form-header">
+                                <img src="forum-assets/img/default-avatar.png" alt="用户头像" class="comment-author-avatar">
+                                <span class="comment-form-title">发表评论</span>
+                            </div>
+                            
+                            <textarea class="comment-textarea" placeholder="分享你的看法..." id="comment-textarea"></textarea>
+                            
+                            <div class="comment-form-footer">
+                                <div class="comment-form-tool">
+                                    <button class="comment-tool-button" title="插入图片">
+                                        <i class="far fa-image"></i>
+                                    </button>
+                                    <button class="comment-tool-button" title="插入表情">
+                                        <i class="far fa-smile"></i>
+                                    </button>
+                                    <button class="comment-tool-button" title="插入链接">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                                
+                                <button class="comment-form-button" id="submit-comment" disabled>发表评论</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 评论列表 -->
+                        <div class="comment-list">
+                            <!-- 评论1 -->
+                            <div class="comment-item">
+                                <img src="forum-assets/img/user6.jpg" alt="评论者头像" class="comment-avatar">
+                                
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-author-name">旅行爱好者</span>
+                                        <span class="comment-time">2小时前</span>
+                                    </div>
+                                    
+                                    <div class="comment-text">非常感谢分享！我一直想去一些人少的地方旅行，这里的推荐很实用。特别是斯洛文尼亚的布莱德湖，看起来太美了。请问那边的消费水平如何？</div>
+                                    
+                                    <div class="comment-actions">
+                                        <button class="comment-action like-action">
+                                            <i class="far fa-heart"></i>
+                                            <span>42</span>
+                                        </button>
+                                        <button class="comment-action reply-button">
+                                            <i class="far fa-comment"></i>
+                                            <span>回复</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- 评论回复 -->
+                                    <div class="comment-replies">
+                                        <div class="comment-item">
+                                            <img src="forum-assets/img/user1.jpg" alt="回复者头像" class="comment-avatar">
+                                            
+                                            <div class="comment-content">
+                                                <div class="comment-header">
+                                                    <span class="comment-author-name">旅行达人小明 <span class="text-xs text-primary-color">作者</span></span>
+                                                    <span class="comment-time">1小时前</span>
+                                                </div>
+                                                
+                                                <div class="comment-text">你好！斯洛文尼亚的消费水平比西欧国家低一些，但比东欧其他国家如捷克、匈牙利略高。布莱德湖周边的住宿价格在旅游旺季会上涨，建议提前预订。总体来说，每天预算大约100-150欧元应该足够了。</div>
+                                                
+                                                <div class="comment-actions">
+                                                    <button class="comment-action like-action">
+                                                        <i class="far fa-heart"></i>
+                                                        <span>28</span>
+                                                    </button>
+                                                    <button class="comment-action reply-button">
+                                                        <i class="far fa-comment"></i>
+                                                        <span>回复</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 评论2 -->
+                            <div class="comment-item">
+                                <img src="forum-assets/img/user7.jpg" alt="评论者头像" class="comment-avatar">
+                                
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-author-name">背包客日记</span>
+                                        <span class="comment-time">昨天</span>
+                                    </div>
+                                    
+                                    <div class="comment-text">我去年去过波兰的克拉科夫，真的是一个很棒的城市！物价便宜，风景优美，当地人也很友善。强烈推荐大家去瓦维尔城堡和辛德勒工厂参观。</div>
+                                    
+                                    <div class="comment-actions">
+                                        <button class="comment-action like-action">
+                                            <i class="far fa-heart"></i>
+                                            <span>36</span>
+                                        </button>
+                                        <button class="comment-action reply-button">
+                                            <i class="far fa-comment"></i>
+                                            <span>回复</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 评论3 -->
+                            <div class="comment-item">
+                                <img src="forum-assets/img/user8.jpg" alt="评论者头像" class="comment-avatar">
+                                
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-author-name">欧洲通</span>
+                                        <span class="comment-time">3天前</span>
+                                    </div>
+                                    
+                                    <div class="comment-text">补充一个：拉脱维亚的里加也值得一去！它是波罗的海三国中最大的城市，有着美丽的新艺术风格建筑，被称为"北方的巴黎"。而且消费水平也很合理。</div>
+                                    
+                                    <div class="comment-actions">
+                                        <button class="comment-action like-action">
+                                            <i class="far fa-heart"></i>
+                                            <span>24</span>
+                                        </button>
+                                        <button class="comment-action reply-button">
+                                            <i class="far fa-comment"></i>
+                                            <span>回复</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 加载更多评论 -->
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="load-more-comments">
+                                加载更多评论
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 相关推荐 -->
+                    <div class="related-posts">
+                        <h3 class="related-posts-title">
+                            <i class="fas fa-thumbs-up"></i>
+                            你可能也喜欢
+                        </h3>
+                        
+                        <div class="related-posts-grid">
+                            <a href="#" class="related-post-card">
+                                <img src="forum-assets/img/norway-travel.jpg" alt="挪威峡湾" class="related-post-image">
+                                <div class="related-post-content">
+                                    <span class="related-post-category">自然景观</span>
+                                    <h4 class="related-post-title">挪威小众峡湾：罗弗敦群岛的绝世美景</h4>
+                                    <div class="related-post-meta">
+                                        <div class="related-post-author">
+                                            <img src="forum-assets/img/user9.jpg" alt="作者头像" class="related-post-avatar">
+                                            <span>自然探索者</span>
+                                        </div>
+                                        <div class="related-post-time">
+                                            <i class="far fa-clock"></i>
+                                            <span>1周前</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="related-post-card">
+                                <img src="forum-assets/img/europe-food.jpg" alt="欧洲美食" class="related-post-image">
+                                <div class="related-post-content">
+                                    <span class="related-post-category">美食文化</span>
+                                    <h4 class="related-post-title">欧洲小众美食之旅：从伊比利亚到波罗的海</h4>
+                                    <div class="related-post-meta">
+                                        <div class="related-post-author">
+                                            <img src="forum-assets/img/user2.jpg" alt="作者头像" class="related-post-avatar">
+                                            <span>吃货小王</span>
+                                        </div>
+                                        <div class="related-post-time">
+                                            <i class="far fa-clock"></i>
+                                            <span>2周前</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="related-post-card">
+                                <img src="forum-assets/img/europe-castle.jpg" alt="欧洲城堡" class="related-post-image">
+                                <div class="related-post-content">
+                                    <span class="related-post-category">历史文化</span>
+                                    <h4 class="related-post-title">欧洲隐藏的城堡：鲜为人知的中世纪建筑瑰宝</h4>
+                                    <div class="related-post-meta">
+                                        <div class="related-post-author">
+                                            <img src="forum-assets/img/user10.jpg" alt="作者头像" class="related-post-avatar">
+                                            <span>历史爱好者</span>
+                                        </div>
+                                        <div class="related-post-time">
+                                            <i class="far fa-clock"></i>
+                                            <span>3周前</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 侧边栏 -->
+                <div class="lg:col-span-1">
+                    <!-- 热门标签 -->
+                    <div class="trending-tags-container">
+                        <h3 class="trending-tags-title">
+                            <i class="fas fa-tags"></i>
+                            热门标签
+                        </h3>
+                        <div class="trending-tags">
+                            <a href="#" class="trending-tag">
+                                <span>#小众旅行</span>
+                                <span class="ml-1">(128)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#欧洲旅行</span>
+                                <span class="ml-1">(96)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#深度游</span>
+                                <span class="ml-1">(87)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#旅行攻略</span>
+                                <span class="ml-1">(83)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#背包客</span>
+                                <span class="ml-1">(76)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#自驾游</span>
+                                <span class="ml-1">(68)</span>
+                            </a>
+                            <a href="#" class="trending-tag">
+                                <span>#摄影技巧</span>
+                                <span class="ml-1">(64)</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- 热门作者 -->
+                    <div class="trending-stats">
+                        <h3 class="trending-stats-title">
+                            <i class="fas fa-users"></i>
+                            热门作者
+                        </h3>
+                        <div class="stat-item">
+                            <div class="flex items-center gap-0.75rem">
+                                <img src="forum-assets/img/user1.jpg" alt="作者头像" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold">旅行达人小明</div>
+                                    <div class="text-xs text-text-muted">资深旅行家</div>
+                                </div>
+                            </div>
+                            <button class="follow-button text-sm py-1 px-3">关注</button>
+                        </div>
+                        <div class="stat-item">
+                            <div class="flex items-center gap-0.75rem">
+                                <img src="forum-assets/img/user2.jpg" alt="作者头像" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold">吃货小王</div>
+                                    <div class="text-xs text-text-muted">美食博主</div>
+                                </div>
+                            </div>
+                            <button class="follow-button text-sm py-1 px-3">关注</button>
+                        </div>
+                        <div class="stat-item">
+                            <div class="flex items-center gap-0.75rem">
+                                <img src="forum-assets/img/user3.jpg" alt="作者头像" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold">科技旅行者</div>
+                                    <div class="text-xs text-text-muted">旅行科技测评</div>
+                                </div>
+                            </div>
+                            <button class="follow-button text-sm py-1 px-3">关注</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 广告区域 -->
+                    <div class="mt-6 bg-white rounded-lg p-4 text-center border border-dashed border-gray-300">
+                        <div class="text-sm text-text-muted mb-2">广告</div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <p class="font-medium mb-2">预订欧洲小众目的地特惠</p>
+                            <p class="text-sm text-text-muted mb-3">使用优惠码 TRAVEL15 享受额外15%折扣</p>
+                            <a href="#" class="inline-block bg-accent-color text-white text-sm py-2 px-4 rounded">了解详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动发布按钮 -->
+    <a href="create-post.html" class="floating-action-btn">
+        <i class="fas fa-plus"></i>
+    </a>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- 网站介绍 -->
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <img src="forum-assets/images/Logo.jpg" alt="无境探索" class="h-10 w-auto">
+                        <span>无境探索</span>
+                    </div>
+                    <p class="footer-description">
+                        无境探索论坛是一个致力于分享旅行体验、交流旅行技巧的社区平台。无论你是资深旅行者还是旅行新手，这里都能找到志同道合的朋友。
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+
+                <!-- 快速链接 -->
+                <div class="footer-column">
+                    <h4 class="footer-title">快速链接</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" class="footer-link">首页</a></li>
+                        <li><a href="hot.html" class="footer-link">热门话题</a></li>
+                        <li><a href="#" class="footer-link">全部分类</a></li>
+                        <li><a href="#" class="footer-link">最新发布</a></li>
+                        <li><a href="#" class="footer-link">用户排行</a></li>
+                    </ul>
+                </div>
+
+                <!-- 关于我们 -->
+                <div class="footer-column">
+                    <h4 class="footer-title">关于我们</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">网站介绍</a></li>
+                        <li><a href="#" class="footer-link">加入我们</a></li>
+                        <li><a href="#" class="footer-link">用户协议</a></li>
+                        <li><a href="#" class="footer-link">隐私政策</a></li>
+                        <li><a href="#" class="footer-link">联系我们</a></li>
+                    </ul>
+                </div>
+
+                <!-- 订阅更新 -->
+                <div class="footer-column">
+                    <h4 class="footer-title">订阅更新</h4>
+                    <p class="footer-description">
+                        订阅我们的电子报，获取最新的旅行资讯和社区动态。
+                    </p>
+                    <form class="footer-subscribe">
+                        <input type="email" placeholder="您的邮箱地址" class="subscribe-input" required>
+                        <button type="submit" class="subscribe-btn">订阅</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2024 无境探索论坛. 保留所有权利.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="forum-assets/js/scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 评论文本框监听
+            const commentTextarea = document.getElementById('comment-textarea');
+            const submitCommentBtn = document.getElementById('submit-comment');
+            
+            commentTextarea.addEventListener('input', function() {
+                submitCommentBtn.disabled = !this.value.trim();
+            });
+            
+            // 点赞功能
+            const likeButton = document.getElementById('like-button');
+            likeButton.addEventListener('click', function() {
+                this.classList.toggle('liked');
+                const icon = this.querySelector('i');
+                const countSpan = this.querySelector('span');
+                
+                if (this.classList.contains('liked')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    // 更新点赞数
+                    const currentCount = parseInt(countSpan.textContent.match(/\d+/)[0]);
+                    countSpan.textContent = `点赞 (${currentCount + 1})`;
+                    showNotification('点赞成功', 'success');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    // 更新点赞数
+                    const currentCount = parseInt(countSpan.textContent.match(/\d+/)[0]);
+                    countSpan.textContent = `点赞 (${currentCount - 1})`;
+                }
+            });
+            
+            // 收藏功能
+            const bookmarkButton = document.getElementById('bookmark-button');
+            bookmarkButton.addEventListener('click', function() {
+                this.classList.toggle('bookmarked');
+                const icon = this.querySelector('i');
+                
+                if (this.classList.contains('bookmarked')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    showNotification('收藏成功', 'success');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    showNotification('已取消收藏', 'info');
+                }
+            });
+            
+            // 关注作者功能
+            const followButton = document.getElementById('follow-button');
+            followButton.addEventListener('click', function() {
+                this.classList.toggle('following');
+                
+                if (this.classList.contains('following')) {
+                    this.textContent = '已关注';
+                    showNotification('关注成功', 'success');
+                } else {
+                    this.textContent = '关注作者';
+                    showNotification('已取消关注', 'info');
+                }
+            });
+            
+            // 评论点赞功能
+            const commentLikeButtons = document.querySelectorAll('.comment-action.like-action');
+            commentLikeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('liked');
+                    const icon = this.querySelector('i');
+                    const countSpan = this.querySelector('span');
+                    
+                    if (this.classList.contains('liked')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        // 更新点赞数
+                        const currentCount = parseInt(countSpan.textContent);
+                        countSpan.textContent = currentCount + 1;
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        // 更新点赞数
+                        const currentCount = parseInt(countSpan.textContent);
+                        countSpan.textContent = currentCount - 1;
+                    }
+                });
+            });
+            
+            // 提交评论
+            submitCommentBtn.addEventListener('click', function() {
+                const commentText = commentTextarea.value.trim();
+                if (commentText) {
+                    showNotification('评论提交成功', 'success');
+                    // 清空文本框
+                    commentTextarea.value = '';
+                    this.disabled = true;
+                }
+            });
+            
+            // 加载更多评论
+            const loadMoreCommentsBtn = document.getElementById('load-more-comments');
+            loadMoreCommentsBtn.addEventListener('click', function() {
+                showNotification('加载更多评论功能开发中', 'info');
+            });
+            
+            // 回复按钮
+            const replyButtons = document.querySelectorAll('.reply-button');
+            replyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 滚动到评论框
+                    commentTextarea.focus();
+                    const authorName = this.closest('.comment-content').querySelector('.comment-author-name').textContent;
+                    commentTextarea.value = `@${authorName} `;
+                    submitCommentBtn.disabled = false;
+                });
+            });
+            
+            // 评论按钮点击滚动到评论区
+            const commentBtn = document.getElementById('comment-button');
+            commentBtn.addEventListener('click', function() {
+                document.querySelector('.comments-section').scrollIntoView({ behavior: 'smooth' });
+                commentTextarea.focus();
+            });
+            
+            // 分享按钮
+            const shareButtons = document.querySelectorAll('.share-button');
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const platform = this.title.replace('分享到', '');
+                    showNotification(`分享到${platform}功能开发中`, 'info');
+                });
+            });
+            
+            // 初始化搜索建议
+            initSearchSuggestions();
+        });
+    </script>
+</body>
+
+</html>
